@@ -6,7 +6,7 @@ export default defineConfig({
   output: 'static',
   adapter: vercel(),
   integrations: [sitemap()],
-  site: 'https://techcraft.vercel.app',
+  site: 'https://miocraft.vercel.app',
   markdown: {
     shikiConfig: {
       theme: 'one-dark-pro',

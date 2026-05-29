@@ -4,7 +4,7 @@
 
 Kiến thức lập trình tiếng Việt viết cho junior dev và sinh viên năm cuối — không phải documentation page, mà là anh senior kể chuyện cho junior nghe. 142 bài, 12 phần, dùng thực tế từ một hệ thống quản lý bệnh viện (Java 17 + Spring Boot 3 + MySQL + Redis).
 
-🔗 **[miocraft.vercel.app](https://techcraft.vercel.app)**
+🔗 **[miocraft.vercel.app](https://miocraft.vercel.app)**
 
 ---
 
