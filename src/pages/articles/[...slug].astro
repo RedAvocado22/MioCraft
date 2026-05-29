@@ -59,7 +59,7 @@ function formatDate(d: Date) {
       "datePublished": article.data.pubDate.toISOString(),
       "url": new URL(`/articles/${article.slug}`, Astro.site).toString(),
       "inLanguage": "vi",
-      "author": { "@type": "Person", "name": "RedAvocado22" },
+      "author": { "@type": "Person", "name": "RedAvocado22", "url": "https://github.com/RedAvocado22" },
       "publisher": { "@type": "Organization", "name": "MioCraft", "url": Astro.site?.toString() },
       "keywords": (article.data.tags ?? []).join(', ')
     })} />
