@@ -1,4 +1,4 @@
-# TechCraft
+# MioCraft
 
 A comprehensive knowledge base and blog built with [Astro](https://astro.build/). This project serves as a structured repository for technical articles, focusing on System Design, Software Architecture, and Programming.
 
@@ -31,8 +31,8 @@ Follow these steps to run the project locally.
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/RedAvocado22/TechCraft.git
-   cd TechCraft
+   git clone https://github.com/RedAvocado22/MioCraft.git
+   cd MioCraft
    ```
 
 2. Install dependencies:
