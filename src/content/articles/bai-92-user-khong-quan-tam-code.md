@@ -3,7 +3,7 @@ title: "User không quan tâm code của mày — họ quan tâm trải nghiệm
 description: "Tao từng rất tự hào về một cái booking flow tao viết. Clean architecture đúng sách, separation of concerns rõ ràng, unit test coverage cao, zero redun..."
 category: programming
 pubDate: 2024-04-11
-series: "Phần 11: Product Engineering"
+series: "Phần 11: Tư duy sản phẩm"
 ---
 
 Tao từng rất tự hào về một cái booking flow tao viết. Clean architecture đúng sách, separation of concerns rõ ràng, unit test coverage cao, zero redundant query. Senior review xong gật đầu: *"Code tốt."*
