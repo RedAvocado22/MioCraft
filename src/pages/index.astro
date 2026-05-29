@@ -100,7 +100,6 @@ for (const article of articles) {
       font-size: 0.7rem;
       transition: transform 0.2s ease;
       flex-shrink: 0;
-      margin-left: auto;
     }
 
     .part-badge {
@@ -244,7 +243,7 @@ for (const article of articles) {
 
   <div class="hero">
     <p class="hero-eyebrow">TechCraft / knowledge-base</p>
-    <h1>97 bài · 11 phần</h1>
+    <h1>{articles.length} bài · {seriesMap.size} phần</h1>
     <p>// system design · architecture · programming</p>
   </div>
 
