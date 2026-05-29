@@ -1,6 +1,10 @@
 # MioCraft
 
-A Vietnamese programming knowledge base covering system design, software architecture, and backend development — written for junior developers and final-year students.
+A Vietnamese programming knowledge base written for junior developers and final-year students. Articles are organized into 12 parts across three topics:
+
+- **System Design** — load balancing, caching, message queues, rate limiting, circuit breakers, API gateways, distributed tracing, and more
+- **Architecture** — clean code, SOLID principles, design patterns, layered architecture, and real-world case studies
+- **Programming** — backend internals, database design, Spring Boot production patterns, deployment, and observability
 
 🔗 **[mio-craft.vercel.app](https://mio-craft.vercel.app)**
 
