@@ -208,7 +208,7 @@ function formatDate(d: Date) {
       .toc {
         position: fixed;
         top: 90px;
-        left: calc(50% - 380px - 1rem - 210px);
+        left: calc(50% - 380px - 40px - 200px);
         width: 200px;
         margin-bottom: 0;
         max-height: calc(100vh - 110px);
@@ -270,51 +270,7 @@ function formatDate(d: Date) {
       border-radius: 4px;
     }
 
-    /* ── Code block with header ── */
-    .code-block-wrapper {
-      margin: 1.25rem 0 1.5rem;
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .code-block-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(255,255,255,0.035);
-      border-bottom: 1px solid rgba(255,255,255,0.07);
-      padding: 0.4rem 0.9rem;
-    }
-
-    .code-lang {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.66rem;
-      font-weight: 700;
-      color: #6b7280;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-
-    .copy-btn {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.68rem;
-      font-weight: 600;
-      color: #4b5563;
-      background: transparent;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 4px;
-      padding: 0.18rem 0.5rem;
-      cursor: pointer;
-      transition: color 0.15s, border-color 0.15s;
-      letter-spacing: 0.04em;
-    }
-    .copy-btn:hover {
-      color: #a78bfa;
-      border-color: rgba(139,92,246,0.4);
-    }
-
-    /* Shiki code blocks — reset margins when inside wrapper */
+    /* Shiki code blocks */
     .prose pre {
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 10px;
@@ -324,14 +280,6 @@ function formatDate(d: Date) {
       font-size: 0.875rem;
       line-height: 1.65;
       position: relative;
-    }
-    .code-block-wrapper .prose pre,
-    .code-block-wrapper > pre,
-    .code-block-wrapper .astro-code,
-    .code-block-wrapper .shiki {
-      margin: 0 !important;
-      border-radius: 0 !important;
-      border: none !important;
     }
 
     .prose pre > code {
@@ -344,6 +292,7 @@ function formatDate(d: Date) {
       width: max-content;
     }
 
+    /* Shiki wraps the pre in a div — fix its bg/radius */
     .prose .astro-code,
     .prose .shiki {
       border-radius: 10px;
@@ -352,12 +301,35 @@ function formatDate(d: Date) {
       font-size: 0.875rem;
       overflow-x: auto;
     }
+
     .prose .astro-code pre,
     .prose .shiki pre {
       border: none;
       border-radius: 0;
       margin: 0;
       padding: 1.25rem 1.5rem;
+    }
+
+    /* ── Copy Button ── */
+    .copy-btn {
+      position: absolute;
+      top: 0.6rem;
+      right: 0.7rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: #4b5563;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px;
+      padding: 0.2rem 0.55rem;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+      letter-spacing: 0.04em;
+    }
+    .copy-btn:hover {
+      color: #a78bfa;
+      border-color: rgba(139,92,246,0.4);
     }
 
     /* ── Blockquote redesign ── */
@@ -482,12 +454,6 @@ function formatDate(d: Date) {
         border-left: none;
         border-right: none;
       }
-      .code-block-wrapper {
-        margin: 1rem -1.25rem 1.25rem;
-        border-radius: 0;
-        border-left: none;
-        border-right: none;
-      }
       .prose .astro-code,
       .prose .shiki {
         margin: 1rem -1.25rem 1.25rem;
@@ -599,109 +565,31 @@ function formatDate(d: Date) {
   window.addEventListener('scroll', updateBtt, { passive: true });
   btt?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-  // ── Code blocks: inject header with language + copy button ──
-  const LANG_MAP: Record<string, string> = {
-    js: 'JavaScript', javascript: 'JavaScript',
-    ts: 'TypeScript', typescript: 'TypeScript',
-    jsx: 'JSX', tsx: 'TSX',
-    py: 'Python', python: 'Python',
-    go: 'Go', rs: 'Rust', rust: 'Rust',
-    sh: 'Shell', bash: 'Bash', shell: 'Shell',
-    sql: 'SQL', json: 'JSON', yaml: 'YAML', toml: 'TOML',
-    html: 'HTML', css: 'CSS', scss: 'SCSS',
-    md: 'Markdown', mdx: 'MDX',
-    java: 'Java', kotlin: 'Kotlin', swift: 'Swift',
-    cpp: 'C++', c: 'C', cs: 'C#',
-    astro: 'Astro', vue: 'Vue', svelte: 'Svelte',
-  };
-
   document.querySelectorAll('.prose pre').forEach(pre => {
     const code = pre.querySelector('code');
     if (!code) return;
-
-    // Detect language from class
-    const cls = [...code.classList].find(c => c.startsWith('language-'));
-    const langKey = cls ? cls.replace('language-', '') : '';
-    const langLabel = LANG_MAP[langKey] || langKey.toUpperCase() || 'CODE';
-
-    // Build header
-    const header = document.createElement('div');
-    header.className = 'code-block-header';
-
-    const langSpan = document.createElement('span');
-    langSpan.className = 'code-lang';
-    langSpan.textContent = langLabel;
-
     const btn = document.createElement('button');
     btn.className = 'copy-btn';
     btn.textContent = 'copy';
+    pre.appendChild(btn);
     btn.addEventListener('click', () => {
-      navigator.clipboard.writeText(code.innerText).then(() => {
-        btn.textContent = 'copied!';
-        setTimeout(() => btn.textContent = 'copy', 1500);
-      });
+      navigator.clipboard.writeText(code.innerText);
+      btn.textContent = 'copied!';
+      setTimeout(() => btn.textContent = 'copy', 1500);
     });
-
-    header.appendChild(langSpan);
-    header.appendChild(btn);
-
-    // Wrap pre in code-block-wrapper
-    const wrapper = document.createElement('div');
-    wrapper.className = 'code-block-wrapper';
-    pre.parentNode?.insertBefore(wrapper, pre);
-    wrapper.appendChild(header);
-    wrapper.appendChild(pre);
-  });
-
-  // Also handle Shiki/astro-code divs
-  document.querySelectorAll('.prose .astro-code, .prose .shiki').forEach(block => {
-    if (block.closest('.code-block-wrapper')) return; // already wrapped
-    const pre = block.querySelector('pre');
-    const code = block.querySelector('code');
-    if (!pre || !code) return;
-
-    const cls = [...code.classList].find(c => c.startsWith('language-'));
-    const langKey = cls ? cls.replace('language-', '') : '';
-    const langLabel = LANG_MAP[langKey] || langKey.toUpperCase() || 'CODE';
-
-    const header = document.createElement('div');
-    header.className = 'code-block-header';
-
-    const langSpan = document.createElement('span');
-    langSpan.className = 'code-lang';
-    langSpan.textContent = langLabel;
-
-    const btn = document.createElement('button');
-    btn.className = 'copy-btn';
-    btn.textContent = 'copy';
-    btn.addEventListener('click', () => {
-      navigator.clipboard.writeText(code.innerText).then(() => {
-        btn.textContent = 'copied!';
-        setTimeout(() => btn.textContent = 'copy', 1500);
-      });
-    });
-
-    header.appendChild(langSpan);
-    header.appendChild(btn);
-
-    const wrapper = document.createElement('div');
-    wrapper.className = 'code-block-wrapper';
-    block.parentNode?.insertBefore(wrapper, block);
-    wrapper.appendChild(header);
-    wrapper.appendChild(block);
   });
 
   // ── TOC Active Heading Highlight ──
   const tocLinks = document.querySelectorAll('.toc a[data-slug]');
   if (tocLinks.length > 0) {
-    const headingEls = document.querySelectorAll('.prose h2, .prose h3');
+    const headingEls = Array.from(document.querySelectorAll('.prose h2, .prose h3'));
+    
+    let activeId = '';
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          const id = entry.target.getAttribute('id');
-          tocLinks.forEach(link => {
-            link.classList.toggle('active', link.getAttribute('data-slug') === id);
-          });
+          activeId = entry.target.getAttribute('id') || '';
+          updateToc();
         }
       });
     }, {
@@ -709,6 +597,24 @@ function formatDate(d: Date) {
       threshold: 0,
     });
     headingEls.forEach(el => observer.observe(el));
+
+    function updateToc() {
+      // If user scrolled to the absolute bottom, activate the last heading
+      const isAtBottom = Math.ceil(window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 50;
+      let targetId = activeId;
+      
+      if (isAtBottom && headingEls.length > 0) {
+        targetId = headingEls[headingEls.length - 1].getAttribute('id') || '';
+      }
+
+      tocLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('data-slug') === targetId);
+      });
+    }
+
+    window.addEventListener('scroll', updateToc, { passive: true });
+    // Run once on load to set initial state
+    updateToc();
   }
 </script>
 </BaseLayout>
