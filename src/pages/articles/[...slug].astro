@@ -17,7 +17,8 @@ export async function getStaticPaths() {
 }
 
 const { article, prevArticle, nextArticle } = Astro.props;
-const { Content } = await article.render();
+const { Content, headings } = await article.render();
+const tocHeadings = headings.filter(h => h.depth === 2 || h.depth === 3);
 
 const categoryMeta = {
   'system-design': { label: 'Thiết kế hệ thống', badge: 'badge-sd', dot: 'dot-sd', href: '/system-design' },
@@ -275,6 +276,73 @@ function formatDate(d: Date) {
       }
     }
 
+    /* ── Table of Contents ── */
+    .toc {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-left: 2px solid #8b5cf6;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 2rem;
+      font-size: 0.82rem;
+    }
+
+    .toc-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #8b5cf6;
+      margin-bottom: 0.6rem;
+    }
+
+    .toc ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .toc li a {
+      color: #6b7280;
+      text-decoration: none;
+      line-height: 1.5;
+      transition: color 0.12s;
+      display: block;
+    }
+
+    .toc li a:hover { color: #a78bfa; }
+
+    .toc li.toc-h3 { padding-left: 1rem; }
+    .toc li.toc-h3 a { font-size: 0.78rem; }
+
+    /* ── Copy Button ── */
+    .prose pre { position: relative; }
+
+    .copy-btn {
+      position: absolute;
+      top: 0.6rem;
+      right: 0.7rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: #4b5563;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px;
+      padding: 0.2rem 0.55rem;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+      letter-spacing: 0.04em;
+    }
+
+    .copy-btn:hover {
+      color: #a78bfa;
+      border-color: rgba(139,92,246,0.4);
+    }
+
     /* ── Pagination ── */
     .article-nav {
       display: flex;
@@ -366,6 +434,19 @@ function formatDate(d: Date) {
 
   <hr class="divider" />
 
+  {tocHeadings.length >= 3 && (
+    <nav class="toc">
+      <p class="toc-title">Nội dung</p>
+      <ul>
+        {tocHeadings.map(h => (
+          <li class={h.depth === 3 ? 'toc-h3' : ''}>
+            <a href={`#${h.slug}`}>{h.text}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )}
+
   <div class="prose">
     <Content />
   </div>
@@ -385,4 +466,20 @@ function formatDate(d: Date) {
       </a>
     ) : <div></div>}
   </div>
+
+<script>
+  document.querySelectorAll('.prose pre').forEach(pre => {
+    const code = pre.querySelector('code');
+    if (!code) return;
+    const btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.textContent = 'copy';
+    pre.appendChild(btn);
+    btn.addEventListener('click', () => {
+      navigator.clipboard.writeText(code.innerText);
+      btn.textContent = 'copied!';
+      setTimeout(() => btn.textContent = 'copy', 1500);
+    });
+  });
+</script>
 </BaseLayout>
