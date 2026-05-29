@@ -148,15 +148,10 @@ public void transferWithRetry(UUID fromId, UUID toId, BigDecimal amount) {
         try {
             transfer(fromId, toId, amount);
             return;
-        } catch (DataIntegrityViolationException e) {
-            if (e.getCause() instanceof SQLException &&
-                ((SQLException) e.getCause()).getErrorCode() == 1213) {
-                // 1213 = MySQL deadlock error code
-                if (i == maxRetries - 1) throw e;
-                Thread.sleep(100 * (long) Math.pow(2, i)); // Exponential backoff
-            } else {
-                throw e;
-            }
+        } catch (CannotAcquireLockException e) {
+            // Spring wrap MySQL deadlock (error 1213) thành CannotAcquireLockException
+            if (i == maxRetries - 1) throw e;
+            Thread.sleep(100 * (long) Math.pow(2, i)); // Exponential backoff
         }
     }
 }
@@ -178,17 +173,12 @@ TRANSACTION 101, ACTIVE 0 sec, process no 1235, OS thread id 5679
 ...
 ```
 
-Hoặc từ application, exception:
+Hoặc từ application, Spring throw `CannotAcquireLockException` (subclass của `DataAccessException`) khi deadlock xảy ra:
 
 ```java
-catch (DataIntegrityViolationException e) {
-    Throwable cause = e.getCause();
-    if (cause instanceof SQLException) {
-        SQLException se = (SQLException) cause;
-        if (se.getErrorCode() == 1213) {
-            // Deadlock
-        }
-    }
+catch (CannotAcquireLockException e) {
+    // MySQL deadlock — retry hoặc thông báo user
+    log.warn("Deadlock detected, consider retrying: {}", e.getMessage());
 }
 ```
 
@@ -203,7 +193,7 @@ public void bookAppointmentWithPayment(UUID scheduleId, UUID patientId) {
     if (scheduleId.compareTo(patientId) > 0) {
         UUID temp = scheduleId;
         scheduleId = patientId;
-        patientId = scheduleId;
+        patientId = temp;
     }
     
     DoctorSchedule schedule = scheduleRepo.findById(scheduleId).lock();

@@ -34,14 +34,14 @@ Trước hết, cái gì là "sai" khi concurrent transactions chạy?
 - Basically không có isolation
 - Ai dùng cái này trong production? Không ai. Skip.
 
-**READ COMMITTED** (Spring Boot default)
+**READ COMMITTED**
 - Chặn: Dirty Read
 - Cho phép: Non-repeatable Read, Phantom Read
 - Cách hoạt động: Transaction A đọc row vào lúc T1, transaction B update và commit vào T2, transaction A đọc lại row vào lúc T3, thấy version mới (do MVCC). Đó là "non-repeatable read".
 - Khi dùng: Hệ thống không care row bị change giữa lần đọc. Ví dụ read user profile rồi display, được thay đổi giữa lúc request A thấy và request B thấy → okay.
 - Vấn đề: Không safe cho transaction mà depend vào "state không thay đổi".
 
-**REPEATABLE READ** (InnoDB default)
+**REPEATABLE READ** (MySQL InnoDB default)
 - Chặn: Dirty Read, Non-repeatable Read
 - Cho phép: Phantom Read
 - Cách hoạt động: Transaction A start, snapshot của database ở thời điểm A start được capture. Mỗi query A làm đều thấy snapshot này, dù B update rows. UPDATE thành UPDATE khác = no-no.
@@ -117,7 +117,7 @@ REPEATABLE READ ensure B thấy consistent snapshot, nhưng optimistic lock catc
 
 ## Cách set isolation level trong Spring Boot
 
-Default là READ COMMITTED. Để change:
+MySQL InnoDB default là **REPEATABLE READ**. Spring Boot không tự override database default — `@Transactional` không chỉ định isolation sẽ dùng level của database. Để explicit:
 
 ```java
 @Transactional(isolation = Isolation.REPEATABLE_READ)
@@ -126,13 +126,13 @@ public void bookAppointment(UUID scheduleId) {
 }
 ```
 
-Hoặc config global:
+Hoặc config global (ví dụ override toàn bộ app sang READ COMMITTED để tăng performance):
 
 ```properties
 spring.jpa.properties.hibernate.connection.isolation=2
 # 1 = READ UNCOMMITTED
 # 2 = READ COMMITTED
-# 4 = REPEATABLE READ
+# 4 = REPEATABLE READ  ← MySQL InnoDB default
 # 8 = SERIALIZABLE
 ```
 
@@ -140,7 +140,7 @@ spring.jpa.properties.hibernate.connection.isolation=2
 
 ## Cách chọn isolation level cho mỗi transaction
 
-**READ COMMITTED (default):**
+**READ COMMITTED:**
 - Hầu hết read-only queries
 - Update mà không dependent on "state consistent"
 - Ví dụ: Update user last_login_at
@@ -175,7 +175,7 @@ Transaction A query lại cùng condition, thấy 6 rows.
 
 ## Takeaway
 
-Default READ COMMITTED là okay cho hầu hết queries. Lúc cần consistent snapshot (transaction multi-step), jump lên REPEATABLE READ. Combine với optimistic lock (version column) để catch concurrent writes. SERIALIZABLE hiếm cần.
+MySQL InnoDB default là REPEATABLE READ — đây là lựa chọn an toàn cho hầu hết transaction. Nhiều app config về READ COMMITTED để giảm lock contention, nhưng cần thêm optimistic lock khi cần consistent snapshot. Combine với version column để catch concurrent writes. SERIALIZABLE hiếm cần — thường có thể đạt cùng kết quả với pessimistic lock explicit.
 
 ---
 
