@@ -205,6 +205,69 @@ for (const article of articles) {
       vertical-align: middle;
     }
 
+    /* ── Search ── */
+    .search-wrap {
+      position: relative;
+      margin-bottom: 1.75rem;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #4b5563;
+      pointer-events: none;
+      width: 14px;
+      height: 14px;
+    }
+
+    #search {
+      width: 100%;
+      box-sizing: border-box;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 0.6rem 1rem 0.6rem 2.4rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      color: #e2e8f0;
+      outline: none;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    #search::placeholder { color: #374151; }
+
+    #search:focus {
+      border-color: rgba(139,92,246,0.4);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .search-clear {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #4b5563;
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 1;
+      padding: 0;
+      display: none;
+      transition: color 0.15s;
+    }
+    .search-clear:hover { color: #a78bfa; }
+
+    .no-results {
+      text-align: center;
+      color: #4b5563;
+      font-size: 0.82rem;
+      padding: 2rem 0;
+      display: none;
+    }
+
     /* ── Responsive Mobile ── */
     @media (max-width: 600px) {
       .hero {
@@ -247,6 +310,16 @@ for (const article of articles) {
     <p>// system design · architecture · programming</p>
   </div>
 
+  <div class="search-wrap">
+    <svg class="search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="6.5" cy="6.5" r="4" />
+      <path d="M11 11l3 3" />
+    </svg>
+    <input id="search" type="text" placeholder="Tìm bài viết..." autocomplete="off" spellcheck="false" />
+    <button class="search-clear" id="search-clear" aria-label="Xoá tìm kiếm">×</button>
+  </div>
+  <p class="no-results" id="no-results">Không tìm thấy bài viết nào.</p>
+
   {Array.from(seriesMap.entries()).map(([series, items]) => {
     const partMatch = series.match(/^Phần (\d+):\s*(.*)/);
     const partNum  = partMatch ? partMatch[1].padStart(2, '0') : '??';
@@ -286,4 +359,47 @@ for (const article of articles) {
       </details>
     );
   })}
+
+<script>
+  const input = document.getElementById('search') as HTMLInputElement;
+  const clearBtn = document.getElementById('search-clear') as HTMLButtonElement;
+  const noResults = document.getElementById('no-results') as HTMLElement;
+  const detailsEls = document.querySelectorAll<HTMLDetailsElement>('details');
+
+  input.addEventListener('input', filter);
+  clearBtn.addEventListener('click', () => {
+    input.value = '';
+    filter();
+    input.focus();
+  });
+
+  function filter() {
+    const q = input.value.trim().toLowerCase();
+    clearBtn.style.display = q ? 'block' : 'none';
+
+    let totalVisible = 0;
+
+    detailsEls.forEach(detail => {
+      const cards = detail.querySelectorAll<HTMLElement>('.article-card');
+      let visibleInGroup = 0;
+
+      cards.forEach(card => {
+        const title = card.querySelector('.article-title')?.textContent?.toLowerCase() ?? '';
+        const match = !q || title.includes(q);
+        card.style.display = match ? '' : 'none';
+        if (match) visibleInGroup++;
+      });
+
+      // Show/hide group and auto-open when searching
+      const hidden = visibleInGroup === 0;
+      detail.style.display = hidden ? 'none' : '';
+      if (q && !hidden) detail.open = true;
+      if (!q) detail.open = false;
+
+      totalVisible += visibleInGroup;
+    });
+
+    noResults.style.display = totalVisible === 0 && q ? 'block' : 'none';
+  }
+</script>
 </BaseLayout>
