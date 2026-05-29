@@ -1,0 +1,16 @@
+{
+  "name": "techcraft",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev --host",
+    "build": "astro build",
+    "preview": "astro preview",
+    "import": "node scripts/import-article.mjs",
+    "admin": "node scripts/admin.mjs"
+  },
+  "devDependencies": {
+    "astro": "^5.0.0",
+    "@astrojs/vercel": "^8.0.0"
+  }
+}
