@@ -1,5 +1,5 @@
 ---
-title: "Behind the feature — nút "Book Appointment" ẩn chứa bao nhiêu hệ thống phía sau"
+title: 'Behind the feature — nút "Book Appointment" ẩn chứa bao nhiêu hệ thống phía sau'
 description: "Từ góc nhìn của bệnh nhân, đặt lịch khám rất đơn giản: chọn bác sĩ, chọn ngày, chọn giờ, bấm xác nhận. Bốn bước. Mười lăm giây."
 category: system-design
 pubDate: 2024-04-08
