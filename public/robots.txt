@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mio-craft.vercel.app/sitemap-index.xml
