@@ -2,7 +2,7 @@
 
 A Vietnamese programming knowledge base covering system design, software architecture, and backend development — written for junior developers and final-year students.
 
-🔗 **[miocraft.vercel.app](https://miocraft.vercel.app)**
+🔗 **[mio-craft.vercel.app](https://mio-craft.vercel.app)**
 
 ## Stack
 
