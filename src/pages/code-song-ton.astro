@@ -71,6 +71,9 @@ for (const article of articles) {
       line-height: 1.25;
     }
 
+    .hero-desc { color: #6b7280; font-size: 0.85rem; line-height: 1.7; margin-top: 0.5rem; max-width: 560px; }
+    .hero-meta { color: #374151; font-size: 0.75rem; margin-top: 0.4rem; }
+
     .hero p {
       color: var(--muted);
       font-size: 0.82rem;
@@ -340,7 +343,8 @@ for (const article of articles) {
   <div class="hero" data-total={articles.length}>
     <p class="hero-eyebrow">MioCraft / Code Sống Sót</p>
     <h1>Từ project sinh viên đến production-ready</h1>
-    <p>{articles.length} bài · {seriesMap.size} phần · system design · architecture · programming</p>
+    <p class="hero-desc">Viết cho junior dev và sinh viên năm cuối — những thứ trường không dạy nhưng production sẽ hỏi. Ví dụ thực tế từ một hệ thống quản lý bệnh viện, Java 17 + Spring Boot 3.</p>
+    <p class="hero-meta">{articles.length} bài · {seriesMap.size} phần</p>
     <p class="read-counter" id="read-counter"></p>
   </div>
 
