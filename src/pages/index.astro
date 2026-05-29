@@ -1,0 +1,255 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const articles = (await getCollection('articles')).sort(
+  (a, b) => a.data.pubDate.getTime() - b.data.pubDate.getTime()
+);
+
+const categoryMeta = {
+  'system-design': { label: 'system-design', badge: 'badge-sd', dot: 'dot-sd' },
+  'architecture':  { label: 'architecture',  badge: 'badge-arch', dot: 'dot-arch' },
+  'programming':   { label: 'programming',   badge: 'badge-prog', dot: 'dot-prog' },
+} as const;
+
+const seriesMap = new Map<string, typeof articles>();
+for (const article of articles) {
+  const s = article.data.series ?? 'Khác';
+  if (!seriesMap.has(s)) seriesMap.set(s, []);
+  seriesMap.get(s)!.push(article);
+}
+---
+
+<BaseLayout title="Trang chủ">
+  <style>
+    /* Hero */
+    .hero {
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 18px;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 1px;
+    }
+
+    .hero h1 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: #f1f5f9;
+      margin-bottom: 0.4rem;
+      line-height: 1.25;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.6;
+    }
+
+    /* Accordion */
+    details {
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.015);
+      margin-bottom: 0.6rem;
+      overflow: hidden;
+      transition: background 0.15s;
+    }
+
+    details[open] {
+      background: rgba(255,255,255,0.025);
+    }
+
+    details[open] > summary .chevron {
+      transform: rotate(90deg);
+    }
+
+    summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 0.85rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      user-select: none;
+    }
+
+    summary::-webkit-details-marker { display: none; }
+
+    summary:hover { background: rgba(255,255,255,0.03); }
+
+    .chevron {
+      color: var(--muted);
+      font-size: 0.7rem;
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+      margin-left: auto;
+    }
+
+    .part-badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+      background: rgba(139,92,246,0.12);
+      border: 1px solid rgba(139,92,246,0.2);
+      border-radius: 4px;
+      padding: 0.15rem 0.45rem;
+      flex-shrink: 0;
+    }
+
+    .part-name {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #e2e8f0;
+      letter-spacing: -0.02em;
+    }
+
+    .part-count {
+      font-size: 0.72rem;
+      color: #4b5563;
+      margin-left: auto;
+      margin-right: 0.5rem;
+    }
+
+    /* Article list inside accordion */
+    .article-list {
+      padding: 0 0.5rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .article-card {
+      display: flex;
+      gap: 1rem;
+      padding: 0.75rem 0.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.12s;
+      border-radius: 5px;
+      align-items: flex-start;
+    }
+
+    .article-card:last-child { border-bottom: none; }
+
+    .article-card:hover {
+      background: rgba(255,255,255,0.04);
+    }
+
+    .article-card:hover .article-title { color: #a78bfa; }
+
+    .article-num {
+      flex-shrink: 0;
+      width: 28px;
+      text-align: right;
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: #374151;
+      margin-top: 3px;
+      letter-spacing: 0.02em;
+    }
+
+    .article-body { flex: 1; min-width: 0; }
+
+    .article-title {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      line-height: 1.45;
+      margin-bottom: 0.2rem;
+      transition: color 0.12s;
+    }
+
+    .article-desc {
+      color: #4b5563;
+      font-size: 0.78rem;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .cat-dot {
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      margin-right: 0.35rem;
+      flex-shrink: 0;
+      vertical-align: middle;
+      margin-top: -1px;
+    }
+
+    .cat-label {
+      font-size: 0.68rem;
+      color: #4b5563;
+      vertical-align: middle;
+    }
+  </style>
+
+  <div class="hero">
+    <p class="hero-eyebrow">TechCraft / knowledge-base</p>
+    <h1>97 bài · 11 phần</h1>
+    <p>// system design · architecture · programming</p>
+  </div>
+
+  {Array.from(seriesMap.entries()).map(([series, items]) => {
+    const partMatch = series.match(/^Phần (\d+):\s*(.*)/);
+    const partNum  = partMatch ? partMatch[1].padStart(2, '0') : '??';
+    const partName = partMatch ? partMatch[2] : series;
+    return (
+      <details>
+        <summary>
+          <span class="part-badge">P{partNum}</span>
+          <span class="part-name">{partName}</span>
+          <span class="part-count">{items.length} bài</span>
+          <span class="chevron">▶</span>
+        </summary>
+        <div class="article-list">
+          {items.map((article) => {
+            const meta = categoryMeta[article.data.category];
+            const numMatch = article.slug.match(/^bai-(\d+)-/);
+            const num = numMatch ? numMatch[1] : '??';
+            const dotColor = article.data.category === 'system-design'
+              ? '#60a5fa'
+              : article.data.category === 'architecture'
+              ? '#34d399'
+              : '#f472b6';
+            return (
+              <a href={`/articles/${article.slug}`} class="article-card">
+                <span class="article-num">{num}</span>
+                <div class="article-body">
+                  <div class="article-title">{article.data.title}</div>
+                  <div>
+                    <span class="cat-dot" style={`background: ${dotColor}`}></span>
+                    <span class="cat-label">{meta.label}</span>
+                  </div>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      </details>
+    );
+  })}
+</BaseLayout>
