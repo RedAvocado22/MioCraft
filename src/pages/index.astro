@@ -205,6 +205,41 @@ for (const article of articles) {
       color: #4b5563;
       vertical-align: middle;
     }
+
+    /* ── Responsive Mobile ── */
+    @media (max-width: 600px) {
+      .hero {
+        margin-bottom: 2rem;
+      }
+      
+      .hero h1 {
+        font-size: 1.45rem;
+      }
+      
+      summary {
+        padding: 0.75rem 0.85rem;
+        gap: 0.5rem;
+      }
+      
+      .part-name {
+        font-size: 0.85rem;
+      }
+      
+      .part-count {
+        font-size: 0.68rem;
+        margin-right: 0.25rem;
+      }
+      
+      .article-card {
+        gap: 0.75rem;
+        padding: 0.6rem 0.5rem;
+      }
+      
+      .article-title {
+        font-size: 0.85rem;
+        line-height: 1.4;
+      }
+    }
   </style>
 
   <div class="hero">

@@ -136,6 +136,26 @@ function formatDate(d: Date) {
       color: #4b5563;
       font-size: 0.9rem;
     }
+
+    /* ── Responsive Mobile ── */
+    @media (max-width: 600px) {
+      .page-header {
+        margin-bottom: 2rem;
+      }
+      .page-header h1 {
+        font-size: 1.35rem;
+      }
+      .article-card {
+        gap: 1rem;
+        padding: 1rem 0;
+      }
+      .article-title {
+        font-size: 0.95rem;
+      }
+      .article-desc {
+        font-size: 0.85rem;
+      }
+    }
   </style>
 
   <a href="/" class="back">

@@ -160,6 +160,46 @@ const currentPath = Astro.url.pathname;
         border-radius: 4px;
         font-family: 'JetBrains Mono', 'Fira Code', monospace;
       }
+
+      /* ── Responsive Mobile (iPhone 12 Pro / 390px) ── */
+      @media (max-width: 600px) {
+        nav {
+          padding: 0.5rem 1rem;
+          height: auto;
+          flex-wrap: wrap;
+          gap: 0.4rem;
+        }
+        
+        .nav-logo {
+          margin: 0;
+          width: 100%;
+          text-align: center;
+          padding: 0.25rem 0;
+        }
+        
+        .nav-links {
+          width: 100%;
+          justify-content: flex-start;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none; /* Firefox */
+          padding-bottom: 0.25rem;
+        }
+        
+        .nav-links::-webkit-scrollbar { 
+          display: none; /* Chrome/Safari */
+        }
+        
+        .nav-links a {
+          white-space: nowrap;
+          font-size: 0.8rem;
+          padding: 0.35rem 0.6rem;
+        }
+        
+        main {
+          padding: 1.5rem 1.25rem 3rem;
+        }
+      }
     </style>
   </head>
   <body>
