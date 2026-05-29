@@ -1,0 +1,190 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const allArticles = (await getCollection('articles')).sort(
+  (a, b) => a.data.pubDate.getTime() - b.data.pubDate.getTime()
+);
+
+const articles = allArticles.filter(a =>
+  a.data.series?.includes('Behind the Tech')
+);
+
+const categoryMeta = {
+  'system-design': { label: 'system-design', badge: 'badge-sd', dot: 'dot-sd' },
+  'architecture':  { label: 'architecture',  badge: 'badge-arch', dot: 'dot-arch' },
+  'programming':   { label: 'programming',   badge: 'badge-prog', dot: 'dot-prog' },
+} as const;
+
+const seriesMap = new Map<string, typeof articles>();
+for (const article of articles) {
+  const s = article.data.series ?? 'Khác';
+  if (!seriesMap.has(s)) seriesMap.set(s, []);
+  seriesMap.get(s)!.push(article);
+}
+---
+
+<BaseLayout title="Behind the Tech" description="Mày dùng nó hàng ngày. Nhưng mày có biết nó làm thế nào không?">
+  <style>
+    .hero { margin-bottom: 2.5rem; }
+    .hero-eyebrow {
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 0.6rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .hero-eyebrow::before {
+      content: ''; display: inline-block; width: 18px; height: 2px;
+      background: var(--accent); border-radius: 1px;
+    }
+    .hero h1 {
+      font-size: 1.6rem; font-weight: 800; letter-spacing: -0.04em;
+      color: #f1f5f9; margin-bottom: 0.4rem; line-height: 1.25;
+    }
+    .hero p { color: var(--muted); font-size: 0.82rem; line-height: 1.6; }
+
+    /* Empty state */
+    .coming-soon {
+      margin-top: 3rem;
+      text-align: center;
+      padding: 3rem 1rem;
+      border: 1px dashed rgba(255,255,255,0.08);
+      border-radius: 12px;
+    }
+    .coming-soon-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      opacity: 0.4;
+    }
+    .coming-soon h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #e2e8f0;
+      margin-bottom: 0.5rem;
+    }
+    .coming-soon p {
+      color: #4b5563;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    /* Accordion — same as code-song-ton */
+    details {
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.015);
+      margin-bottom: 0.6rem;
+      overflow: hidden;
+    }
+    details[open] { background: rgba(255,255,255,0.025); }
+    details[open] > summary .chevron { transform: rotate(90deg); }
+    summary {
+      list-style: none; cursor: pointer; padding: 0.85rem 1rem;
+      display: flex; align-items: center; gap: 0.75rem; user-select: none;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary:hover { background: rgba(255,255,255,0.03); }
+    .chevron { color: var(--muted); font-size: 0.7rem; transition: transform 0.2s ease; flex-shrink: 0; }
+    .part-badge {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em;
+      color: var(--accent); background: rgba(139,92,246,0.12);
+      border: 1px solid rgba(139,92,246,0.2); border-radius: 4px;
+      padding: 0.15rem 0.45rem; flex-shrink: 0;
+    }
+    .part-name { font-size: 0.9rem; font-weight: 700; color: #e2e8f0; letter-spacing: -0.02em; }
+    .part-count { font-size: 0.72rem; color: #4b5563; margin-left: auto; margin-right: 0.5rem; }
+    .article-list { padding: 0 0.5rem 0.75rem; display: flex; flex-direction: column; gap: 0; }
+    .article-card {
+      display: flex; gap: 1rem; padding: 0.75rem 0.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      text-decoration: none; color: inherit; transition: background 0.12s;
+      border-radius: 5px; align-items: flex-start;
+    }
+    .article-card:last-child { border-bottom: none; }
+    .article-card:hover { background: rgba(255,255,255,0.04); }
+    .article-card:hover .article-title { color: #a78bfa; }
+    .article-num {
+      flex-shrink: 0; width: 28px; text-align: right;
+      font-size: 0.68rem; font-weight: 600; color: #374151; margin-top: 3px;
+    }
+    .article-body { flex: 1; min-width: 0; }
+    .article-title { font-size: 0.88rem; font-weight: 600; color: #cbd5e1; line-height: 1.45; margin-bottom: 0.2rem; transition: color 0.12s; }
+    .article-desc { color: #4b5563; font-size: 0.78rem; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+    .cat-dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; margin-right: 0.35rem; vertical-align: middle; }
+    .cat-label { font-size: 0.68rem; color: #4b5563; vertical-align: middle; }
+    .read-check { display: none; font-size: 0.65rem; font-weight: 700; color: #34d399; flex-shrink: 0; align-self: center; margin-left: auto; }
+    .article-card.read .read-check { display: block; }
+    .article-card.read .article-title { color: #6b7280; }
+    .read-counter { display: none; font-size: 0.78rem; color: #34d399; margin-top: 0.25rem; }
+  </style>
+
+  <div class="hero" data-total={articles.length}>
+    <p class="hero-eyebrow">MioCraft / Behind the Tech</p>
+    <h1>Mày dùng nó hàng ngày.</h1>
+    <p>Nhưng mày có biết nó làm thế nào không? · {articles.length} bài</p>
+    <p class="read-counter" id="read-counter"></p>
+  </div>
+
+  {articles.length === 0 ? (
+    <div class="coming-soon">
+      <div class="coming-soon-icon">⚙</div>
+      <h2>Đang viết</h2>
+      <p>Series đang được chuẩn bị. Bài đầu tiên sẽ giải thích tại sao xe Grab trên map chạy mượt dù không gọi API mỗi giây.</p>
+    </div>
+  ) : (
+    Array.from(seriesMap.entries()).map(([series, items]) => {
+      const numMatch = series.match(/Behind the Tech[:\s—]+(.+)/);
+      const partName = numMatch ? numMatch[1] : series;
+      const idx = Array.from(seriesMap.keys()).indexOf(series);
+      const partNum = String(idx + 1).padStart(2, '0');
+      return (
+        <details>
+          <summary>
+            <span class="part-badge">BTT-{partNum}</span>
+            <span class="part-name">{partName}</span>
+            <span class="part-count">{items.length} bài</span>
+            <span class="chevron">▶</span>
+          </summary>
+          <div class="article-list">
+            {items.map((article) => {
+              const meta = categoryMeta[article.data.category];
+              const numMatch = article.slug.match(/^btt-(\d+)-/) ?? article.slug.match(/^bai-(\d+)-/);
+              const num = numMatch ? numMatch[1] : '??';
+              const dotColor = article.data.category === 'system-design' ? '#60a5fa'
+                : article.data.category === 'architecture' ? '#34d399' : '#f472b6';
+              return (
+                <a href={`/articles/${article.slug}`} class="article-card" data-slug={article.slug}>
+                  <span class="article-num">{num}</span>
+                  <div class="article-body">
+                    <div class="article-title">{article.data.title}</div>
+                    <div>
+                      <span class="cat-dot" style={`background: ${dotColor}`}></span>
+                      <span class="cat-label">{meta.label}</span>
+                    </div>
+                  </div>
+                  <span class="read-check" aria-hidden="true">✓</span>
+                </a>
+              );
+            })}
+          </div>
+        </details>
+      );
+    })
+  )}
+
+<script>
+  const readSlugs = new Set(JSON.parse(localStorage.getItem('mio_read') || '[]'));
+  if (readSlugs.size > 0) {
+    const total = parseInt(document.querySelector<HTMLElement>('.hero')?.dataset?.total || '0');
+    const counter = document.getElementById('read-counter');
+    if (counter && total > 0) {
+      counter.textContent = `✓ Đã đọc: ${readSlugs.size} / ${total} bài`;
+      counter.style.display = 'block';
+    }
+    document.querySelectorAll<HTMLElement>('.article-card[data-slug]').forEach(card => {
+      if (readSlugs.has(card.dataset.slug ?? '')) card.classList.add('read');
+    });
+  }
+</script>
+</BaseLayout>
