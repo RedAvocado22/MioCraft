@@ -25,6 +25,16 @@ for (const article of articles) {
 ---
 
 <BaseLayout title="Behind the Tech" description="Mày dùng nó hàng ngày. Nhưng mày có biết nó làm thế nào không?">
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "MioCraft — Behind the Tech",
+      "url": new URL('/behind-the-tech', Astro.site).toString(),
+      "description": "Internals của những thứ mày dùng hàng ngày — từ Grab map đến Google Search đến HTTPS",
+      "inLanguage": "vi"
+    })} />
+  </Fragment>
   <style>
     .hero { margin-bottom: 2.5rem; }
     .hero-eyebrow {
