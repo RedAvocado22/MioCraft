@@ -21,6 +21,16 @@ for (const article of articles) {
 ---
 
 <BaseLayout title="Trang chủ">
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "MioCraft",
+      "url": Astro.site?.toString(),
+      "description": "Kiến thức lập trình & thiết kế hệ thống tiếng Việt — series Code Sống Sót",
+      "inLanguage": "vi"
+    })} />
+  </Fragment>
   <style>
     /* Hero */
     .hero {

@@ -10,7 +10,10 @@
     "admin": "node scripts/admin.mjs"
   },
   "devDependencies": {
-    "astro": "^5.0.0",
-    "@astrojs/vercel": "^8.0.0"
+    "@astrojs/vercel": "^8.0.0",
+    "astro": "^5.0.0"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3"
   }
 }

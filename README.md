@@ -1,60 +1,81 @@
 # MioCraft
 
-A comprehensive knowledge base and blog built with [Astro](https://astro.build/). This project serves as a structured repository for technical articles, focusing on System Design, Software Architecture, and Programming.
+**Code Sống Sót — Từ Project Sinh Viên Đến Production-Ready**
 
-## 🚀 Features
+Kiến thức lập trình tiếng Việt viết cho junior dev và sinh viên năm cuối — không phải documentation page, mà là anh senior kể chuyện cho junior nghe. 142 bài, 12 phần, dùng thực tế từ một hệ thống quản lý bệnh viện (Java 17 + Spring Boot 3 + MySQL + Redis).
 
-- **Blazing Fast**: Built with Astro for optimal performance and static site generation.
-- **Structured Content**: Articles are organized into clear, sequential parts (series) and categorized by topics.
-- **Topics Covered**:
-  - 🖥️ System Design
-  - 🏗️ Architecture
-  - 💻 Programming
-- **Modern UI**: Clean, dark-themed, and responsive interface with interactive accordions for easy navigation.
-- **Content Collections**: Leverages Astro's Content Collections for type-safe markdown/MDX rendering.
+🔗 **[miocraft.vercel.app](https://techcraft.vercel.app)**
 
-## 🛠️ Tech Stack
+---
 
-- **Framework**: [Astro](https://astro.build/)
-- **Deployment**: [Vercel](https://vercel.com/) (configured with `@astrojs/vercel`)
-- **Styling**: Vanilla CSS with CSS Variables
+## Nội dung
 
-## 💻 Getting Started
+| Phần | Chủ đề |
+|------|--------|
+| Phần 1 | Tư duy lập trình |
+| Phần 2 | Clean Code |
+| Phần 3 | Kiến trúc phần mềm |
+| Phần 4 | SOLID |
+| Phần 5 | Design Patterns |
+| Phần 6 | Database |
+| Phần 7 | Backend & Hệ thống |
+| Phần 8 | System Design |
+| Phần 9 | Không phải lúc nào cũng đúng |
+| Phần 10 | Case Studies thực tế |
+| Phần 11 | Tư duy sản phẩm |
+| Phần 12 | Production & Ops |
 
-Follow these steps to run the project locally.
+---
 
-### Prerequisites
-- Node.js (v18 or higher recommended)
-- npm (or yarn/pnpm)
+## Tech Stack
 
-### Installation
+- **Framework**: [Astro 5](https://astro.build/) — static output, zero JS overhead
+- **Deployment**: [Vercel](https://vercel.com/)
+- **Font**: JetBrains Mono
+- **Styling**: Vanilla CSS, dark theme, purple accent
+- **Search**: Client-side, instant, no backend
+- **Read tracking**: localStorage — biết bài nào đã đọc
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/RedAvocado22/MioCraft.git
-   cd MioCraft
-   ```
+---
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+## Chạy local
 
-3. Start the development server:
-   ```bash
-   npm run dev
-   ```
+```bash
+git clone https://github.com/RedAvocado22/MioCraft.git
+cd MioCraft
+npm install
+npm run dev
+# → http://localhost:4321
+```
 
-4. Open your browser and navigate to `http://localhost:4321`.
+Build production:
 
-## 📦 Scripts
+```bash
+npm run build
+npm run preview
+```
 
-- `npm run dev`: Starts the local development server.
-- `npm run build`: Builds the project for production into the `dist/` directory.
-- `npm run preview`: Previews the production build locally.
-- `npm run import`: Runs the custom script to import articles (`scripts/import-article.mjs`).
-- `npm run admin`: Runs the admin script (`scripts/admin.mjs`).
+---
 
-## 📝 License
+## Import bài mới
 
-This project is licensed under the MIT License.
+Bài viết là file `.md` trong `src/content/articles/` với frontmatter:
+
+```yaml
+---
+title: "Tên bài"
+description: "Mô tả ngắn"
+category: system-design  # hoặc: architecture | programming
+pubDate: 2026-06-01
+series: "Phần 8: System Design"
+tags: ["spring-boot", "redis"]
+---
+```
+
+Đặt file theo format `bai-NNN-slug.md`, chạy `npm run build` để verify.
+
+---
+
+## License
+
+MIT

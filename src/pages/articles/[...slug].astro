@@ -48,7 +48,21 @@ function formatDate(d: Date) {
 }
 ---
 
-<BaseLayout title={article.data.title} description={article.data.description}>
+<BaseLayout title={article.data.title} description={article.data.description} ogType="article">
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": article.data.title,
+      "description": article.data.description,
+      "datePublished": article.data.pubDate.toISOString(),
+      "url": new URL(`/articles/${article.slug}`, Astro.site).toString(),
+      "inLanguage": "vi",
+      "author": { "@type": "Person", "name": "RedAvocado22" },
+      "publisher": { "@type": "Organization", "name": "MioCraft", "url": Astro.site?.toString() },
+      "keywords": (article.data.tags ?? []).join(', ')
+    })} />
+  </Fragment>
   <style>
     /* ── Reading Progress Bar ── */
     .reading-progress {
