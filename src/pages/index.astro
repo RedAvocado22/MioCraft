@@ -268,6 +268,25 @@ for (const article of articles) {
       display: none;
     }
 
+    /* ── Read Tracking ── */
+    .read-counter {
+      display: none;
+      font-size: 0.78rem;
+      color: #34d399;
+      margin-top: 0.25rem;
+    }
+    .article-card.read .article-title { color: #6b7280; }
+    .read-check {
+      display: none;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #34d399;
+      flex-shrink: 0;
+      align-self: center;
+      margin-left: auto;
+    }
+    .article-card.read .read-check { display: block; }
+
     /* ── Responsive Mobile ── */
     @media (max-width: 600px) {
       .hero {
@@ -304,10 +323,11 @@ for (const article of articles) {
     }
   </style>
 
-  <div class="hero">
+  <div class="hero" data-total={articles.length}>
     <p class="hero-eyebrow">MioCraft / knowledge-base</p>
     <h1>{articles.length} bài · {seriesMap.size} phần</h1>
     <p>// system design · architecture · programming</p>
+    <p class="read-counter" id="read-counter"></p>
   </div>
 
   <div class="search-wrap">
@@ -343,7 +363,7 @@ for (const article of articles) {
               ? '#34d399'
               : '#f472b6';
             return (
-              <a href={`/articles/${article.slug}`} class="article-card">
+              <a href={`/articles/${article.slug}`} class="article-card" data-slug={article.slug}>
                 <span class="article-num">{num}</span>
                 <div class="article-body">
                   <div class="article-title">{article.data.title}</div>
@@ -352,6 +372,7 @@ for (const article of articles) {
                     <span class="cat-label">{meta.label}</span>
                   </div>
                 </div>
+                <span class="read-check" aria-hidden="true">✓</span>
               </a>
             );
           })}
@@ -400,6 +421,20 @@ for (const article of articles) {
     });
 
     noResults.style.display = totalVisible === 0 && q ? 'block' : 'none';
+  }
+
+  // ── Read Tracking ──
+  const readSlugs = new Set(JSON.parse(localStorage.getItem('mio_read') || '[]'));
+  if (readSlugs.size > 0) {
+    const total = parseInt(document.querySelector<HTMLElement>('.hero')?.dataset?.total || '0');
+    const counter = document.getElementById('read-counter');
+    if (counter) {
+      counter.textContent = `✓ Đã đọc: ${readSlugs.size} / ${total} bài`;
+      counter.style.display = 'block';
+    }
+    document.querySelectorAll<HTMLElement>('.article-card[data-slug]').forEach(card => {
+      if (readSlugs.has(card.dataset.slug ?? '')) card.classList.add('read');
+    });
   }
 </script>
 </BaseLayout>
