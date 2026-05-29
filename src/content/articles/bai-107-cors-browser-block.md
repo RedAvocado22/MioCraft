@@ -3,7 +3,7 @@ title: "CORS — tại sao browser block và config đúng trong Spring"
 description: "Postman chạy được, browser báo CORS error. Same-origin policy, preflight OPTIONS, và cách cấu hình CorsConfigurationSource trong Spring Security."
 category: system-design
 pubDate: 2026-05-25
-series: "Phần 7: Backend Internals"
+series: "Phần 7: Backend & Hệ thống"
 tags: ["backend", "CORS", "spring", "security"]
 ---
 

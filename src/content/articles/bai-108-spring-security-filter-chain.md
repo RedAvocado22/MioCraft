@@ -3,7 +3,7 @@ title: "Spring Security filter chain — request đi qua những gì trước co
 description: "OncePerRequestFilter, JwtAuthenticationFilter, authorization vs authentication — và tại sao filter chạy trước @PreAuthorize."
 category: system-design
 pubDate: 2026-05-26
-series: "Phần 7: Backend Internals"
+series: "Phần 7: Backend & Hệ thống"
 tags: ["backend", "spring-security", "JWT", "filter"]
 ---
 
