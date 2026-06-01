@@ -11,6 +11,8 @@ Mày mở một Google Doc, thấy cái cursor màu tím của đồng nghiệp 
 
 Nhưng thử tưởng tượng cùng một thời điểm, mày chèn chữ vào position 5 của đoạn văn, còn đồng nghiệp mày xóa chữ ở position 7. Hai thay đổi này đi lên server theo thứ tự nào? Và làm sao server đảm bảo khi cả hai được apply, document vẫn đúng — không bị lệch vị trí, không mất chữ, không nhảy loạn xạ?
 
+> **TL;DR:** Thay vì gửi toàn bộ nội dung lên server, Google Docs gửi **hành động** ("chèn chữ X vào vị trí 5"). Khi hai hành động xung đột, một thuật toán tự điều chỉnh vị trí để cả hai áp dụng đúng — không ai mất chữ, không cần lock chờ nhau.
+
 ## Cách naive — tại sao nó không work
 
 Cách đơn giản nhất là **locking**: khi một người đang gõ, người kia bị khóa lại không được chỉnh sửa. Chờ người kia save xong, rồi mới đến lượt mình.
@@ -28,6 +30,8 @@ Vậy Google Docs làm gì khác?
 ## Cái trick thật sự đằng sau
 
 Google Docs dùng **Operational Transformation (OT)** — không lock, không chờ đợi. Mọi người gõ ngay lập tức, thay đổi được broadcast, và một thuật toán đặc biệt đảm bảo kết quả cuối cùng của tất cả mọi người là như nhau.
+
+> **Hãy tưởng tượng:** Mày và đồng nghiệp cùng nhận một tờ giấy y hệt nhau. Mày viết "X vào dòng 5". Đồng nghiệp xóa "dòng 7". Cả hai gửi mảnh giấy ghi chú cho nhau. Khi áp dụng chú thích của nhau, cần điều chỉnh vị trí cho đúng — vì mày vừa thêm một dòng, vị trí của đồng nghiệp đã lệch đi 1. Đó chính xác là OT làm.
 
 Ý tưởng cốt lõi: thay vì sync **trạng thái** (snapshot của document), sync **operations** — những hành động cụ thể được thực hiện.
 
@@ -75,7 +79,7 @@ Cả hai client ra cùng kết quả. Transform function shift position của op
 
 **Server là arbiter**: Server nhận operations từ tất cả clients, định nghĩa thứ tự canonical, rồi broadcast lại. Mỗi client transform operation nhận được dựa trên operations local đã apply mà server chưa biết.
 
-## Đi sâu hơn — chi tiết kỹ thuật
+## Nếu bạn muốn hiểu sâu hơn _(đọc thêm, không bắt buộc)_
 
 **Transform function là trái tim của OT** và phải xử lý mọi tổ hợp operation pairs: Insert+Insert, Insert+Delete, Delete+Insert, Delete+Delete. Ví dụ Delete+Delete phức tạp hơn:
 

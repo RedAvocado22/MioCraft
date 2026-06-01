@@ -11,6 +11,8 @@ Mày chạy Lighthouse, nhận điểm 43. Màu đỏ. Mày sửa vài thứ, đ
 
 Vì con số 43 hay 91 không phải do Lighthouse cảm tính. Nó là kết quả của những phép đo rất cụ thể, trên những thứ rất cụ thể, với trọng số rất cụ thể. Và hiểu được chúng thì mày fix đúng chỗ thay vì chạy theo màu sắc.
 
+> **TL;DR:** Lighthouse đo 4 thứ cụ thể — khi nào nội dung chính hiện ra (LCP), trang có nhảy lung tung không (CLS), click có phản hồi nhanh không (INP), và server trả về nhanh không (TTFB). Mỗi thứ có trọng số khác nhau trong điểm tổng.
+
 ## Cách naive — tại sao nó không work
 
 Cách đo performance đơn giản nhất: xem trang load xong chưa. Sự kiện `window.onload` — HTML parse xong, CSS parse xong, JS chạy xong, ảnh tải xong. Chờ event đó fire, đo thời gian từ lúc request đến lúc event fire. Số đó thấp thì trang "nhanh".
@@ -68,11 +70,11 @@ TTFB     FCP            LCP        TTI
                       INP đo mọi tương tác sau TTI
 ```
 
-## Đi sâu hơn — chi tiết kỹ thuật
+## Nếu bạn muốn hiểu sâu hơn _(đọc thêm, không bắt buộc)_
 
 **Trọng số trong Lighthouse score:**
 
-Lighthouse không lấy trung bình cộng các metric. Nó dùng weighted average:
+Lighthouse không lấy trung bình cộng các metric. Mỗi metric đóng góp khác nhau vào điểm tổng:
 
 | Metric | Trọng số |
 |--------|----------|
@@ -87,13 +89,7 @@ TBT — Total Blocking Time — chiếm nhiều nhất: 30%. Đây là tổng th
 
 **CLS và cái bẫy không ai để ý**
 
-CLS score được tính theo công thức:
-
-```
-layout shift score = impact fraction × distance fraction
-```
-
-`impact fraction` là % viewport bị ảnh hưởng bởi shift. `distance fraction` là % viewport element đã di chuyển.
+Mỗi khi một element nhảy chỗ, điểm CLS tăng lên dựa trên: element đó chiếm bao nhiêu % màn hình, và nó nhảy xa bao nhiêu. Element lớn nhảy xa = CLS tăng nhiều.
 
 Cái bẫy phổ biến nhất: ảnh và video không có `width`/`height` attribute.
 

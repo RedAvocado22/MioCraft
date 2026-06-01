@@ -11,6 +11,8 @@ Mày bật 2FA, mở Google Authenticator, thấy một dãy 6 số đang đếm
 
 Rõ ràng cái mã này không tồn tại mãi. Nhưng ai tạo ra nó? Server gửi cho điện thoại mày à? Và nếu không có mạng mà Authenticator vẫn hiện mã — thì mã đó đến từ đâu?
 
+> **TL;DR:** Điện thoại và server đều **tự tính toán** mã OTP từ cùng một công thức — dùng một secret key chung và thời gian hiện tại. Không cần gửi mã qua mạng. Cứ mỗi 30 giây, thời gian thay đổi → mã thay đổi → mã cũ vô hiệu.
+
 ## Cách naive — tại sao nó không work
 
 Cách đơn giản nhất ai cũng nghĩ đến: server tạo ra một mã ngẫu nhiên, lưu vào database kèm thời gian hết hạn, gửi cho mày qua SMS hoặc app, mày nhập lại, server tra DB kiểm tra.
@@ -27,53 +29,49 @@ Cách này thực ra là SMS OTP đang làm — và nó có vài vấn đề ngh
 
 Google Authenticator không nhận mã từ server. Nó **tự tính mã** — và server cũng **tự tính mã đó** — rồi cả hai so sánh kết quả. Không cần giao tiếp gì thêm.
 
-Đây là **TOTP — Time-based One-Time Password**, được chuẩn hóa trong RFC 6238. Nguyên lý:
+> **Hãy tưởng tượng:** Mày và bạn thân cùng có một cuốn sách giống hệt nhau. Mỗi ngày mày đọc trang bằng số ngày trong năm. Nếu hôm nay là ngày 183, cả hai đều mở đúng trang 183 mà không cần nhắn nhau. OTP hoạt động y như vậy — "trang sách" là thời gian, "cuốn sách" là secret key chung.
+
+Đây là **TOTP — Time-based One-Time Password** (RFC 6238). Nguyên lý:
 
 ```
-Shared Secret (thiết lập một lần)
+Secret Key (thiết lập một lần khi quét QR code)
          |
-         +-----> [Phone]  HMAC-SHA1(secret, time_counter) → 6 digits
+         +-----> [Điện thoại]  tính mã từ (secret + thời gian hiện tại) → 6 chữ số
          |
-         +-----> [Server] HMAC-SHA1(secret, time_counter) → 6 digits
-                                         ↑
-                          time_counter = floor(unix_timestamp / 30)
+         +-----> [Server]      tính mã từ (secret + thời gian hiện tại) → 6 chữ số
+                                                   ↑
+                                    cứ 30 giây đổi một lần
 ```
 
-Cả hai bên dùng cùng hai input: **secret key** và **time counter**. Cùng input → cùng output. Không cần trao đổi mã qua mạng.
+Cả hai bên dùng cùng hai input: **secret key** và **thời gian**. Cùng input → cùng output. Không cần trao đổi mã qua mạng.
 
-**Time counter** là thứ làm mã thay đổi mỗi 30 giây:
+**Tại sao mã đổi mỗi 30 giây?** Thời gian được chia thành các "cửa sổ" 30 giây. Mỗi cửa sổ có một số thứ tự riêng:
 
 ```
-time_counter = floor(unix_timestamp / 30)
+Lúc 12:00:00 → đang ở cửa sổ #58320000
+Lúc 12:00:29 → vẫn cửa sổ #58320000  (mã không đổi)
+Lúc 12:00:30 → sang cửa sổ #58320001  (mã đổi ngay!)
 ```
 
-Lúc 12:00:00 → timestamp = 1749600000 → counter = 58320000
-Lúc 12:00:29 → timestamp = 1749600029 → counter = 58320000  (vẫn như cũ)
-Lúc 12:00:30 → timestamp = 1749600030 → counter = 58320001  (đổi!)
+Số thứ tự cửa sổ thay đổi → input thay đổi → mã 6 số thay đổi.
 
-Counter thay đổi → input đổi → HMAC output đổi → mã 6 số đổi.
+**HMAC-SHA1** là hàm tính mã một chiều: biết hai input thì tính được output, nhưng từ output không ngược ra được input. Nếu ai thấy mã "482931", họ không thể tìm ra secret key. Đây là tính chất bảo mật cốt lõi của TOTP.
 
-**HMAC-SHA1** là hàm hash một chiều: biết input thì tính được output, nhưng từ output không ngược ra được input. Nếu ai thấy mã "482931", họ không thể suy ngược ra secret key.
+## Nếu bạn muốn hiểu sâu hơn _(đọc thêm, không bắt buộc)_
 
-Từ HMAC output (20 bytes), TOTP lấy **dynamic truncation**: đọc 4 bytes tại offset xác định, bỏ bit đầu, lấy modulo 1.000.000 → ra 6 chữ số.
-
-## Đi sâu hơn — chi tiết kỹ thuật
-
-**Cái QR code mày scan khi setup 2FA** không chứa mã OTP. Nó chứa **secret key**, được encode theo format:
+**Cái QR code mày scan khi setup 2FA** không chứa mã OTP. Nó chứa **secret key**, được encode thành chuỗi ký tự:
 
 ```
 otpauth://totp/Google%3Amay%40gmail.com?secret=JBSWY3DPEHPK3PXP&issuer=Google
 ```
 
-`JBSWY3DPEHPK3PXP` là secret key encode bằng Base32. Authenticator giải mã ra byte array, lưu an toàn trong secure storage của điện thoại. Từ đó về sau, mọi mã OTP đều được tính offline hoàn toàn từ secret này.
+`JBSWY3DPEHPK3PXP` là secret key. Authenticator đọc nó, lưu an toàn vào bộ nhớ bảo mật của điện thoại. Từ đó về sau, mọi mã OTP đều được tính offline hoàn toàn — không cần mạng, không cần liên lạc với server.
 
-**Vấn đề clock skew:** Điện thoại và server đồng hồ không hoàn toàn khớp nhau. Nếu điện thoại chậm 15 giây, mã tính ra có thể thuộc time window cũ. Để giải quyết, server thường chấp nhận **±1 window** — tức là mã của window liền trước và liền sau cũng pass. Thực tế mày có khoảng 90 giây để nhập mã dù UI hiển thị là 30 giây.
+**Vấn đề đồng hồ lệch:** Điện thoại và server không hoàn toàn khớp giờ nhau. Nếu điện thoại chậm 15 giây, mã tính ra có thể thuộc cửa sổ cũ. Giải pháp: server chấp nhận mã của cửa sổ hiện tại **và** cửa sổ liền trước, liền sau. Thực tế mày có khoảng 90 giây thay vì 30 giây để nhập.
 
-**Tại sao dùng được một lần?** Server theo dõi time counter cuối cùng đã dùng thành công. Nếu mày submit mã của counter N, server lưu lại "đã dùng counter N rồi". Submit lần hai với cùng mã trong window đó → reject. Counter tiếp theo (N+1) mới được chấp nhận.
+**Tại sao dùng được một lần?** Server ghi nhớ cửa sổ thời gian cuối cùng đã xác thực thành công. Submit lần hai với cùng mã trong cùng cửa sổ → bị từ chối ngay. Sang cửa sổ kế tiếp mới được chấp nhận.
 
-**HOTP vs TOTP:** TOTP (Time-based) là phiên bản cải tiến của HOTP (HMAC-based OTP, RFC 4226). HOTP dùng **counter tăng dần** (0, 1, 2, 3...) thay vì time. Vấn đề: counter có thể lệch nhau nếu người dùng generate nhiều mã mà không dùng. TOTP dùng thời gian là nguồn counter tự nhiên và đồng bộ, giải quyết vấn đề này.
-
-**SMS OTP khác hoàn toàn:** Đây là server tạo random token, lưu DB, gửi qua telco network. Không có shared secret, không có HMAC. Yếu hơn TOTP vì phụ thuộc vào SMS infrastructure và có thể bị intercept qua SIM swap hay SS7 exploit.
+**SMS OTP khác hoàn toàn:** Server tạo mã ngẫu nhiên, lưu vào database, gửi qua nhà mạng. Không có secret key chung, không có tính toán offline. Yếu hơn TOTP vì có thể bị chặn qua SIM swap hoặc tấn công vào hạ tầng mạng di động.
 
 ## Mày thấy nó ở đâu trong thực tế
 

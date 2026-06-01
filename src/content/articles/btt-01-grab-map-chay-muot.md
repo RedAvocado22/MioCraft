@@ -11,6 +11,8 @@ Mày đặt Grab, nhìn vào map, thấy cái icon xe máy đang lướt đều 
 
 Nhưng thử nghĩ lại: nếu driver gửi vị trí mỗi giây, và mày đang ngồi chờ xe trong khi đang dùng 4G... cái icon đó tiêu tốn bao nhiêu data, bao nhiêu pin, bao nhiêu server request? Và nếu nó chỉ cập nhật mỗi 3-5 giây, tại sao animation lại mượt đến vậy — thay vì nhảy cóc từng đoạn?
 
+> **TL;DR:** App Grab chỉ nhận GPS update mỗi 3-5 giây — không phải mỗi frame. Giữa hai update, app **tự tính toán** vị trí tiếp theo dựa vào tốc độ và hướng đã biết. Kỹ thuật này gọi là dead reckoning — NASA dùng nó để dẫn đường tàu vũ trụ từ thập niên 60.
+
 ## Cách naive — tại sao nó không work
 
 Cách đầu tiên ai cũng nghĩ đến: driver app gửi GPS coordinates lên server mỗi giây, server push xuống passenger app, passenger app cập nhật vị trí icon trên map.
@@ -52,7 +54,7 @@ Passenger app nhận được mỗi GPS update không chỉ có coordinates, mà
 
 **requestAnimationFrame** là vòng lặp render của browser/app chạy mỗi ~16ms (tức 60fps). Mỗi frame, app tính lại dead reckoning position và cập nhật icon. Vì là pure math trên client, không có network latency, animation cực mượt.
 
-## Đi sâu hơn — chi tiết kỹ thuật
+## Nếu bạn muốn hiểu sâu hơn _(đọc thêm, không bắt buộc)_
 
 Packet driver gửi lên trông roughly như thế này:
 

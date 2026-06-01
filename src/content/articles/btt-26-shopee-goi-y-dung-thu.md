@@ -11,6 +11,8 @@ Mày vào Shopee, search "tai nghe", click vào 3 sản phẩm, rồi đóng app
 
 Shopee không đọc được suy nghĩ của mày. Nhưng nó biết một điều khác — hàng triệu người đã làm chính xác cái mày vừa làm trước mày. Và từ đó, nó suy ra cái mày nhiều khả năng sẽ làm tiếp theo. Câu hỏi là: cơ chế nào cho phép nó làm điều đó ở quy mô hàng triệu user?
 
+> **TL;DR:** Shopee dùng ba lớp cùng lúc: **(1)** những gì mày vừa click trong session này, **(2)** sản phẩm nào hay được mua cùng nhau (dựa trên lịch sử hàng triệu đơn hàng), **(3)** người có profile mua hàng giống mày đã mua gì. Kết quả được tính sẵn từ đêm trước — mày chỉ nhìn vào kết quả tổng hợp.
+
 ## Cách naive — tại sao nó không work
 
 Cách đơn giản nhất: mày search "tai nghe" → hệ thống lưu lại category "Electronics > Headphones" → lần sau vào thì show sản phẩm trong category đó.
@@ -74,7 +76,7 @@ Thay vì so sánh sản phẩm với sản phẩm, cách này so sánh user vớ
 
 User-based CF tốn kém hơn item-based ở inference time vì phải tìm similar users trong real-time. Shopee giải quyết bằng cách precompute "user neighbor list" theo batch, cập nhật hàng ngày.
 
-## Đi sâu hơn — chi tiết kỹ thuật
+## Nếu bạn muốn hiểu sâu hơn _(đọc thêm, không bắt buộc)_
 
 **Co-occurrence matrix — mục "Đã xem cùng"**
 

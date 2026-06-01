@@ -13,6 +13,8 @@ Rồi mày mở Instagram Reels — account đã dùng 3 năm, đã follow 200 n
 
 TikTok cold start từ con số 0 mà đã hiểu mày trong 10 phút. Cái gì đang xảy ra ở đây?
 
+> **TL;DR:** TikTok không hỏi mày thích gì — nó đo mày xem video đến giây thứ mấy. Xem đến cuối = thích. Scroll qua sau 2 giây = không thích. Chỉ cần ~10 tín hiệu rõ là nó bắt đầu hiểu. Nhanh hơn vì thiết kế từ đầu cho người dùng mới — không dựa vào follow graph.
+
 ## Cách naive — tại sao nó không work
 
 Cách obvious nhất để biết user thích gì: hỏi họ. Onboarding survey — "Chọn 5 chủ đề mày quan tâm." Rồi recommend content trong những chủ đề đó.
@@ -69,15 +71,15 @@ Toàn bộ video (billions)
      For You Page
 ```
 
-## Đi sâu hơn — chi tiết kỹ thuật
+## Nếu bạn muốn hiểu sâu hơn _(đọc thêm, không bắt buộc)_
 
 **Stage 1: Candidate Generation**
 
 Từ hàng tỷ video → lọc xuống ~1000 candidates. Tốc độ là yêu cầu đầu tiên — không thể dùng heavy ML model ở đây. Có hai nguồn candidates chính:
 
-**Collaborative filtering**: "Users giống mày đã xem gì?" Mày và user A có watch history tương tự nhau (cùng xem hết những video về mèo, coding humor, cooking nhất định) → những video user A xem gần đây mà mày chưa xem là candidates tốt.
+**Collaborative filtering**: "Users giống mày đã xem gì?" Mày và user A có watch history tương tự nhau → những video user A xem gần đây mà mày chưa xem là candidates tốt.
 
-Về mặt kỹ thuật, đây là matrix factorization: tạo vector embedding cho mỗi user và mỗi video trong không gian latent (ví dụ 128 chiều). Users có sở thích giống nhau có embedding gần nhau trong không gian đó. Candidate retrieval = tìm videos có embedding gần với user embedding — đây là approximate nearest neighbor search, có thể làm rất nhanh với FAISS hay ScaNN.
+Về mặt kỹ thuật: mỗi user và mỗi video được đại diện bởi một "điểm" trong không gian ảo nhiều chiều (tương tự tọa độ GPS nhưng với ~128 chiều). Users có taste giống nhau nằm gần nhau trong không gian đó. Tìm video phù hợp = tìm các điểm video gần với điểm user — thuật toán FAISS làm việc này cực nhanh dù có hàng tỷ video.
 
 **Content-based signals**: video mới, video trending theo region, videos từ accounts mày đã interact (dù TikTok de-prioritize follower graph hơn nhiều so với Instagram). Videos từ cùng audio, cùng hashtag, cùng creator style với thứ mày đã xem.
 
