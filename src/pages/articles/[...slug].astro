@@ -28,7 +28,7 @@ export async function getStaticPaths() {
 }
 
 const { article, prevArticle, nextArticle, relatedArticles } = Astro.props;
-const seriesHref = article.data.series?.includes('Behind the Tech') ? '/behind-the-tech' : '/code-song-ton';
+const seriesHref = article.data.series?.includes('Behind the Tech') ? '/behind-the-tech' : '/code-co-nghe';
 const { Content, headings } = await article.render();
 const tocHeadings = headings.filter(h => h.depth === 2 || h.depth === 3);
 

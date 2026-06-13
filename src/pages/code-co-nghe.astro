@@ -24,14 +24,14 @@ for (const article of articles) {
 }
 ---
 
-<BaseLayout title="Code Sống Sót" description="Từ project sinh viên đến production-ready — 142 bài về system design, architecture và backend development.">
+<BaseLayout title="Code Có Nghề" description="Từ project sinh viên đến production-ready — 142 bài về system design, architecture và backend development.">
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "WebSite",
-      "name": "MioCraft — Code Sống Sót",
-      "url": new URL('/code-song-ton', Astro.site).toString(),
-      "description": "Từ project sinh viên đến production-ready",
+      "name": "MioCraft — Code Có Nghề",
+      "url": new URL('/code-co-nghe', Astro.site).toString(),
+      "description": "Từ đặt tên biến đến vận hành production — những gì tạo ra sự khác biệt giữa code chạy được và code người ta muốn maintain",
       "inLanguage": "vi"
     })} />
   </Fragment>
@@ -341,8 +341,8 @@ for (const article of articles) {
   </style>
 
   <div class="hero" data-total={articles.length}>
-    <p class="hero-eyebrow">MioCraft / Code Sống Sót</p>
-    <h1>Từ project sinh viên đến production-ready</h1>
+    <p class="hero-eyebrow">MioCraft / Code Có Nghề</p>
+    <h1>Từ đặt tên biến đến vận hành production</h1>
     <p class="hero-desc">Viết cho junior dev và sinh viên năm cuối — những thứ trường không dạy nhưng production sẽ hỏi. Ví dụ thực tế từ một hệ thống quản lý bệnh viện, Java 17 + Spring Boot 3.</p>
     <p class="hero-meta">{articles.length} bài · {seriesMap.size} phần</p>
     <p class="read-counter" id="read-counter"></p>
