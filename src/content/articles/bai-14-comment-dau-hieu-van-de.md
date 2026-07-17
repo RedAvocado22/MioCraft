@@ -99,7 +99,7 @@ Page<Appointment> findWithDoctorInfo(Pageable pageable);
 ## Comment tốt thứ ba: TODO và FIXME có context
 
 ```java
-// TODO: [Bài 83] Hiện tại dùng pessimistic lock — cần migrate sang Redis Lua
+// TODO: [P10/Bài 01] Hiện tại dùng pessimistic lock — cần migrate sang Redis Lua
 // khi traffic tăng lên. Estimate: cần refactor toàn bộ SlotBookingService
 // TODO: Deadline: trước khi deploy production tháng 6
 @Lock(LockModeType.PESSIMISTIC_WRITE)

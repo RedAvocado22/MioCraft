@@ -204,7 +204,7 @@ Mỗi lần tạo appointment, phải `UPDATE doctor SET totalAppointmentsCount 
 // Không denormalize counter vào doctor table
 // Thay vào đó, query-time COUNT:
 SELECT COUNT(*) FROM appointment WHERE doctor_id = ?;
-// Hoặc cache result (Bài 62 sẽ nói)
+// Hoặc cache result (P07/Bài 04 sẽ nói)
 ```
 
 **Rule 3 — Denormalize ở boundary (tidak deeply nested)**

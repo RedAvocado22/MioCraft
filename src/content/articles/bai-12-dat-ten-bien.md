@@ -119,7 +119,7 @@ boolean isActive;
 boolean isInsuranceVerified;
 ```
 
-Bài 15 sẽ nói sâu hơn về vấn đề boolean flag — nhưng tên là phần đầu tiên cần đúng.
+P02/Bài 05 sẽ nói sâu hơn về vấn đề boolean flag — nhưng tên là phần đầu tiên cần đúng.
 
 **Method name:** Phải là verb hoặc verb phrase. Và cần nói rõ nó trả về gì hay làm gì.
 
@@ -157,7 +157,7 @@ public void confirmAppointmentAndNotifyPatient(AppointmentDTO appointmentDTO) { 
 public List<AppointmentSlot> getAvailableSlotsByDoctorId(Long doctorId) { ... }
 ```
 
-`confirmAppointmentAndNotifyPatient` dài hơn — nhưng đó là dấu hiệu function này đang làm *hai việc*. Bài 13 sẽ bắt đầu từ đây.
+`confirmAppointmentAndNotifyPatient` dài hơn — nhưng đó là dấu hiệu function này đang làm *hai việc*. P02/Bài 03 sẽ bắt đầu từ đây.
 
 ## Một quy tắc nhỏ nhưng cực kỳ hữu ích
 

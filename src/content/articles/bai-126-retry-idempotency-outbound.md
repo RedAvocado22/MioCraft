@@ -1,6 +1,6 @@
 ---
 title: "Retry outbound và idempotency — khi HMS gọi gateway"
-description: "Bài 84 idempotency inbound. Outbound: RestClient timeout, @Retryable chỉ trên read hoặc request có Idempotency-Key — tránh capture hai lần."
+description: "P10/Bài 02 nói về idempotency inbound. Outbound: RestClient timeout, @Retryable chỉ trên read hoặc request có Idempotency-Key — tránh capture hai lần."
 category: system-design
 pubDate: 2026-05-29
 series: "Phần 10: Case Studies thực tế"

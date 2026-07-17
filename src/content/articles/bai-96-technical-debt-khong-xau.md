@@ -1,12 +1,12 @@
 ---
 title: "Technical debt không xấu — xấu là không biết dùng nó"
-description: "Bài 6 trong series này nói về technical debt từ góc độ kỹ thuật — mày đang nợ ai, nợ cái gì. Bài này nói về nó từ góc độ product: khi nào nên chủ động..."
+description: "P01/Bài 06 trong series này nói về technical debt từ góc độ kỹ thuật — mày đang nợ ai, nợ cái gì. Bài này nói về nó từ góc độ product: khi nào nên chủ động..."
 category: programming
 pubDate: 2024-04-15
 series: "Phần 11: Tư duy sản phẩm"
 ---
 
-Bài 6 trong series này nói về technical debt từ góc độ kỹ thuật — mày đang nợ ai, nợ cái gì. Bài này nói về nó từ góc độ product: khi nào nên chủ động vay nợ, và khi nào cái gọi là "debt" thực ra là quyết định đúng đắn bị gán nhãn sai.
+P01/Bài 06 trong series này nói về technical debt từ góc độ kỹ thuật — mày đang nợ ai, nợ cái gì. Bài này nói về nó từ góc độ product: khi nào nên chủ động vay nợ, và khi nào cái gọi là “debt” thực ra là quyết định đúng đắn bị gán nhãn sai.
 
 ---
 

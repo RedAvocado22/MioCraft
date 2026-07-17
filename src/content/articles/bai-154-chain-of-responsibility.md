@@ -3,7 +3,7 @@ title: "Chain of Responsibility — khi request phải đi qua nhiều handler"
 description: "GoF gặp bài toán: một request cần được xử lý bởi nhiều handler theo thứ tự, nhưng sender không nên biết handler nào sẽ thật sự xử lý nó. Mày đang dùng pattern này mỗi khi gửi request qua Spring Security."
 category: programming
 pubDate: 2026-08-02
-series: "Phần 5: Design Patterns thực chiến"
+series: "Phần 5: Design Patterns"
 tags: ["chain-of-responsibility", "design-pattern", "spring-security", "filter"]
 ---
 

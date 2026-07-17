@@ -79,11 +79,11 @@ Không phải một checklist. Là một mindset. Nhưng nếu phải cụ thể
 
 **Tên nói lên ý định.** Không phải `data`, `result`, `temp`. Tên phải trả lời câu hỏi: đây là cái gì, nó đại diện cho điều gì trong domain.
 
-**Function làm đúng một việc.** Không phải "một function một trang code" — mà là một function có một lý do để thay đổi. Chi tiết tao sẽ nói ở Bài 13.
+**Function làm đúng một việc.** Không phải "một function một trang code" — mà là một function có một lý do để thay đổi. Chi tiết tao sẽ nói ở P02/Bài 03.
 
 **Không có surprise.** Code làm đúng những gì tên nó nói. `getPatientById` không gọi thêm Keycloak bên trong. `calculateInsuranceCoverage` không tự gửi notification.
 
-**Error không bị nuốt.** Exception bị catch rồi không làm gì là một trong những nguồn bug khó debug nhất. Bài 17 sẽ đào sâu vào cái này.
+**Error không bị nuốt.** Exception bị catch rồi không làm gì là một trong những nguồn bug khó debug nhất. P02/Bài 07 sẽ đào sâu vào cái này.
 
 **Test được.** Nếu code không test được, nghĩa là nó đang có quá nhiều dependency ẩn, quá nhiều side effect. Không test được = không thể chứng minh nó đúng.
 

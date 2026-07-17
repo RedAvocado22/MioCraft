@@ -147,7 +147,7 @@ if (appointment.getStatus() == CANCELLED && appointment.isPaid()) {
 }
 ```
 
-Bài 42 sẽ đi sâu hơn về Strategy vs State pattern trong context này — nhưng enum là bước đầu tiên và thường là đủ.
+P05/Bài 03 sẽ đi sâu hơn về Strategy vs State pattern trong context này — nhưng enum là bước đầu tiên và thường là đủ.
 
 ## Vấn đề 3: Boolean để control branching trong method
 

@@ -7,7 +7,7 @@ series: "Phần 12: Production & Ops"
 tags: ["rate-limiting", "redis", "api", "production"]
 ---
 
-Bài 72 nói *có* rate limiting. Production hỏi tiếp: **limit bao nhiêu cho endpoint nào?**
+P08/Bài 07 nói *có* rate limiting. Production hỏi tiếp: **limit bao nhiêu cho endpoint nào?**
 
 Một bucket chung `100 req/phút/user` nghe công bằng — cho đến khi script scan `GET /api/doctors` 99 lần, user thật bấm `POST /api/appointments/book` lần thứ 101 và nhận 429. Hoặc ngược lại: attacker chỉ hammer endpoint book vì global limit còn dư từ traffic read nhẹ.
 
@@ -32,7 +32,7 @@ Junior hay gắn một `@RateLimiter` global. Senior map **policy name → limit
 
 ## Key Redis: user + policy, không chỉ user
 
-Bài 72 đã có Lua token bucket. Chỉ cần đổi key từ `rate_limit:{userId}` sang `rate_limit:{userId}:{policy}`:
+P08/Bài 07 đã có Lua token bucket. Chỉ cần đổi key từ `rate_limit:{userId}` sang `rate_limit:{userId}:{policy}`:
 
 ```java
 @Component

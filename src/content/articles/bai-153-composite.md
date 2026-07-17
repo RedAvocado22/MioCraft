@@ -3,7 +3,7 @@ title: "Composite — khi cây và lá phải được xử lý như nhau"
 description: "GoF gặp cấu trúc dạng cây — menu có submenu, category có subcategory, permission có group. Composite cho phép xử lý một node đơn hay toàn bộ cây bằng cùng một cách."
 category: programming
 pubDate: 2026-07-26
-series: "Phần 5: Design Patterns thực chiến"
+series: "Phần 5: Design Patterns"
 tags: ["composite", "design-pattern", "tree-structure", "java"]
 ---
 

@@ -3,7 +3,7 @@ title: "Iterator — duyệt collection mà không cần biết bên trong có g
 description: "GoF gặp bài toán: cùng một traversal logic phải chạy trên array, linked list, tree, graph — mà không thay đổi code duyệt. Iterator tách 'cách duyệt' ra khỏi 'cấu trúc chứa data'. Java đã bake nó vào ngôn ngữ."
 category: programming
 pubDate: 2026-08-09
-series: "Phần 5: Design Patterns thực chiến"
+series: "Phần 5: Design Patterns"
 tags: ["iterator", "design-pattern", "java", "collections"]
 ---
 

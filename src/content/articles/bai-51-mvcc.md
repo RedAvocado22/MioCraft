@@ -113,8 +113,8 @@ Kết quả: slot = 6 (cái này gọi là Lost Update)
 Cả hai transaction đều thấy cùng value (MVCC), update nó, một update bị "lost" vì bị overwrite.
 
 Giải pháp:
-1. **Lock** — SELECT ... FOR UPDATE (Bài 53 sẽ nói)
-2. **Optimistic Locking** — Version column (Bài 52 sẽ nói)
+1. **Lock** — SELECT ... FOR UPDATE (P06/Bài 05 sẽ nói)
+2. **Optimistic Locking** — Version column (P06/Bài 04 sẽ nói)
 
 ---
 

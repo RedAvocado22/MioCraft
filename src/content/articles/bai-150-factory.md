@@ -3,7 +3,7 @@ title: "Factory — khi mày không muốn code biết nó đang tạo ra object
 description: "GoF gặp vấn đề với `new` keyword — nó buộc code phải biết cụ thể class nào sẽ được tạo. Factory cắt đứt sự phụ thuộc đó. Abstract Factory đi thêm một bước."
 category: programming
 pubDate: 2026-07-05
-series: "Phần 5: Design Patterns thực chiến"
+series: "Phần 5: Design Patterns"
 tags: ["factory", "abstract-factory", "design-pattern", "spring"]
 ---
 

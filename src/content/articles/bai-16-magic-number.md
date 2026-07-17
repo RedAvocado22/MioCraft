@@ -91,7 +91,7 @@ Mỗi string này nếu thay đổi (rename role, thay đổi status naming conv
 
 ```java
 // ✅ Tốt hơn — dùng enum và constant
-appointment.setStatus(AppointmentStatus.PENDING); // Bài 15 đã cover
+appointment.setStatus(AppointmentStatus.PENDING); // P02/Bài 05 đã cover
 if (user.hasRole(UserRole.DOCTOR)) { ... }
 
 // Key format tập trung một chỗ

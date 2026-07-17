@@ -1,11 +1,18 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import {
+  buildLocalArticleNumbers,
+  formatArticleNumber,
+  getPartNumber,
+  sortArticles,
+} from '../../utils/article-numbering';
 
 export async function getStaticPaths() {
   const articles = (await getCollection('articles')).sort(
-    (a, b) => a.data.pubDate.getTime() - b.data.pubDate.getTime()
+    sortArticles
   );
+  const localNumbers = buildLocalArticleNumbers(articles);
   return articles.map((article, index) => {
     const currentTags = new Set(article.data.tags ?? []);
     const relatedArticles = articles
@@ -14,7 +21,7 @@ export async function getStaticPaths() {
       .filter(r => r.score > 0)
       .sort((a, b) => b.score - a.score)
       .slice(0, 3)
-      .map(r => r.a);
+      .map(r => ({ article: r.a, localNumber: localNumbers.get(r.a.slug) }));
     return {
       params: { slug: article.slug },
       props: {
@@ -614,13 +621,17 @@ function formatDate(d: Date) {
       <p class="related-title">Bài liên quan</p>
       <div class="related-grid">
         {relatedArticles.map(r => {
-          const numMatch = r.slug.match(/^bai-(\d+)-/);
+          const partNumber = getPartNumber(r.article.data.series);
+          const numMatch = r.article.slug.match(/^(?:bai|btt)-(\d+)-/);
           const num = numMatch ? numMatch[1] : '??';
-          const seriesShort = r.data.series ? r.data.series.replace(/^Phần \d+:\s*/, '') : '';
+          const numberLabel = partNumber !== null
+            ? `P${String(partNumber).padStart(2, '0')} · Bài ${formatArticleNumber(r.localNumber)}`
+            : `Bài ${num}`;
+          const seriesShort = r.article.data.series ? r.article.data.series.replace(/^Phần \d+:\s*/, '') : '';
           return (
-            <a href={`/articles/${r.slug}`} class="related-card">
-              <span class="related-card-num">Bài {num}</span>
-              <span class="related-card-title">{r.data.title}</span>
+            <a href={`/articles/${r.article.slug}`} class="related-card">
+              <span class="related-card-num">{numberLabel}</span>
+              <span class="related-card-title">{r.article.data.title}</span>
               {seriesShort && <span class="related-card-series">{seriesShort}</span>}
             </a>
           );

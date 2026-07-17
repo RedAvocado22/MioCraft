@@ -1,9 +1,10 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { groupArticlesBySeries, sortArticles, formatArticleNumber } from '../utils/article-numbering';
 
 const allArticles = (await getCollection('articles')).sort(
-  (a, b) => a.data.pubDate.getTime() - b.data.pubDate.getTime()
+  sortArticles
 );
 
 const articles = allArticles.filter(a =>
@@ -16,15 +17,10 @@ const categoryMeta = {
   'programming':   { label: 'programming',   badge: 'badge-prog', dot: 'dot-prog' },
 } as const;
 
-const seriesMap = new Map<string, typeof articles>();
-for (const article of articles) {
-  const s = article.data.series ?? 'Khác';
-  if (!seriesMap.has(s)) seriesMap.set(s, []);
-  seriesMap.get(s)!.push(article);
-}
+const seriesMap = new Map(groupArticlesBySeries(articles));
 ---
 
-<BaseLayout title="Code Có Nghề" description="Từ project sinh viên đến production-ready — 142 bài về system design, architecture và backend development.">
+<BaseLayout title="Code Có Nghề" description={`${articles.length} bài về system design, architecture và backend development — từ project sinh viên đến production-ready.`}>
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
@@ -371,10 +367,9 @@ for (const article of articles) {
           <span class="chevron">▶</span>
         </summary>
         <div class="article-list">
-          {items.map((article) => {
+          {items.map((article, index) => {
             const meta = categoryMeta[article.data.category];
-            const numMatch = article.slug.match(/^bai-(\d+)-/);
-            const num = numMatch ? numMatch[1] : '??';
+            const num = formatArticleNumber(index + 1);
             const dotColor = article.data.category === 'system-design'
               ? '#60a5fa'
               : article.data.category === 'architecture'

@@ -3,7 +3,7 @@ title: "Singleton — pattern dễ nhất, bị dùng sai nhiều nhất"
 description: "GoF tạo ra Singleton để giải quyết một vấn đề cụ thể. Junior dùng nó để giải quyết mọi thứ — và đó là lý do nó nằm trong danh sách anti-pattern."
 category: programming
 pubDate: 2026-06-28
-series: "Phần 5: Design Patterns thực chiến"
+series: "Phần 5: Design Patterns"
 tags: ["singleton", "design-pattern", "spring", "dependency-injection"]
 ---
 

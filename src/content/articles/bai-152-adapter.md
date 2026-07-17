@@ -3,7 +3,7 @@ title: "Adapter — khi hai interface không nói chuyện được với nhau"
 description: "GoF gặp vấn đề với code legacy và third-party library có interface không khớp. Adapter là cái adapter phích cắm của lập trình — không thay đổi gì ở hai đầu, chỉ làm cho chúng vừa nhau."
 category: programming
 pubDate: 2026-07-19
-series: "Phần 5: Design Patterns thực chiến"
+series: "Phần 5: Design Patterns"
 tags: ["adapter", "design-pattern", "integration", "spring"]
 ---
 

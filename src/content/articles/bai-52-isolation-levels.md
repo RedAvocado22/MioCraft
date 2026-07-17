@@ -23,7 +23,7 @@ Trước hết, cái gì là "sai" khi concurrent transactions chạy?
 
 **Phantom Read** — Transaction A query với WHERE clause, lần đầu thấy N rows. Lần thứ hai query cùng WHERE, thấy N+1 rows vì transaction B vừa insert.
 
-**Lost Update** — Hai transaction update cùng row, một update bị overwrite (cậu biết từ Bài 51).
+**Lost Update** — Hai transaction update cùng row, một update bị overwrite (cậu biết từ P06/Bài 03).
 
 ---
 

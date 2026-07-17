@@ -67,7 +67,7 @@ Request có JWT nhưng sai role → 403 tại `@PreAuthorize`.
 
 Tại sao ở đây? Vì idempotency check cần xảy ra **trước** bất kỳ operation nào có side effect. Nếu mày check idempotency sau khi đã lock slot, và sau đó trả về "đã xử lý rồi" — mày đã lock một slot không cần thiết.
 
-*(Chi tiết implementation: Bài 84)*
+*(Chi tiết implementation: P10/Bài 02)*
 
 ---
 
@@ -86,7 +86,7 @@ accessPolicy.assertCanBookForPatient(
 
 Không có check này, bất kỳ patient nào cũng có thể đặt lịch dưới tên người khác — chỉ cần biết patientId.
 
-*(Chi tiết implementation: Bài 86)*
+*(Chi tiết implementation: P10/Bài 04)*
 
 ---
 
@@ -109,7 +109,7 @@ if (slotResult == -1) {
 
 Hai bệnh nhân cùng bấm Book cùng lúc → chỉ một người "hold" được slot. Người kia nhận SlotFullException ngay lập tức.
 
-*(Chi tiết implementation: Bài 83)*
+*(Chi tiết implementation: P10/Bài 01)*
 
 ---
 
@@ -178,7 +178,7 @@ void handleAppointmentCreated(AppointmentCreatedEvent event) {
 }
 ```
 
-*(Chi tiết: Bài 85 cho notification, Bài 88 cho cache invalidation)*
+*(Chi tiết: P10/Bài 03 cho notification, P10/Bài 06 cho cache invalidation)*
 
 ---
 

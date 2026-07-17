@@ -3,7 +3,7 @@ title: "Builder — object phức tạp không cần constructor 12 tham số"
 description: "GoF gặp vấn đề với object có quá nhiều optional field. Builder tách quá trình tạo object thành từng bước. Lombok @Builder thì sao?"
 category: programming
 pubDate: 2026-07-12
-series: "Phần 5: Design Patterns thực chiến"
+series: "Phần 5: Design Patterns"
 tags: ["builder", "design-pattern", "lombok", "java"]
 ---
 

@@ -8,7 +8,7 @@ tags: ["case-study", "outbox", "transaction", "notification"]
 ---
 
 
-Bài 85 nói: đừng gửi notification **trong** transaction — dùng `@TransactionalEventListener(AFTER_COMMIT)`. Đúng hướng.
+P10/Bài 03 nói: đừng gửi notification **trong** transaction — dùng `@TransactionalEventListener(AFTER_COMMIT)`. Đúng hướng.
 
 Nhưng production vẫn có ticket: *"Appointment đã CONFIRMED trong DB, patient không nhận email."* Log không có exception lúc book. SMTP timeout một giây sau commit, hoặc pod **SIGKILL** ngay sau khi transaction commit, trước khi listener chạy xong.
 

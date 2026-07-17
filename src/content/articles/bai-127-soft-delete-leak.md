@@ -7,7 +7,7 @@ series: "Phần 6: Database"
 tags: ["soft-delete", "security", "data-leak", "hibernate"]
 ---
 
-Bài 57: soft delete = thêm `deleted_at`, mọi query phải lọc. Team thêm `@Where(clause = "deleted_at IS NULL")` lên `Appointment` — tưởng xong.
+P06/Bài 09: soft delete = thêm `deleted_at`, mọi query phải lọc. Team thêm `@Where(clause = "deleted_at IS NULL")` lên `Appointment` — tưởng xong.
 
 QA báo: patient mở app vẫn thấy lịch đã hủy tuần trước. Dev grep: repository đúng hết. Bug nằm ở **report SQL native** và **JOIN doctor không filter** — `@Where` không áp vào đó.
 
