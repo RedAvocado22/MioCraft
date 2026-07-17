@@ -36,7 +36,7 @@ List<Appointment> findByClinicNative(UUID clinicId);
     WHERE a.patient.id = :patientId
     """)
 List<Doctor> findDoctorsWithAppointments(UUID patientId);
-// ❌ Filter trên Appointment có thể không áp như mày tưởng — test thật
+// ❌ Filter trên Appointment có thể không áp như bạn tưởng — test thật
 ```
 
 Rule: **mỗi query mới** — code review hỏi `deleted_at`. Không assume annotation cứu.

@@ -29,9 +29,9 @@ Client → Gửi request kèm cookie "abc123"
 Server → Lookup "abc123" trong memory → Tìm thấy → Biết đây là user-001
 ```
 
-Vấn đề xuất hiện ngay khi mày có nhiều hơn một server. Server A lưu session của user X. User X gửi request đến Server B — Server B không có session đó, coi như chưa đăng nhập.
+Vấn đề xuất hiện ngay khi bạn có nhiều hơn một server. Server A lưu session của user X. User X gửi request đến Server B — Server B không có session đó, coi như chưa đăng nhập.
 
-Giải pháp cổ điển: sticky session (mọi request của user phải đến cùng server) hoặc centralized session store (Redis). Cả hai đều thêm complexity. Và khi Keycloak authentication server của mày nằm tách biệt với application server — session store trung tâm trở thành bottleneck.
+Giải pháp cổ điển: sticky session (mọi request của user phải đến cùng server) hoặc centralized session store (Redis). Cả hai đều thêm complexity. Và khi Keycloak authentication server của bạn nằm tách biệt với application server — session store trung tâm trở thành bottleneck.
 
 JWT sinh ra để giải quyết vấn đề này bằng cách đảo ngược mô hình: thay vì server lưu state, **state nằm trong token mà client giữ**.
 
@@ -71,17 +71,17 @@ Khi server nhận JWT, nó không lookup database. Nó verify signature bằng p
 
 ## Tại sao server tin tưởng payload này
 
-Đây là phần mà nhiều người bỏ qua. JWT không mã hóa payload — mày có thể decode base64 payload và đọc nội dung. Vậy tại sao client không tự sửa `"roles": ["ROLE_ADMIN"]` rồi gửi lên?
+Đây là phần mà nhiều người bỏ qua. JWT không mã hóa payload — bạn có thể decode base64 payload và đọc nội dung. Vậy tại sao client không tự sửa `"roles": ["ROLE_ADMIN"]` rồi gửi lên?
 
 Vì signature.
 
-Signature được tạo bằng private key của Keycloak từ `header + payload`. Nếu mày thay đổi bất kỳ byte nào trong payload, signature sẽ không còn khớp với public key nữa. Server verify signature trước khi đọc payload — token bị tamper là token bị reject ngay lập tức.
+Signature được tạo bằng private key của Keycloak từ `header + payload`. Nếu bạn thay đổi bất kỳ byte nào trong payload, signature sẽ không còn khớp với public key nữa. Server verify signature trước khi đọc payload — token bị tamper là token bị reject ngay lập tức.
 
 Trong HMS với Spring Boot và Keycloak:
 
 ```java
 // Spring Security tự động verify JWT với Keycloak public key
-// Mày chỉ cần config endpoint
+// Bạn chỉ cần config endpoint
 @Configuration
 public class SecurityConfig {
     
@@ -102,7 +102,7 @@ public class SecurityConfig {
 }
 ```
 
-Sau khi verify, Spring Security populate `SecurityContext` với claims từ JWT — và mày access trong code:
+Sau khi verify, Spring Security populate `SecurityContext` với claims từ JWT — và bạn access trong code:
 
 ```java
 @Component
@@ -129,9 +129,9 @@ public class UserContext {
 
 Đây là trade-off mà JWT mang lại và không có cách giải quyết hoàn toàn.
 
-Với session: mày muốn force logout user — xóa session trong database, xong. Lần request tiếp theo của user sẽ fail.
+Với session: bạn muốn force logout user — xóa session trong database, xong. Lần request tiếp theo của user sẽ fail.
 
-Với JWT: mày không thể "xóa" token đang tồn tại ở phía client. Token sống cho đến khi hết hạn (`exp`). Nếu token expire sau 1 giờ mà mày muốn revoke ngay lập tức — mày có vấn đề.
+Với JWT: bạn không thể "xóa" token đang tồn tại ở phía client. Token sống cho đến khi hết hạn (`exp`). Nếu token expire sau 1 giờ mà bạn muốn revoke ngay lập tức — bạn có vấn đề.
 
 Giải pháp phổ biến: **JWT blacklist trong Redis**.
 
@@ -176,4 +176,4 @@ JWT không phải "session mới hơn" — đó là một mô hình khác hoàn 
 
 ---
 
-*Bài tiếp theo: Logging đúng cách — vì sao log của mày đang vô dụng lúc cần nhất.*
+*Bài tiếp theo: Logging đúng cách — vì sao log của bạn đang vô dụng lúc cần nhất.*

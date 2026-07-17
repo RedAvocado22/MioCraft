@@ -15,7 +15,7 @@ POST https://api.hms.example.com/webhooks/payment
 { "eventId": "evt_abc", "paymentId": "pay_xyz", "status": "SUCCESS", ... }
 ```
 
-Junior expose endpoint `permitAll`, update appointment status từ body, trả 200. Attacker POST fake `SUCCESS` — appointment free.
+Người mới expose endpoint `permitAll`, update appointment status từ body, trả 200. Attacker POST fake `SUCCESS` — appointment free.
 
 Webhook không phải API cho frontend. Là **cửa sau** — chỉ gateway được vào, và có thể gọi **nhiều lần**.
 

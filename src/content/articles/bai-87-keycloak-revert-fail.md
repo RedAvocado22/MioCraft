@@ -9,19 +9,19 @@ tags: ["case-study", "saga-pattern", "Keycloak", "distributed-systems"]
 
 Register một user mới trong HMS cần hai thứ xảy ra: một record trong database nội bộ (thông tin bệnh nhân, medical history, etc.) và một account trong Keycloak (authentication, JWT issuance). Hai hệ thống. Hai operations. Không có distributed transaction nào bao phủ cả hai.
 
-Khi Keycloak call thành công nhưng DB insert fail — hoặc ngược lại — mày có một user tồn tại ở một nơi nhưng không có ở nơi kia. Hệ thống ở trạng thái inconsistent. Và đây là trạng thái rất khó phục hồi nếu mày không chuẩn bị trước.
+Khi Keycloak call thành công nhưng DB insert fail — hoặc ngược lại — bạn có một user tồn tại ở một nơi nhưng không có ở nơi kia. Hệ thống ở trạng thái inconsistent. Và đây là trạng thái rất khó phục hồi nếu bạn không chuẩn bị trước.
 
 ---
 
 ## Vấn đề của two-phase commit trong thực tế
 
-Câu trả lời lý thuyết cho distributed consistency là two-phase commit (2PC): một coordinator hỏi tất cả participants "mày có sẵn sàng commit không?", tất cả đồng ý, rồi coordinator ra lệnh commit. Nếu ai không đồng ý, tất cả rollback.
+Câu trả lời lý thuyết cho distributed consistency là two-phase commit (2PC): một coordinator hỏi tất cả participants "bạn có sẵn sàng commit không?", tất cả đồng ý, rồi coordinator ra lệnh commit. Nếu ai không đồng ý, tất cả rollback.
 
-Thực tế: Keycloak không support 2PC. REST API không support 2PC. Hầu hết external services không support 2PC. Mày không thể wrap HTTP call và database insert vào cùng một distributed transaction.
+Thực tế: Keycloak không support 2PC. REST API không support 2PC. Hầu hết external services không support 2PC. Bạn không thể wrap HTTP call và database insert vào cùng một distributed transaction.
 
 Và ngay cả khi có thể, 2PC có vấn đề riêng: nó chặn resources trong quá trình coordinate, dễ deadlock, và khi coordinator crash thì hệ thống bị stuck.
 
-Thứ mày thực sự cần là **compensation** — thay vì "rollback cùng nhau", là "nếu bước N fail, undo bước N-1, N-2, ... theo thứ tự ngược lại."
+Thứ bạn thực sự cần là **compensation** — thay vì "rollback cùng nhau", là "nếu bước N fail, undo bước N-1, N-2, ... theo thứ tự ngược lại."
 
 ---
 
@@ -96,7 +96,7 @@ public class UserRegistrationService {
 
 Code ở trên có một vấn đề: `safelyDeleteKeycloakUser` có thể fail. Keycloak có thể down. Network timeout. Rate limit. Compensation bản thân là một operation có thể fail.
 
-Khi compensation fail, mày có một "orphaned resource" — user tồn tại trong Keycloak nhưng không có record tương ứng trong DB (hoặc ngược lại). Không có cách nào để tự động clean up.
+Khi compensation fail, bạn có một "orphaned resource" — user tồn tại trong Keycloak nhưng không có record tương ứng trong DB (hoặc ngược lại). Không có cách nào để tự động clean up.
 
 HMS xử lý điều này bằng cách kết hợp hai thứ:
 
@@ -145,7 +145,7 @@ public void cleanupOrphanedRegistrations() {
 
 Không phải lúc nào cũng cần saga phức tạp. Đôi khi, đặt thứ tự operations đúng cũng giảm đáng kể complexity của compensation.
 
-Nguyên tắc: **làm external call trước nếu external system là source of truth; làm DB write trước nếu DB của mày là source of truth.**
+Nguyên tắc: **làm external call trước nếu external system là source of truth; làm DB write trước nếu DB của bạn là source of truth.**
 
 Với registration: Keycloak là authentication source of truth. Vì vậy:
 
@@ -180,9 +180,9 @@ Khi Keycloak-first, trường hợp cần compensation chỉ còn xảy ra khi D
 
 ## Điều cần nhớ về distributed state
 
-Mỗi lần mày có data tồn tại ở hai nơi — hai databases, database và external service, database và message queue — mày đang quản lý distributed state. Và distributed state sẽ lệch nhau. Không phải "có thể lệch" — là "sẽ lệch", chỉ là vấn đề khi nào.
+Mỗi lần bạn có data tồn tại ở hai nơi — hai databases, database và external service, database và message queue — bạn đang quản lý distributed state. Và distributed state sẽ lệch nhau. Không phải "có thể lệch" — là "sẽ lệch", chỉ là vấn đề khi nào.
 
-Câu hỏi quan trọng hơn "làm sao để không bị lệch" là: **"Khi lệch, tao phát hiện ra thế nào, và tao recover thế nào?"**
+Câu hỏi quan trọng hơn "làm sao để không bị lệch" là: **"Khi lệch, mình phát hiện ra thế nào, và mình recover thế nào?"**
 
 Reconciliation jobs, saga with persistent state, dead letter queues, và operational runbooks cho manual cleanup — tất cả đều là phần không thể thiếu của hệ thống xử lý distributed state nghiêm túc.
 
@@ -190,7 +190,7 @@ Reconciliation jobs, saga with persistent state, dead letter queues, và operati
 
 ## Takeaway
 
-Compensation pattern không phải là fallback plan. Nó phải là first-class design decision khi mày bắt đầu thiết kế bất kỳ flow nào chạm đến nhiều hơn một system. Và compensation cũng có thể fail — đó là lý do cần saga với persistent state, không phải chỉ là try-catch.
+Compensation pattern không phải là fallback plan. Nó phải là first-class design decision khi bạn bắt đầu thiết kế bất kỳ flow nào chạm đến nhiều hơn một system. Và compensation cũng có thể fail — đó là lý do cần saga với persistent state, không phải chỉ là try-catch.
 
 ---
 

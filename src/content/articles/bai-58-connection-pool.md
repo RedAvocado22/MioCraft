@@ -7,7 +7,7 @@ series: "Phần 6: Database"
 tags: ["database", "connection-pool", "performance"]
 ---
 
-Mày có HMS. 1000 user online cùng lúc. Khi query database, mỗi user request cần một **connection** (TCP socket tới MySQL server).
+Bạn có HMS. 1000 user online cùng lúc. Khi query database, mỗi user request cần một **connection** (TCP socket tới MySQL server).
 
 Nếu 1000 request = 1000 connection, cái này chết — MySQL mỗi connection tốn memory, lại có limit (default max_connections = 151).
 
@@ -157,7 +157,7 @@ Meaning: Request timeout chờ connection, dù pool size 20, chỉ 5 connections
 Cause: Connections không được return (hung)
 Debug:
   1. Check active connections: SELECT * FROM information_schema.PROCESSLIST;
-  2. Nếu >20, mày có connection leak
+  2. Nếu >20, bạn có connection leak
   3. Xem query đang chạy (command), có nói hang query không
 ```
 

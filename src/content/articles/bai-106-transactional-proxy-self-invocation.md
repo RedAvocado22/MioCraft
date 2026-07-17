@@ -8,9 +8,9 @@ tags: ["database", "transaction", "spring", "jpa"]
 ---
 
 
-Mày thêm `@Transactional` vào method `createAppointmentWithPayment()`. Bên trong gọi `saveAppointment()` và `chargePayment()` — cả hai đều có `@Transactional` riêng. Test unit xanh. Deploy. Một ngày payment gateway timeout giữa chừng: appointment đã lưu DB, payment chưa charge, patient nhận email xác nhận lịch hẹn.
+Bạn thêm `@Transactional` vào method `createAppointmentWithPayment()`. Bên trong gọi `saveAppointment()` và `chargePayment()` — cả hai đều có `@Transactional` riêng. Test unit xanh. Deploy. Một ngày payment gateway timeout giữa chừng: appointment đã lưu DB, payment chưa charge, patient nhận email xác nhận lịch hẹn.
 
-Mày mở code, thấy `@Transactional` đầy đủ. *"Ủa sao không rollback?"*
+Bạn mở code, thấy `@Transactional` đầy đủ. *"Ủa sao không rollback?"*
 
 Vì Spring không wrap object bằng magic annotation trên method. Nó wrap **proxy**. Và `this.chargePayment()` không đi qua proxy.
 
@@ -117,7 +117,7 @@ public void book() {
 }
 ```
 
-Chỉ khi mày hiểu rõ trade-off; tách service thường sạch hơn.
+Chỉ khi bạn hiểu rõ trade-off; tách service thường sạch hơn.
 
 ---
 
@@ -134,7 +134,7 @@ public void cancelAppointment(UUID id) throws AppointmentCancellationException {
 }
 ```
 
-Mặc định Spring **chỉ rollback** với `RuntimeException` và `Error`. **Checked exception không rollback** trừ khi mày chỉ định:
+Mặc định Spring **chỉ rollback** với `RuntimeException` và `Error`. **Checked exception không rollback** trừ khi bạn chỉ định:
 
 ```java
 @Transactional(rollbackFor = Exception.class)
@@ -146,7 +146,7 @@ Hoặc ngược lại — không rollback với exception cụ thể:
 @Transactional(noRollbackFor = BusinessWarningException.class)
 ```
 
-Bug kinh điển: throw checked exception sau khi đã `save()` — transaction commit, mày tưởng đã rollback.
+Bug kinh điển: throw checked exception sau khi đã `save()` — transaction commit, bạn tưởng đã rollback.
 
 ---
 
@@ -217,7 +217,7 @@ Self-invocation không liên quan trực tiếp, nhưng cùng theme: **hiểu kh
 
 ## Takeaway
 
-Trước khi tin `@Transactional` đã cứu mày: vẽ call graph. Call từ bên ngoài bean → qua proxy. `this.foo()` trong cùng class → không qua proxy. Một entry point public bọc cả flow, hoặc tách bean. Và nhớ rollback mặc định bỏ qua checked exception — nếu business fail phải undo DB, throw `RuntimeException` hoặc `rollbackFor`.
+Trước khi tin `@Transactional` đã cứu bạn: vẽ call graph. Call từ bên ngoài bean → qua proxy. `this.foo()` trong cùng class → không qua proxy. Một entry point public bọc cả flow, hoặc tách bean. Và nhớ rollback mặc định bỏ qua checked exception — nếu business fail phải undo DB, throw `RuntimeException` hoặc `rollbackFor`.
 
 ---
 

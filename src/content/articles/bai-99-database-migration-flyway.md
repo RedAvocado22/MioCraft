@@ -9,7 +9,7 @@ tags: ["database", "migration", "flyway", "schema"]
 
 ---
 
-Trong project sinh viên, workflow thay đổi database trông như thế này: mày mở MySQL Workbench, ALTER TABLE, xong. Hoặc đơn giản hơn — bật `spring.jpa.hibernate.ddl-auto=update` và để Hibernate tự lo.
+Trong project sinh viên, workflow thay đổi database trông như thế này: bạn mở MySQL Workbench, ALTER TABLE, xong. Hoặc đơn giản hơn — bật `spring.jpa.hibernate.ddl-auto=update` và để Hibernate tự lo.
 
 Cả hai đều hoạt động. Cả hai đều là thảm họa trong production.
 
@@ -17,11 +17,11 @@ Cả hai đều hoạt động. Cả hai đều là thảm họa trong productio
 
 ## Vấn đề với "làm thủ công"
 
-Giả sử team có 3 người. Mày thêm một column `cancellation_reason` vào bảng `appointments`. Mày ALTER TABLE trên local, sửa code, push lên. Teammate pull code về — app crash ngay vì database của họ không có column đó.
+Giả sử team có 3 người. Bạn thêm một column `cancellation_reason` vào bảng `appointments`. Bạn ALTER TABLE trên local, sửa code, push lên. Teammate pull code về — app crash ngay vì database của họ không có column đó.
 
 Giải pháp hiện tại của team: "nhớ nhắn nhau trên Slack khi đổi schema." Giải pháp này không scale được vì nó phụ thuộc vào con người không quên, không bỏ lỡ tin nhắn, và luôn làm đúng thứ tự.
 
-Rồi đến production deployment. Mày có dám tay ALTER TABLE trên production database khi hệ thống đang chạy không? Nếu có lỗi, mày rollback bằng cách nào?
+Rồi đến production deployment. Bạn có dám tay ALTER TABLE trên production database khi hệ thống đang chạy không? Nếu có lỗi, bạn rollback bằng cách nào?
 
 **Flyway** giải quyết tất cả những câu hỏi này bằng một nguyên tắc đơn giản: *mọi thay đổi schema đều là code, được version control, được track, và được apply tự động theo đúng thứ tự.*
 
@@ -29,7 +29,7 @@ Rồi đến production deployment. Mày có dám tay ALTER TABLE trên producti
 
 ## Flyway hoạt động như thế nào
 
-Mày viết migration scripts dưới dạng SQL file, đặt tên theo convention, để vào `src/main/resources/db/migration/`. Khi app khởi động, Flyway:
+Bạn viết migration scripts dưới dạng SQL file, đặt tên theo convention, để vào `src/main/resources/db/migration/`. Khi app khởi động, Flyway:
 
 1. Kiểm tra table `flyway_schema_history` trong database
 2. So sánh với danh sách migration files
@@ -66,7 +66,7 @@ CREATE INDEX idx_appointments_doctor_date
     WHERE status != 'CANCELLED';
 ```
 
-Mỗi file là immutable sau khi commit. Flyway checksum từng file — nếu mày sửa nội dung một file đã chạy, Flyway sẽ fail khi khởi động và báo lỗi. Đây là feature, không phải bug: nó ngăn mày modify lịch sử.
+Mỗi file là immutable sau khi commit. Flyway checksum từng file — nếu bạn sửa nội dung một file đã chạy, Flyway sẽ fail khi khởi động và báo lỗi. Đây là feature, không phải bug: nó ngăn bạn modify lịch sử.
 
 ---
 
@@ -98,13 +98,13 @@ spring:
       ddl-auto: validate  # ✅ Không để Hibernate tự sửa schema nữa
 ```
 
-`ddl-auto: validate` là thay đổi quan trọng nhất. Thay vì để Hibernate tự động tạo/sửa schema, giờ nó chỉ validate xem Entity của mày có khớp với schema hiện tại không. Nếu không khớp — app sẽ fail ngay lúc khởi động thay vì fail âm thầm lúc runtime.
+`ddl-auto: validate` là thay đổi quan trọng nhất. Thay vì để Hibernate tự động tạo/sửa schema, giờ nó chỉ validate xem Entity của bạn có khớp với schema hiện tại không. Nếu không khớp — app sẽ fail ngay lúc khởi động thay vì fail âm thầm lúc runtime.
 
 ---
 
 ## Quy tắc bất di bất dịch
 
-**Không bao giờ sửa migration file đã được commit.** Nếu mày cần undo một thay đổi — viết migration mới để revert. Không edit file cũ.
+**Không bao giờ sửa migration file đã được commit.** Nếu bạn cần undo một thay đổi — viết migration mới để revert. Không edit file cũ.
 
 ```sql
 -- ❌ Sai — đừng sửa V3 nếu đã chạy
@@ -115,7 +115,7 @@ spring:
 ALTER TABLE appointments DROP COLUMN cancelled_by;
 ```
 
-Lý do: migration history là audit trail. Nếu mày sửa V3, mày không còn biết production database đang ở trạng thái nào.
+Lý do: migration history là audit trail. Nếu bạn sửa V3, bạn không còn biết production database đang ở trạng thái nào.
 
 **Migration phải idempotent khi có thể.** Dùng `CREATE TABLE IF NOT EXISTS`, `ADD COLUMN IF NOT EXISTS` để migration không fail nếu chạy lại vì lý do bất kỳ.
 
@@ -123,8 +123,8 @@ Lý do: migration history là audit trail. Nếu mày sửa V3, mày không còn
 
 ## Takeaway
 
-`ddl-auto=update` là cú lừa hoàn hảo của Hibernate — nó làm mọi thứ "work" lúc dev, rồi trở thành quả bom hẹn giờ lúc production. Chuyển sang Flyway không tốn nhiều hơn 30 phút setup, nhưng nó cho mày thứ quan trọng hơn nhiều: *schema của database luôn đồng bộ với code, ở mọi môi trường, không cần tin tưởng vào con người nhớ làm đúng việc.*
+`ddl-auto=update` là cú lừa hoàn hảo của Hibernate — nó làm mọi thứ "work" lúc dev, rồi trở thành quả bom hẹn giờ lúc production. Chuyển sang Flyway không tốn nhiều hơn 30 phút setup, nhưng nó cho bạn thứ quan trọng hơn nhiều: *schema của database luôn đồng bộ với code, ở mọi môi trường, không cần tin tưởng vào con người nhớ làm đúng việc.*
 
 ---
 
-*Bài tiếp theo: Pagination — offset vs cursor — và tại sao trang 500 trong hệ thống của mày có thể chậm hơn trang 1 đến 500 lần.*
+*Bài tiếp theo: Pagination — offset vs cursor — và tại sao trang 500 trong hệ thống của bạn có thể chậm hơn trang 1 đến 500 lần.*

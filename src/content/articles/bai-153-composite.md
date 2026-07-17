@@ -9,9 +9,9 @@ tags: ["composite", "design-pattern", "tree-structure", "java"]
 
 HMS có permission system. Bác sĩ được xem `MedicalRecord` của bệnh nhân trong phòng mình. Trưởng khoa được xem toàn bộ record của khoa đó. Admin được xem tất cả.
 
-Ban đầu mày check permission bằng role — đơn giản, đủ dùng. Rồi requirement thay đổi: một bác sĩ có thể được grant thêm permission vào một số record cụ thể ngoài phạm vi phòng của họ. Permission giờ là tổ hợp: role-based *cộng với* specific grants.
+Ban đầu bạn check permission bằng role — đơn giản, đủ dùng. Rồi requirement thay đổi: một bác sĩ có thể được grant thêm permission vào một số record cụ thể ngoài phạm vi phòng của họ. Permission giờ là tổ hợp: role-based *cộng với* specific grants.
 
-Mày viết:
+Bạn viết:
 
 ```java
 // ❌ Caller phải biết cấu trúc bên trong
@@ -31,7 +31,7 @@ Mỗi loại permission mới là một `if` mới vào method này. Không scal
 
 ## Vấn đề GoF thấy
 
-Cấu trúc dạng cây có đặc tính: **một node có thể là leaf (không có children) hoặc composite (có children).** Khi mày muốn “evaluate toàn bộ cây”, mày phải xử lý leaf và composite khác nhau — hoặc là mày tìm ra cách làm cho chúng giống nhau.
+Cấu trúc dạng cây có đặc tính: **một node có thể là leaf (không có children) hoặc composite (có children).** Khi bạn muốn “evaluate toàn bộ cây”, bạn phải xử lý leaf và composite khác nhau — hoặc là bạn tìm ra cách làm cho chúng giống nhau.
 
 GoF giải bằng cách cho leaf và composite implement cùng một interface. Composite đệ quy gọi xuống children của nó. Caller không cần biết đang xử lý leaf hay cả cây — gọi cùng một method.
 
@@ -148,17 +148,17 @@ Caller vẫn gọi `.permits()` — không biết bên trong có bao nhiêu tầ
 
 Composite phù hợp khi **cấu trúc thật sự có dạng cây** và **logic đệ quy là tự nhiên**. Đừng dùng nó khi:
 
-Mày chỉ có 2–3 loại rule cố định không bao giờ thay đổi. `if/else` hay `switch` đọc thẳng hơn, ít code hơn, không cần thiết kế thêm class hierarchy.
+Bạn chỉ có 2–3 loại rule cố định không bao giờ thay đổi. `if/else` hay `switch` đọc thẳng hơn, ít code hơn, không cần thiết kế thêm class hierarchy.
 
 Cấu trúc flat — không có khái niệm “rule chứa rule”. Composite tỏa sáng với cây, không phải với danh sách.
 
-Khi mày nhận ra mình đang viết Composite chỉ vì nó “có vẻ đúng pattern” nhưng caller không bao giờ cần đệ quy — đó là dấu hiệu cần đơn giản hóa.
+Khi bạn nhận ra mình đang viết Composite chỉ vì nó “có vẻ đúng pattern” nhưng caller không bao giờ cần đệ quy — đó là dấu hiệu cần đơn giản hóa.
 
 ---
 
 ## Takeaway
 
-Composite là pattern của cây: khi leaf và branch cần được xử lý đồng nhất, khi logic cần đệ quy xuống children mà không quan tâm depth. Trong HMS, nó giải bài “permission phức tạp tổ hợp từ nhiều rule” sạch hơn nhiều so với chuỗi `if`. Nhưng nếu mày không có cấu trúc cây thật sự, đừng tạo ra nó chỉ để dùng Composite.
+Composite là pattern của cây: khi leaf và branch cần được xử lý đồng nhất, khi logic cần đệ quy xuống children mà không quan tâm depth. Trong HMS, nó giải bài “permission phức tạp tổ hợp từ nhiều rule” sạch hơn nhiều so với chuỗi `if`. Nhưng nếu bạn không có cấu trúc cây thật sự, đừng tạo ra nó chỉ để dùng Composite.
 
 ---
 

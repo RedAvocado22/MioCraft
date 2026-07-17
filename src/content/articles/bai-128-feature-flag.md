@@ -23,7 +23,7 @@ Vấn đề: làm sao merge code chưa xong mà không phá prod? Flag.
 - Mặc định `false` trên prod → user thấy flow cũ
 - Khi sẵn sàng: bật flag, không cần deploy lại (hoặc chỉ đổi config)
 
-Junior hay nhầm: *“Flag = comment code bằng if”*. Khác ở chỗ flag **đổi runtime** — từ dashboard, env, hoặc service như Unleash/LaunchDarkly — không cần build image mới.
+Một lỗi thường gặp là: *“Flag = comment code bằng if”*. Khác ở chỗ flag **đổi runtime** — từ dashboard, env, hoặc service như Unleash/LaunchDarkly — không cần build image mới.
 
 ---
 

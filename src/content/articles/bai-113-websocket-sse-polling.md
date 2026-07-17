@@ -8,9 +8,9 @@ tags: ["backend", "websocket", "sse", "polling", "realtime"]
 ---
 
 
-Reception desk cần màn hình tự cập nhật khi bệnh nhân check-in — không reload trang. Junior gắn `setInterval` gọi `GET /api/queue` mỗi giây. Mười quầy × 60 request/phút × 8 giờ ca = hàng chục nghìn request chỉ để hỏi *"có gì mới không?"* — câu trả lời thường là không.
+Reception desk cần màn hình tự cập nhật khi bệnh nhân check-in — không reload trang. Người mới gắn `setInterval` gọi `GET /api/queue` mỗi giây. Mười quầy × 60 request/phút × 8 giờ ca = hàng chục nghìn request chỉ để hỏi *"có gì mới không?"* — câu trả lời thường là không.
 
-Backend log đầy `200 OK` giống nhau. DB connection pool nhích dần. Senior hỏi: *"Sao không dùng SSE?"* Mày hỏi lại: *"WebSocket có phải realtime không?"*
+Backend log đầy `200 OK` giống nhau. DB connection pool nhích dần. Người có kinh nghiệm hỏi: *"Sao không dùng SSE?"* Bạn hỏi lại: *"WebSocket có phải realtime không?"*
 
 Cả ba đều giải bài toán **server muốn đẩy thông tin xuống client** — nhưng chi phí, hướng dữ liệu, và hạ tầng khác nhau hẳn. Chọn theo hype là cách nhanh nhất để vừa tốn connection vừa khó debug.
 
@@ -20,7 +20,7 @@ Cả ba đều giải bài toán **server muốn đẩy thông tin xuống clien
 
 REST API HMS — đặt lịch, xem hồ sơ — mô hình request-response là đủ. Client chủ động. Server không gọi ngược lại browser được.
 
-Khi product cần *"bác sĩ thấy notification ngay khi có lịch mới"* hoặc *"màn hình phòng khám nhảy số thứ tự realtime"* — mày phải chọn một trong:
+Khi product cần *"bác sĩ thấy notification ngay khi có lịch mới"* hoặc *"màn hình phòng khám nhảy số thứ tự realtime"* — bạn phải chọn một trong:
 
 1. **Polling** — client hỏi liên tục
 2. **SSE (Server-Sent Events)** — server giữ một kết nối HTTP, đẩy event một chiều
@@ -185,7 +185,7 @@ Client subscribe `/topic/doctor/{doctorId}/appointments`, server gửi khi có l
 **Không cần WebSocket khi:**
 
 - Chỉ cần "server báo có notification mới" — SSE đủ, stack đơn giản hơn
-- Mày muốn tránh thêm STOMP session, heartbeat, security config riêng cho `/ws`
+- Bạn muốn tránh thêm STOMP session, heartbeat, security config riêng cho `/ws`
 
 WebSocket + JWT: authenticate lúc **handshake** (query param hoặc header — header khó với browser WS API; pattern phổ biến: short-lived ticket từ REST rồi connect WS). Đừng quên authorize topic — doctor A không subscribe được stream của doctor B.
 
@@ -234,7 +234,7 @@ Phân tầng:
 
 ## Takeaway
 
-Hỏi một câu trước khi chọn: *"Client có cần gửi stream liên tục lên server, hay chỉ cần nghe server báo?"* Chỉ nghe → **SSE**. Hai chiều thật sự → **WebSocket**. Không cần sub-giây, chấp nhận delay → **polling chậm** vẫn là code đơn giản nhất. Và nếu mày đang `setInterval(..., 1000)` lên endpoint queue — dừng lại, tính request/phút × số màn hình; con số đó chính là lý do senior reject.
+Hỏi một câu trước khi chọn: *"Client có cần gửi stream liên tục lên server, hay chỉ cần nghe server báo?"* Chỉ nghe → **SSE**. Hai chiều thật sự → **WebSocket**. Không cần sub-giây, chấp nhận delay → **polling chậm** vẫn là code đơn giản nhất. Và nếu bạn đang `setInterval(..., 1000)` lên endpoint queue — dừng lại, tính request/phút × số màn hình; con số đó chính là lý do người có kinh nghiệm reject.
 
 ---
 

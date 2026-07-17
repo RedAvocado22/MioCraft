@@ -13,7 +13,7 @@ export function getPartNumber(series?: string) {
   return match ? Number(match[1]) : null;
 }
 
-/** Groups articles and sorts numbered Code Có Nghề parts numerically. */
+/** Groups articles and sorts numbered learning-note parts numerically. */
 export function groupArticlesBySeries(articles: Article[]) {
   const seriesMap = new Map<string, Article[]>();
 

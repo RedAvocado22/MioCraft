@@ -1,5 +1,5 @@
 ---
-title: "Deadlock — vì sao database tự kill query của mày"
+title: "Deadlock — vì sao database tự kill query của bạn"
 description: "Deadlock xảy ra khi hai transaction chờ nhau giải phóng lock. Database phát hiện và kill một transaction — nhưng fix đúng cách mới tránh được tái diễn."
 category: system-design
 pubDate: 2024-02-22
@@ -7,7 +7,7 @@ series: "Phần 6: Database"
 tags: ["database", "deadlock", "transactions"]
 ---
 
-Mày viết một transaction. Nó chạy ổn lúc test. Lên production, user thấy error: "Deadlock found when trying to get lock". Application crash, user chịu.
+Bạn viết một transaction. Nó chạy ổn lúc test. Lên production, user thấy error: "Deadlock found when trying to get lock". Application crash, user chịu.
 
 Deadlock là khi hai transaction cùng cần nhau để tiếp tục, nhưng cả hai đều giữ cái gì đó mà cái kia cần. MySQL phải kill một trong hai để thoát vòng lặp vô hạn.
 
@@ -17,7 +17,7 @@ Cách tránh deadlock không phải viết query phức tạp hơn — là hiể
 
 ## Deadlock xảy ra khi nào?
 
-Giả sử mày có hai resource: Row A và Row B.
+Giả sử bạn có hai resource: Row A và Row B.
 
 ```
 Transaction 1:
@@ -31,13 +31,13 @@ Transaction 2:
 Vòng lặp vô hạn. MySQL không thể thoát.
 ```
 
-MySQL quyết định: "Tao kill transaction 2, rollback, transaction 1 lấy Row B, xong."
+MySQL quyết định: "Mình kill transaction 2, rollback, transaction 1 lấy Row B, xong."
 
 ---
 
 ## Ví dụ thực tế — Transfer tiền từ account A sang B
 
-Giả sử mày implement transfer như này:
+Giả sử bạn implement transfer như này:
 
 ```java
 @Transactional
@@ -52,7 +52,7 @@ public void transfer(UUID fromId, UUID toId, BigDecimal amount) {
 }
 ```
 
-Khi mày transfer 1000 từ Account A → B, và đồng thời user khác transfer 2000 từ B → A:
+Khi bạn transfer 1000 từ Account A → B, và đồng thời user khác transfer 2000 từ B → A:
 
 ```
 Transaction 1: transfer(A → B, 1000)
@@ -139,7 +139,7 @@ public void complexOp(UUID aId) {
 
 **Rule 4 — Retry logic**
 
-Dù cậu làm sao, deadlock vẫn có thể happen (ví dụ do timing không may). Cách lành mạnh là retry:
+Dù bạn làm sao, deadlock vẫn có thể happen (ví dụ do timing không may). Cách lành mạnh là retry:
 
 ```java
 public void transferWithRetry(UUID fromId, UUID toId, BigDecimal amount) {
@@ -218,7 +218,7 @@ Lock order: schedule → patient (ID nhỏ hơn lock trước). Mỗi transactio
 
 ## Takeaway
 
-Deadlock không phải bug của MySQL, là transaction design của mày. Quy tắc đơn giản: lock cùng order, lock minimal scope, retry if happen.
+Deadlock không phải bug của MySQL, là transaction design của bạn. Quy tắc đơn giản: lock cùng order, lock minimal scope, retry if happen.
 
 ---
 

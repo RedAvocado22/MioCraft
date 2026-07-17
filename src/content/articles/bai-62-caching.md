@@ -7,9 +7,9 @@ series: "Phần 7: Backend & Hệ thống"
 tags: ["caching", "Redis", "performance"]
 ---
 
-Một optimization tuyệt vời nhất mà cậu sẽ khi HMS scale lên là **cache**. Nhưng caching cũng là thứ dễ làm sai nhất.
+Một optimization tuyệt vời nhất mà bạn sẽ khi HMS scale lên là **cache**. Nhưng caching cũng là thứ dễ làm sai nhất.
 
-Cậu đã dùng Redis ở HMS. Nhưng cậu có biết: caching không phải "tất cả data vào Redis, bài toán giải quyết"? Cache strategy sai có thể làm hệ thống **chậm hơn lúc không cache**, vì overhead của cache vượt lợi ích.
+Bạn đã dùng Redis ở HMS. Nhưng bạn có biết: caching không phải "tất cả data vào Redis, bài toán giải quyết"? Cache strategy sai có thể làm hệ thống **chậm hơn lúc không cache**, vì overhead của cache vượt lợi ích.
 
 ---
 
@@ -34,13 +34,13 @@ Request 3: Get from cache   → 1ms  → Respond
 Request 100: Get from cache → 1ms  → Respond
 ```
 
-Sau 100 requests, cậu save 4.9 seconds so với không cache.
+Sau 100 requests, bạn save 4.9 seconds so với không cache.
 
 ---
 
 ## Caching strategy 1: Lazy Loading (demand-driven)
 
-Giống pattern mà cậu đang dùng:
+Giống pattern mà bạn đang dùng:
 
 ```java
 @Cacheable("doctors")
@@ -234,7 +234,7 @@ public List<Doctor> getDoctorsWithFallback() {
 
 Phil Karlton: *"There are only two hard things in Computer Science: cache invalidation and naming things."*
 
-Nếu cậu clear cache sai, user sẽ thấy cũ data. Nếu cậu forget clear cache, sẽ worse.
+Nếu bạn clear cache sai, user sẽ thấy cũ data. Nếu bạn forget clear cache, sẽ worse.
 
 ```java
 // ❌ Vấn đề: forget clear cache

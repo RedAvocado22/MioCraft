@@ -7,7 +7,7 @@ series: "Phần 3: Kiến trúc phần mềm"
 tags: ["architecture", "layered-architecture", "design"]
 ---
 
-Có một điều mà hầu hết tutorial Spring Boot không nói với mày: kiến trúc Controller/Service/Repository mà mày đang dùng được thiết kế cho một loại ứng dụng cụ thể — và ứng dụng đó không nhất thiết là ứng dụng mày đang xây.
+Có một điều mà hầu hết tutorial Spring Boot không nói với bạn: kiến trúc Controller/Service/Repository mà bạn đang dùng được thiết kế cho một loại ứng dụng cụ thể — và ứng dụng đó không nhất thiết là ứng dụng bạn đang xây.
 
 Không phải Layered Architecture sai. Mà là nó được thiết kế để giải quyết một nhóm vấn đề, và như mọi công cụ khác, dùng nó cho vấn đề khác sẽ cho ra kết quả tệ.
 
@@ -17,7 +17,7 @@ Không phải Layered Architecture sai. Mà là nó được thiết kế để 
 
 Ba layer — presentation, business, data — ra đời từ thời enterprise application những năm 90. Lúc đó, bài toán chủ yếu là: *một đống data trong DB, cần expose ra ngoài theo nhiều cách khác nhau*. CRUD nặng, business logic đơn giản, nhiều integration với các system khác.
 
-Với bài toán đó, ba layer hoạt động tốt. Mày tách được "cách lấy data" ra khỏi "cách hiển thị data." Repository lo việc SQL, Controller lo việc HTTP, Service nằm giữa làm trọng tài. Rõ ràng, dễ test, dễ thay thế từng layer.
+Với bài toán đó, ba layer hoạt động tốt. Bạn tách được "cách lấy data" ra khỏi "cách hiển thị data." Repository lo việc SQL, Controller lo việc HTTP, Service nằm giữa làm trọng tài. Rõ ràng, dễ test, dễ thay thế từng layer.
 
 Nếu HMS chỉ là một CRUD app — tạo bệnh nhân, tạo lịch hẹn, lấy danh sách, sửa, xóa — thì ba layer là đủ và là lựa chọn đúng.
 
@@ -58,9 +58,9 @@ Trong Layered Architecture, dependency đi từ trên xuống dưới:
 Controller  →  Service  →  Repository  →  Database
 ```
 
-Có vẻ hợp lý. Nhưng nhìn kỹ hơn: Service layer — nơi chứa business logic quan trọng nhất — đang **phụ thuộc trực tiếp vào** Repository, tức là đang phụ thuộc vào cách mày lưu data.
+Có vẻ hợp lý. Nhưng nhìn kỹ hơn: Service layer — nơi chứa business logic quan trọng nhất — đang **phụ thuộc trực tiếp vào** Repository, tức là đang phụ thuộc vào cách bạn lưu data.
 
-Điều đó có nghĩa là: nếu mày quyết định thay MySQL bằng PostgreSQL, hoặc thêm Redis cache trước DB, hoặc migrate một phần sang NoSQL — business logic của mày bị ảnh hưởng. Không phải vì logic thay đổi, mà vì nó đang bị coupled với tầng infrastructure.
+Điều đó có nghĩa là: nếu bạn quyết định thay MySQL bằng PostgreSQL, hoặc thêm Redis cache trước DB, hoặc migrate một phần sang NoSQL — business logic của bạn bị ảnh hưởng. Không phải vì logic thay đổi, mà vì nó đang bị coupled với tầng infrastructure.
 
 ```java
 // ❌ Vấn đề: AppointmentService biết về JPA specifics
@@ -94,7 +94,7 @@ public class AppointmentService {
 }
 ```
 
-Cái khác biệt ở đây không phải là "dùng interface thay vì class" — đó chỉ là syntax. Cái khác biệt là **ai phụ thuộc vào ai**. Business logic không biết JPA là gì. Nó chỉ biết "tao cần lưu appointment vào đâu đó" — và delegate cho một contract.
+Cái khác biệt ở đây không phải là "dùng interface thay vì class" — đó chỉ là syntax. Cái khác biệt là **ai phụ thuộc vào ai**. Business logic không biết JPA là gì. Nó chỉ biết "mình cần lưu appointment vào đâu đó" — và delegate cho một contract.
 
 ---
 
@@ -110,7 +110,7 @@ Phần còn lại của Phần 3 sẽ đi sâu vào từng khía cạnh của ng
 
 ## Takeaway
 
-Ba layer không sai — nó fit cho ứng dụng CRUD đơn giản. Khi business logic trở nên phức tạp và có nhiều quy tắc nghiệp vụ thật sự, hãy hỏi: *"Service của tao đang phụ thuộc vào cái gì, và nếu cái đó thay đổi, tao có bị kéo theo không?"* Câu trả lời sẽ cho mày biết kiến trúc hiện tại có đang fit hay không.
+Ba layer không sai — nó fit cho ứng dụng CRUD đơn giản. Khi business logic trở nên phức tạp và có nhiều quy tắc nghiệp vụ thật sự, hãy hỏi: *"Service của mình đang phụ thuộc vào cái gì, và nếu cái đó thay đổi, mình có bị kéo theo không?"* Câu trả lời sẽ cho bạn biết kiến trúc hiện tại có đang fit hay không.
 
 ---
 

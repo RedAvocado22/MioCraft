@@ -123,7 +123,7 @@ User cancel trong lúc webhook `SUCCESS` đến — hai luồng đụng một pa
 
 ## Takeaway
 
-Hủy lịch đã trả tiền = transition appointment `CANCELLED` **và** payment `REFUND_PENDING` → job refund idempotent. Không thêm boolean `needRefund`. Vẽ diagram transition trước khi viết `if` — junior đọc được, prod ít scandal hoàn tiền.
+Hủy lịch đã trả tiền = transition appointment `CANCELLED` **và** payment `REFUND_PENDING` → job refund idempotent. Không thêm boolean `needRefund`. Vẽ diagram transition trước khi viết `if` — người mới đọc được, prod ít scandal hoàn tiền.
 
 ---
 

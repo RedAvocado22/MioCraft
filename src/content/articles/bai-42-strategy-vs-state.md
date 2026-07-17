@@ -161,7 +161,7 @@ Không có if-else kiểu `if (status == PENDING) { ... } else if (status == CON
 
 ## Câu hỏi để phân biệt
 
-Khi mày đang design và không chắc nên dùng cái nào, hỏi:
+Khi bạn đang design và không chắc nên dùng cái nào, hỏi:
 
 **"Ai quyết định behavior nào được dùng?"**
 
@@ -177,7 +177,7 @@ Khi mày đang design và không chắc nên dùng cái nào, hỏi:
 
 ## Sai lầm phổ biến
 
-Dùng Strategy để implement State machine — viết một đống `if (currentStrategy instanceof XxxStrategy)` để kiểm tra trạng thái. Đây là dấu hiệu mày đang dùng sai tool. Strategy không có khái niệm "transition" giữa các implementation. State thì có.
+Dùng Strategy để implement State machine — viết một đống `if (currentStrategy instanceof XxxStrategy)` để kiểm tra trạng thái. Đây là dấu hiệu bạn đang dùng sai tool. Strategy không có khái niệm "transition" giữa các implementation. State thì có.
 
 Và ngược lại — dùng State khi hành vi đơn giản chỉ cần được inject từ ngoài. Không phải mọi if-else đều cần trở thành State machine.
 
@@ -185,7 +185,7 @@ Và ngược lại — dùng State khi hành vi đơn giản chỉ cần đượ
 
 ## Takeaway
 
-Trong HMS, `Appointment` là ứng viên hoàn hảo cho State pattern vì nó có lifecycle rõ ràng và behavior thay đổi theo từng giai đoạn. `PaymentService` là ứng viên cho Strategy vì caller biết và chọn payment method. Nhìn lại code mày — mày có đang dùng if-else để kiểm tra trạng thái một object trước khi quyết định làm gì không? Đó là State pattern đang chờ được extract ra.
+Trong HMS, `Appointment` là ứng viên hoàn hảo cho State pattern vì nó có lifecycle rõ ràng và behavior thay đổi theo từng giai đoạn. `PaymentService` là ứng viên cho Strategy vì caller biết và chọn payment method. Nhìn lại code bạn — bạn có đang dùng if-else để kiểm tra trạng thái một object trước khi quyết định làm gì không? Đó là State pattern đang chờ được extract ra.
 
 ---
 

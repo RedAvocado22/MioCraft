@@ -1,5 +1,5 @@
 ---
-title: "DTO vs Entity vs Domain Model — ba thứ khác nhau, và mày cần cả ba"
+title: "DTO vs Entity vs Domain Model — ba thứ khác nhau, và bạn cần cả ba"
 description: "Dùng Entity làm DTO, hay Domain Model làm Entity — đây là sai lầm phổ biến nhất trong Spring Boot và nó phá vỡ boundary một cách thầm lặng."
 category: architecture
 pubDate: 2024-01-27
@@ -7,11 +7,11 @@ series: "Phần 3: Kiến trúc phần mềm"
 tags: ["architecture", "DTO", "domain-model", "spring-boot"]
 ---
 
-Đây là một trong những thứ mà mày sẽ thấy bị conflict nhất khi đọc code người khác: cùng một cái tên "Appointment" nhưng có thể có đến ba, bốn version khác nhau trong cùng một project — `Appointment`, `AppointmentDTO`, `AppointmentRequest`, `AppointmentResponse`, `AppointmentEntity`. Đôi khi còn có `AppointmentVO`.
+Đây là một trong những thứ mà bạn sẽ thấy bị conflict nhất khi đọc code người khác: cùng một cái tên "Appointment" nhưng có thể có đến ba, bốn version khác nhau trong cùng một project — `Appointment`, `AppointmentDTO`, `AppointmentRequest`, `AppointmentResponse`, `AppointmentEntity`. Đôi khi còn có `AppointmentVO`.
 
 Một developer nhìn vào đống đó sẽ bực bội: *"Sao nhiều class thế? Gộp lại một cái cho đơn giản không?"*
 
-Câu trả lời là không — và hiểu tại sao sẽ giúp mày tránh được một loạt bug tinh vi mà hầu hết junior mắc phải.
+Câu trả lời là không — và hiểu tại sao sẽ giúp bạn tránh được một loạt bug tinh vi mà hầu hết người mới mắc phải.
 
 ---
 
@@ -25,7 +25,7 @@ Câu trả lời là không — và hiểu tại sao sẽ giúp mày tránh đư
 
 ---
 
-## Khi mày merge ba thứ này thành một
+## Khi bạn merge ba thứ này thành một
 
 ```java
 // ❌ Vấn đề: một class làm cả ba việc
@@ -37,7 +37,7 @@ public class Appointment {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    // JPA relationship — mày cần @JsonIgnore vì serialization sẽ load lazy relation
+    // JPA relationship — bạn cần @JsonIgnore vì serialization sẽ load lazy relation
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore  // ← đây là dấu hiệu conflict: phải dùng Jackson annotation trong domain
     private Patient patient;
@@ -61,9 +61,9 @@ public class Appointment {
 
 Hậu quả ngay lập tức:
 
-Mày phải đánh `@JsonIgnore` trên JPA relationship vì Jackson sẽ trigger lazy load khi serialize — và nếu quên, mày nhận được `LazyInitializationException` hoặc tệ hơn là serialize cả object graph. Domain class của mày phải biết về JSON. Không đúng.
+Bạn phải đánh `@JsonIgnore` trên JPA relationship vì Jackson sẽ trigger lazy load khi serialize — và nếu quên, bạn nhận được `LazyInitializationException` hoặc tệ hơn là serialize cả object graph. Domain class của bạn phải biết về JSON. Không đúng.
 
-Field `internalNotes` xuất hiện trong response trả về cho bệnh nhân trừ khi mày nhớ exclude nó. Với đủ loại field nhạy cảm, mày sẽ sớm có security leak mà không hay.
+Field `internalNotes` xuất hiện trong response trả về cho bệnh nhân trừ khi bạn nhớ exclude nó. Với đủ loại field nhạy cảm, bạn sẽ sớm có security leak mà không hay.
 
 JPA yêu cầu public setter — nhưng setter đó phá vỡ encapsulation. Ai cũng có thể gọi `appointment.setStatus(COMPLETED)` mà không đi qua business rule.
 
@@ -124,7 +124,7 @@ public record BookAppointmentRequest(
 ) {}
 ```
 
-Ba class, ba trách nhiệm rõ ràng. Thay đổi DB schema không ảnh hưởng Domain. Thay đổi API response không ảnh hưởng business rule. Business rule không bị ảnh hưởng bởi việc mày đang dùng REST hay gRPC.
+Ba class, ba trách nhiệm rõ ràng. Thay đổi DB schema không ảnh hưởng Domain. Thay đổi API response không ảnh hưởng business rule. Business rule không bị ảnh hưởng bởi việc bạn đang dùng REST hay gRPC.
 
 ---
 
@@ -138,7 +138,7 @@ Nhưng khi một object có business rules thật sự, state machine, hoặc se
 
 ## Takeaway
 
-Mỗi khi mày thấy `@JsonIgnore` hay `@Transient` trong một JPA entity, đó là dấu hiệu hai trách nhiệm đang conflict trong cùng một class. Hỏi: *"Annotation này có mặt ở đây vì business rule, hay vì ai đó đang cố workaround một conflict?"*
+Mỗi khi bạn thấy `@JsonIgnore` hay `@Transient` trong một JPA entity, đó là dấu hiệu hai trách nhiệm đang conflict trong cùng một class. Hỏi: *"Annotation này có mặt ở đây vì business rule, hay vì ai đó đang cố workaround một conflict?"*
 
 ---
 

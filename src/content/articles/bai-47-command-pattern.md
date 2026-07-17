@@ -7,7 +7,7 @@ series: "Phần 5: Design Patterns"
 tags: ["design-patterns", "command", "event-sourcing"]
 ---
 
-Có một class of problem mà các pattern trước không giải được: khi hành vi cần trở thành một *thứ gì đó* — một object mày có thể truyền đi, lưu lại, xếp hàng, undo, hoặc retry.
+Có một class of problem mà các pattern trước không giải được: khi hành vi cần trở thành một *thứ gì đó* — một object bạn có thể truyền đi, lưu lại, xếp hàng, undo, hoặc retry.
 
 Ví dụ cụ thể trong HMS: patient hủy appointment. Flow đơn giản:
 
@@ -18,7 +18,7 @@ Ví dụ cụ thể trong HMS: patient hủy appointment. Flow đơn giản:
 
 Bây giờ business yêu cầu thêm: nếu user hủy trong vòng 24 giờ trước lịch khám, admin phải được notify và approve trước khi hủy thực sự có hiệu lực. Và admin có thể undo approve trong vòng 1 giờ.
 
-Đột nhiên mày cần lưu trữ "hành động hủy lịch" như một entity — không phải chỉ thực thi nó ngay.
+Đột nhiên bạn cần lưu trữ "hành động hủy lịch" như một entity — không phải chỉ thực thi nó ngay.
 
 ---
 
@@ -160,7 +160,7 @@ public class CommandOrchestrator {
 
 Đừng dùng Command Pattern chỉ để "wrap một method call vào object." Đó là over-engineering.
 
-Dùng khi mày cần một hoặc nhiều trong số này:
+Dùng khi bạn cần một hoặc nhiều trong số này:
 
 - **Deferred execution**: hành động cần thực thi sau (queue, approval workflow)
 - **Undo/Redo**: cần đảo ngược hành động đã làm
@@ -168,7 +168,7 @@ Dùng khi mày cần một hoặc nhiều trong số này:
 - **Retry logic**: fail thì retry command object, không phải retry toàn bộ request
 - **Transaction outbox**: lưu command vào DB để đảm bảo at-least-once execution
 
-Nếu mày chỉ cần gọi một method và nhận kết quả ngay — gọi method đó đi. Không cần Command.
+Nếu bạn chỉ cần gọi một method và nhận kết quả ngay — gọi method đó đi. Không cần Command.
 
 ---
 
@@ -178,4 +178,4 @@ Trong HMS, bất kỳ hành động nào cần approval flow hoặc undo capabil
 
 ---
 
-*Bài tiếp theo: Senior không review code — senior review change*
+*Bài tiếp theo: Review không chỉ là đọc code — mà là hiểu change*

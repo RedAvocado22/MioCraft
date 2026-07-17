@@ -7,9 +7,9 @@ series: "Phần 8: System Design"
 tags: ["API", "REST", "system-design", "design"]
 ---
 
-API là contract. Một khi mày publish nó ra và client bắt đầu dùng, mày không thể tự tiện thay đổi nó mà không break người khác.
+API là contract. Một khi bạn publish nó ra và client bắt đầu dùng, bạn không thể tự tiện thay đổi nó mà không break người khác.
 
-Cái sự thật đó nghe có vẻ đơn giản. Nhưng phần lớn dev junior — kể cả nhiều người không còn là junior — không thực sự internalize nó. Họ nghĩ API chỉ là URL và JSON. Thực ra, API là surface area của hệ thống mày với thế giới bên ngoài, và thiết kế nó tệ thì consequences lan ra rất xa.
+Cái sự thật đó nghe có vẻ đơn giản. Nhưng phần lớn dev — kể cả những người đã làm lâu năm — không thực sự internalize nó. Họ nghĩ API chỉ là URL và JSON. Thực ra, API là surface area của hệ thống bạn với thế giới bên ngoài, và thiết kế nó tệ thì consequences lan ra rất xa.
 
 ---
 
@@ -25,7 +25,7 @@ public Appointment getAppointment(@PathVariable UUID id) {
 }
 ```
 
-`Appointment` entity có `createdAt`, `updatedAt`, `version` (optimistic lock), `deletedAt` (soft delete), `internalStatusCode`. Client nhìn thấy tất cả. Rồi một ngày mày refactor database schema — rename column, split entity, thêm field — toàn bộ client phải update. Mày đã bind contract của mày vào implementation detail của mày.
+`Appointment` entity có `createdAt`, `updatedAt`, `version` (optimistic lock), `deletedAt` (soft delete), `internalStatusCode`. Client nhìn thấy tất cả. Rồi một ngày bạn refactor database schema — rename column, split entity, thêm field — toàn bộ client phải update. Bạn đã bind contract của bạn vào implementation detail của bạn.
 
 Đúng ra response phải là một DTO được thiết kế riêng cho API contract:
 
@@ -45,9 +45,9 @@ public record AppointmentResponse(
 ) {}
 ```
 
-Giờ mày có thể thay đổi entity thoải mái, miễn là `AppointmentResponse` vẫn giữ nguyên shape.
+Giờ bạn có thể thay đổi entity thoải mái, miễn là `AppointmentResponse` vẫn giữ nguyên shape.
 
-**Inconsistent error responses.** Client của mày — có thể là frontend React của chính mày, có thể là mobile app sau này — cần handle lỗi theo cách nhất quán. Nếu endpoint này trả về `{"error": "Not found"}`, endpoint kia trả về `{"message": "Appointment not found", "code": 404}`, endpoint thứ ba throw exception và trả về HTML stacktrace — client phải viết ba cách handle lỗi khác nhau, và bất kỳ cái nào mày quên handle đều thành bug ở production.
+**Inconsistent error responses.** Client của bạn — có thể là frontend React của chính bạn, có thể là mobile app sau này — cần handle lỗi theo cách nhất quán. Nếu endpoint này trả về `{"error": "Not found"}`, endpoint kia trả về `{"message": "Appointment not found", "code": 404}`, endpoint thứ ba throw exception và trả về HTML stacktrace — client phải viết ba cách handle lỗi khác nhau, và bất kỳ cái nào bạn quên handle đều thành bug ở production.
 
 Một error response schema nhất quán cho toàn hệ thống:
 
@@ -60,7 +60,7 @@ public record ApiError(
 ) {}
 ```
 
-**Thiếu versioning.** API không có version thì không thể evolve. Nếu mày cần thay đổi shape của response vì business requirement mới, mày sẽ phải either break existing client hoặc add workaround xấu xí vào code. Versioning đơn giản nhất là path-based: `/api/v1/appointments`. Khi cần breaking change, tạo `/api/v2/appointments` và deprecate v1.
+**Thiếu versioning.** API không có version thì không thể evolve. Nếu bạn cần thay đổi shape của response vì business requirement mới, bạn sẽ phải either break existing client hoặc add workaround xấu xí vào code. Versioning đơn giản nhất là path-based: `/api/v1/appointments`. Khi cần breaking change, tạo `/api/v2/appointments` và deprecate v1.
 
 **Ambiguous status codes.** Trả về HTTP 200 cho tất cả mọi thứ, kể cả lỗi, là một pattern thật sự tồn tại ngoài đời. Đừng làm vậy. HTTP status codes là một phần của protocol — 201 Created khi tạo resource mới, 404 khi không tìm thấy, 409 Conflict khi có race condition, 422 Unprocessable Entity khi validation fail. Client có thể đọc status code mà không cần parse response body.
 
@@ -68,11 +68,11 @@ public record ApiError(
 
 ## Idempotency — thứ ít ai nghĩ đến lúc thiết kế
 
-Network là không tin cậy. Client gửi request, server xử lý xong, nhưng response bị timeout trước khi về đến client. Client không biết server đã xử lý chưa — nó sẽ retry. Nếu operation đó không idempotent, mày có thể tạo duplicate appointment, charge tiền hai lần, gửi notification hai lần.
+Network là không tin cậy. Client gửi request, server xử lý xong, nhưng response bị timeout trước khi về đến client. Client không biết server đã xử lý chưa — nó sẽ retry. Nếu operation đó không idempotent, bạn có thể tạo duplicate appointment, charge tiền hai lần, gửi notification hai lần.
 
 GET, PUT, DELETE là idempotent theo convention — gọi nhiều lần với cùng input thì result như nhau. POST thì không phải mặc định.
 
-Với những POST endpoint quan trọng — tạo booking, tạo payment — mày cần thiết kế explicit idempotency:
+Với những POST endpoint quan trọng — tạo booking, tạo payment — bạn cần thiết kế explicit idempotency:
 
 ```java
 // Client gửi idempotency key trong header
@@ -93,7 +93,7 @@ Server lưu idempotency key lại. Nếu request với cùng key đến lần ha
 
 ## Pagination — không phải optional
 
-Bất kỳ endpoint nào trả về list đều phải có pagination. Không có exception. Hôm nay HMS có 100 appointment. Năm sau có 100,000. Nếu API của mày không có pagination, khi data lớn dần query sẽ chậm, memory sẽ tăng, và response size sẽ tăng đến mức client timeout.
+Bất kỳ endpoint nào trả về list đều phải có pagination. Không có exception. Hôm nay HMS có 100 appointment. Năm sau có 100,000. Nếu API của bạn không có pagination, khi data lớn dần query sẽ chậm, memory sẽ tăng, và response size sẽ tăng đến mức client timeout.
 
 ```java
 // ✅ Luôn paginate list endpoints
@@ -114,7 +114,7 @@ Response nên bao gồm metadata: tổng số items, tổng số pages, trang hi
 
 ## API documentation không phải optional
 
-API document là contract được viết ra. Frontend dev của mày — có thể là bạn cùng nhóm, có thể là chính mày một tuần sau — cần biết endpoint nào nhận gì, trả về gì, lỗi ra sao. Springdoc OpenAPI với một annotation đơn giản tự động generate Swagger UI:
+API document là contract được viết ra. Frontend dev của bạn — có thể là bạn cùng nhóm, có thể là chính bạn một tuần sau — cần biết endpoint nào nhận gì, trả về gì, lỗi ra sao. Springdoc OpenAPI với một annotation đơn giản tự động generate Swagger UI:
 
 ```java
 @Operation(summary = "Tạo appointment mới")
@@ -131,7 +131,7 @@ public ResponseEntity<AppointmentResponse> create(...) { ... }
 
 ## Takeaway
 
-Trước khi implement bất kỳ endpoint mới nào, viết ra response schema và error cases trước. Nếu mày không thể mô tả rõ ràng "endpoint này nhận gì, trả về gì, và fail như thế nào" trước khi code, mày chưa sẵn sàng implement nó.
+Trước khi implement bất kỳ endpoint mới nào, viết ra response schema và error cases trước. Nếu bạn không thể mô tả rõ ràng "endpoint này nhận gì, trả về gì, và fail như thế nào" trước khi code, bạn chưa sẵn sàng implement nó.
 
 ---
 

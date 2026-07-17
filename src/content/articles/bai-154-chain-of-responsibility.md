@@ -1,6 +1,6 @@
 ---
 title: "Chain of Responsibility — khi request phải đi qua nhiều handler"
-description: "GoF gặp bài toán: một request cần được xử lý bởi nhiều handler theo thứ tự, nhưng sender không nên biết handler nào sẽ thật sự xử lý nó. Mày đang dùng pattern này mỗi khi gửi request qua Spring Security."
+description: "GoF gặp bài toán: một request cần được xử lý bởi nhiều handler theo thứ tự, nhưng sender không nên biết handler nào sẽ thật sự xử lý nó. Bạn đang dùng pattern này mỗi khi gửi request qua Spring Security."
 category: programming
 pubDate: 2026-08-02
 series: "Phần 5: Design Patterns"
@@ -17,13 +17,13 @@ Trước khi một HTTP request đến `AppointmentController`, nó đi qua:
 
 Nếu step 2 fail, step 3, 4, 5 không chạy. Nếu step 3 fail, step 4, 5 không chạy. Mỗi step độc lập, theo thứ tự, có thể dừng chuỗi lại.
 
-Đây là Chain of Responsibility — và mày đã dùng nó mỗi ngày qua Spring Security filter chain mà có thể chưa biết tên.
+Đây là Chain of Responsibility — và bạn đã dùng nó mỗi ngày qua Spring Security filter chain mà có thể chưa biết tên.
 
 ---
 
 ## GoF giải bài gì
 
-Không phải lúc nào mày cũng biết trước ai sẽ xử lý một request. Hoặc mày biết thứ tự, nhưng không muốn sender phải biết toàn bộ chuỗi — sender chỉ cần gửi request vào đầu chuỗi, từng handler tự quyết định "tao xử lý và dừng ở đây" hay "tao pass tiếp xuống".
+Không phải lúc nào bạn cũng biết trước ai sẽ xử lý một request. Hoặc bạn biết thứ tự, nhưng không muốn sender phải biết toàn bộ chuỗi — sender chỉ cần gửi request vào đầu chuỗi, từng handler tự quyết định "mình xử lý và dừng ở đây" hay "mình pass tiếp xuống".
 
 GoF: **Chain of Responsibility tránh coupling sender với receiver bằng cách cho nhiều object cơ hội xử lý request. Các receiver được chain thành một chuỗi và request được pass dọc theo chuỗi cho đến khi một object xử lý nó.**
 
@@ -31,7 +31,7 @@ GoF: **Chain of Responsibility tránh coupling sender với receiver bằng các
 
 ## Viết tay Chain of Responsibility trong HMS
 
-HMS có validation pipeline cho booking request: mày cần validate format, check slot availability, verify insurance, rồi mới tạo booking. Mỗi bước có thể reject với lý do khác nhau.
+HMS có validation pipeline cho booking request: bạn cần validate format, check slot availability, verify insurance, rồi mới tạo booking. Mỗi bước có thể reject với lý do khác nhau.
 
 ```java
 // Handler interface
@@ -131,7 +131,7 @@ Thêm validator mới? Tạo class, thêm `@Order`, Spring tự đưa vào chain
 
 ## Chain of Responsibility trong Spring ecosystem
 
-Mày đã dùng pattern này mà không biết ở nhiều chỗ:
+Bạn đã dùng pattern này mà không biết ở nhiều chỗ:
 
 **Spring Security FilterChain:** mỗi filter là một handler — `CorsFilter`, `JwtAuthenticationFilter`, `AuthorizationFilter`... Request đi qua lần lượt, handler nào muốn dừng thì dừng bằng cách không gọi `filterChain.doFilter()`.
 
@@ -139,7 +139,7 @@ Mày đã dùng pattern này mà không biết ở nhiều chỗ:
 
 **Servlet Filter:** `javax.servlet.Filter` với `FilterChain.doFilter()` là Chain of Responsibility trực tiếp.
 
-Khi mày implement `OncePerRequestFilter` trong Spring Boot (bài 108), mày đang thêm một handler vào chain có sẵn của Spring Security.
+Khi bạn implement `OncePerRequestFilter` trong Spring Boot (bài 108), bạn đang thêm một handler vào chain có sẵn của Spring Security.
 
 ---
 
@@ -161,13 +161,13 @@ Khi thứ tự không quan trọng và không cần "fail fast" — dùng danh s
 
 Khi chuỗi quá dài và mỗi bước đều cần kết quả của bước trước — Pipeline pattern (biến thể của Chain) phù hợp hơn, và `Stream` của Java thực ra là pipeline.
 
-Khi mày muốn *tất cả* handler đều xử lý dù có fail giữa chừng — hãy dùng list và collect tất cả error thay vì dừng sớm.
+Khi bạn muốn *tất cả* handler đều xử lý dù có fail giữa chừng — hãy dùng list và collect tất cả error thay vì dừng sớm.
 
 ---
 
 ## Takeaway
 
-Chain of Responsibility tỏa sáng khi mày có nhiều bước validation hoặc processing cần chạy theo thứ tự, mỗi bước có thể dừng chuỗi lại, và mày muốn thêm/bớt bước mà không sửa orchestration code. Nếu mày đang viết `if/else` lồng nhau với nhiều tầng validation trong một method, đó là signal để tách thành chain.
+Chain of Responsibility tỏa sáng khi bạn có nhiều bước validation hoặc processing cần chạy theo thứ tự, mỗi bước có thể dừng chuỗi lại, và bạn muốn thêm/bớt bước mà không sửa orchestration code. Nếu bạn đang viết `if/else` lồng nhau với nhiều tầng validation trong một method, đó là signal để tách thành chain.
 
 ---
 

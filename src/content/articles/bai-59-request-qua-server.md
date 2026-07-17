@@ -7,15 +7,15 @@ series: "Phần 7: Backend & Hệ thống"
 tags: ["backend", "networking", "HTTP", "TCP"]
 ---
 
-Lúc 14:30 chiều, một user mở app HMS và bấm nút "Book Appointment". Cây API `/appointments/book` được gọi. Cậu có biết chính xác cái gì xảy ra từ lúc request rời khỏi điện thoại user đến lúc response trả về không?
+Lúc 14:30 chiều, một user mở app HMS và bấm nút "Book Appointment". Cây API `/appointments/book` được gọi. Bạn có biết chính xác cái gì xảy ra từ lúc request rời khỏi điện thoại user đến lúc response trả về không?
 
-Hầu hết junior dev không biết — và đó là lý do khi hệ thống chậm, họ lúng túng. Không hiểu request flow, cậu không biết debug từ đâu.
+Hầu hết người mới không biết — và đó là lý do khi hệ thống chậm, họ lúng túng. Không hiểu request flow, bạn không biết debug từ đâu.
 
 ---
 
 ## Request flow có 5 layer — từ hardware đến code
 
-Khi user bấm button, request không bay thẳng vào hàm `bookAppointment()` của cậu. Nó phải đi qua một chuỗi các layer, và ở mỗi layer, có thứ gì đó có thể chậm hoặc sai.
+Khi user bấm button, request không bay thẳng vào hàm `bookAppointment()` của bạn. Nó phải đi qua một chuỗi các layer, và ở mỗi layer, có thứ gì đó có thể chậm hoặc sai.
 
 Dưới đây là chuỗi từ điện thoại user → Spring Boot handler → database → response trả lại:
 
@@ -48,15 +48,15 @@ User's phone
     ↓ [Client receive, parse JSON, render UI]
 ```
 
-Mỗi layer trên đều có thể chậm. Nhưng junior thường chỉ nhìn vào layer Spring Boot và nghĩ "code của tôi chậm", trong khi vấn đề có thể nằm ở layer database hoặc network.
+Mỗi layer trên đều có thể chậm. Nhưng người mới thường chỉ nhìn vào layer Spring Boot và nghĩ "code của tôi chậm", trong khi vấn đề có thể nằm ở layer database hoặc network.
 
 ---
 
 ## Cụ thể: request `/appointments/book` của HMS trở nên chậm
 
-Giả sử cậu nhận feedback: "Khi user book appointment, nó chậm lắm, chờ tới 5 giây".
+Giả sử bạn nhận feedback: "Khi user book appointment, nó chậm lắm, chờ tới 5 giây".
 
-Cậu bắt đầu:
+Bạn bắt đầu:
 
 1. **Nghi ngờ code Spring Boot** — thêm log, kiểm tra hàm `bookAppointment()`. Hàm chạy xong trong 100ms. Vậy sao endpoint chậm?
 
@@ -66,7 +66,7 @@ Cậu bắt đầu:
 
 4. **Nghi ngờ concurrency** — 50 user đang book cùng lúc, request của user này bị xếp hàng. Phải chờ request trước nó xong rồi mới chạy.
 
-Nếu cậu không hiểu layer nào của request flow có thể là bottleneck, cậu sẽ debug mù quáng. Đó là tại sao hiểu request flow từ TCP đến response là quan trọng.
+Nếu bạn không hiểu layer nào của request flow có thể là bottleneck, bạn sẽ debug mù quáng. Đó là tại sao hiểu request flow từ TCP đến response là quan trọng.
 
 ---
 
@@ -132,7 +132,7 @@ jstack <PID> > threads.dump
 # Hoặc dùng VisualVM để monitor realtime
 ```
 
-Trong thread dump, cậu sẽ thấy:
+Trong thread dump, bạn sẽ thấy:
 
 ```
 "http-nio-8080-exec-47" #47 daemon prio=5 os_prio=0
@@ -142,9 +142,9 @@ Trong thread dump, cậu sẽ thấy:
     at com.mysql.cj.protocol.NetworkProtocol.read(NetworkProtocol.java:523)
 ```
 
-Dòng `at com.mysql.cj.protocol.NetworkProtocol.read` nói cho cậu biết: **thread #47 đang chờ MySQL trả kết quả**. 
+Dòng `at com.mysql.cj.protocol.NetworkProtocol.read` nói cho bạn biết: **thread #47 đang chờ MySQL trả kết quả**.
 
-Nếu cậu thấy 150 threads trong 200 đều chờ MySQL, vấn đề không phải ở code Spring Boot — vấn đề ở **database quá chậm hoặc quá tải**.
+Nếu bạn thấy 150 threads trong 200 đều chờ MySQL, vấn đề không phải ở code Spring Boot — vấn đề ở **database quá chậm hoặc quá tải**.
 
 ---
 
@@ -152,7 +152,7 @@ Nếu cậu thấy 150 threads trong 200 đều chờ MySQL, vấn đề không 
 
 Lần tới khi hệ thống chậm, đừng nhảy vào code ngay. Hãy hỏi: **ở layer nào của request flow vấn đề nằm?** Network? Database? Thread pool exhaustion? 
 
-Mỗi layer có debug method khác nhau. Hiểu request flow giúp cậu debug đúng chỗ, thay vì đi lòng vòng.
+Mỗi layer có debug method khác nhau. Hiểu request flow giúp bạn debug đúng chỗ, thay vì đi lòng vòng.
 
 ---
 

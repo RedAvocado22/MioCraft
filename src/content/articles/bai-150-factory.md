@@ -1,5 +1,5 @@
 ---
-title: "Factory — khi mày không muốn code biết nó đang tạo ra object gì"
+title: "Factory — khi bạn không muốn code biết nó đang tạo ra object gì"
 description: "GoF gặp vấn đề với `new` keyword — nó buộc code phải biết cụ thể class nào sẽ được tạo. Factory cắt đứt sự phụ thuộc đó. Abstract Factory đi thêm một bước."
 category: programming
 pubDate: 2026-07-05
@@ -9,7 +9,7 @@ tags: ["factory", "abstract-factory", "design-pattern", "spring"]
 
 Có một cái keyword trong Java mà GoF không thích — `new`.
 
-Không phải vì `new` xấu. Mà vì mỗi lần mày viết `new SomeConcreteClass()`, mày đang tạo ra một sự phụ thuộc cứng vào đúng cái class đó. Code của mày đang nói: *“Tao biết chính xác loại object tao cần, và tao muốn loại này chứ không phải loại khác.”*
+Không phải vì `new` xấu. Mà vì mỗi lần bạn viết `new SomeConcreteClass()`, bạn đang tạo ra một sự phụ thuộc cứng vào đúng cái class đó. Code của bạn đang nói: *“Mình biết chính xác loại object mình cần, và mình muốn loại này chứ không phải loại khác.”*
 
 Đôi khi điều đó ổn. Đôi khi đó là vấn đề.
 
@@ -35,7 +35,7 @@ public void sendNotification(String type, String recipient, String content) {
 }
 ```
 
-Mỗi lần có loại notification mới, mày vào sửa method này. Mỗi lần config của `SmsSender` thay đổi, mày vào sửa chỗ này. `sendNotification` đang biết quá nhiều thứ không phải việc của nó.
+Mỗi lần có loại notification mới, bạn vào sửa method này. Mỗi lần config của `SmsSender` thay đổi, bạn vào sửa chỗ này. `sendNotification` đang biết quá nhiều thứ không phải việc của nó.
 
 ---
 
@@ -77,13 +77,13 @@ Logic tạo object bây giờ tập trung một chỗ. `sendNotification` chỉ 
 
 ---
 
-## Abstract Factory: khi mày cần một *bộ* object nhất quán
+## Abstract Factory: khi bạn cần một *bộ* object nhất quán
 
 Factory Method giải bài “tạo một object”. Abstract Factory giải bài khác hơn một chút: “tạo một *bộ* các object liên quan, đảm bảo chúng không bị trộn lẫn với nhau.”
 
 HMS chạy hai môi trường: production và test. Production dùng VNPay thật, SMS gateway thật, S3 thật. Test dùng mock của cả ba. Vấn đề không phải là tạo từng cái — Factory Method làm được rồi. Vấn đề là đảm bảo không ai vô tình mix: VNPay thật với mock SMS. Nếu điều đó xảy ra, test chạy thật tiền, hoặc production gửi SMS vào void.
 
-Abstract Factory giải bài này bằng cách gom tất cả factory method của một “bộ” vào chung một interface. Mày chỉ có thể dùng toàn production hoặc toàn mock — không có trạng thái ở giữa:
+Abstract Factory giải bài này bằng cách gom tất cả factory method của một “bộ” vào chung một interface. Bạn chỉ có thể dùng toàn production hoặc toàn mock — không có trạng thái ở giữa:
 
 ```java
 // Abstract Factory — một interface, gom tất cả factory method của cùng một "bộ"
@@ -140,7 +140,7 @@ Business code nhận `HmsServiceFactory` — không biết đang chạy bộ nà
 
 ## Spring đã có phiên bản mình của Factory
 
-Trong Spring Boot, mày hiếm khi cần viết factory tay. Spring có `@ConditionalOnProperty`, `@Profile`, và `@Bean` method — tất cả đều là factory mechanism ở tầng framework:
+Trong Spring Boot, bạn hiếm khi cần viết factory tay. Spring có `@ConditionalOnProperty`, `@Profile`, và `@Bean` method — tất cả đều là factory mechanism ở tầng framework:
 
 ```java
 // ✅ Spring-style factory — dùng @Profile thay vì class factory
@@ -169,7 +169,7 @@ Spring quyết định bean nào được tạo dựa trên active profile. Code
 
 Factory thủ công vẫn có chỗ trong Spring ecosystem — khi quyết định tạo object xảy ra **runtime**, không phải **startup time**.
 
-Ví dụ: HMS có export feature, mày không biết trước user muốn export PDF hay Excel cho đến khi họ click. Spring không inject bean theo request runtime — đó là việc của factory:
+Ví dụ: HMS có export feature, bạn không biết trước user muốn export PDF hay Excel cho đến khi họ click. Spring không inject bean theo request runtime — đó là việc của factory:
 
 ```java
 @Component
@@ -196,7 +196,7 @@ public class ReportExporterFactory {
 
 Factory thêm abstraction layer. Abstraction layer có giá — code dài hơn, flow khó trace hơn. Đừng dùng factory khi:
 
-Mày chỉ có một implementation và không có kế hoạch thêm. Tạo interface + factory cho `EmailSender` khi hệ thống chỉ bao giờ dùng email là over-engineering (bài 04 đã nói về cái bẫy này).
+Bạn chỉ có một implementation và không có kế hoạch thêm. Tạo interface + factory cho `EmailSender` khi hệ thống chỉ bao giờ dùng email là over-engineering (bài 04 đã nói về cái bẫy này).
 
 Logic tạo object đơn giản đến mức ai đọc cũng hiểu ngay. Factory che giấu thông tin — hữu ích khi thông tin đó phức tạp, gây nhiễu khi đơn giản.
 
@@ -204,7 +204,7 @@ Logic tạo object đơn giản đến mức ai đọc cũng hiểu ngay. Factor
 
 ## Takeaway
 
-Factory giải một bài cụ thể: *code không nên biết chính xác class nào đang được tạo*. Khi mày có một điểm trong code mà việc thêm implementation mới đòi hỏi sửa caller, đó là dấu hiệu cần factory. Khi mày chỉ có một implementation và Spring đã quản lý lifecycle cho mày, factory là giấy bọc không cần thiết.
+Factory giải một bài cụ thể: *code không nên biết chính xác class nào đang được tạo*. Khi bạn có một điểm trong code mà việc thêm implementation mới đòi hỏi sửa caller, đó là dấu hiệu cần factory. Khi bạn chỉ có một implementation và Spring đã quản lý lifecycle cho bạn, factory là giấy bọc không cần thiết.
 
 ---
 

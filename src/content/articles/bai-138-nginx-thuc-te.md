@@ -7,9 +7,9 @@ series: "Phần 12: Production & Ops"
 tags: ["nginx", "reverse-proxy", "https", "production", "devops"]
 ---
 
-Mày deploy Spring Boot lên server. Chạy `java -jar app.jar`, thấy `Started AppointmentApplication in 4.3 seconds`, hài lòng. Rồi gõ IP:8080 trên browser — vào được. Xong.
+Bạn deploy Spring Boot lên server. Chạy `java -jar app.jar`, thấy `Started AppointmentApplication in 4.3 seconds`, hài lòng. Rồi gõ IP:8080 trên browser — vào được. Xong.
 
-Vài tuần sau, PM hỏi: "Tại sao không có HTTPS? Tại sao đôi lúc bị spam hàng nghìn request? Tại sao static file tải chậm vậy?" Mày nhìn lại `java -jar` và nhận ra: port 8080, HTTP, không có gì đứng trước nó cả.
+Vài tuần sau, PM hỏi: "Tại sao không có HTTPS? Tại sao đôi lúc bị spam hàng nghìn request? Tại sao static file tải chậm vậy?" Bạn nhìn lại `java -jar` và nhận ra: port 8080, HTTP, không có gì đứng trước nó cả.
 
 Đó là lúc Nginx xuất hiện.
 
@@ -70,7 +70,7 @@ apt install certbot python3-certbot-nginx
 certbot --nginx -d hms.example.com
 ```
 
-Sau khi chạy xong, certbot tự thêm vào config của mày:
+Sau khi chạy xong, certbot tự thêm vào config của bạn:
 
 ```nginx
 server {
@@ -252,7 +252,7 @@ Khác với `systemctl restart nginx` — restart sẽ kill process, drop connec
 
 ## Takeaway
 
-Nginx không thay thế Spring Boot — nó làm những việc Spring Boot không nên làm: TLS termination, gzip, rate limit, static serving. Nếu mày đang expose Java trực tiếp ra internet ở port 8080 không có gì đứng trước, đó là production chờ sự cố.
+Nginx không thay thế Spring Boot — nó làm những việc Spring Boot không nên làm: TLS termination, gzip, rate limit, static serving. Nếu bạn đang expose Java trực tiếp ra internet ở port 8080 không có gì đứng trước, đó là production chờ sự cố.
 
 ---
 

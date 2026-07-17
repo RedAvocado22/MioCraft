@@ -7,9 +7,9 @@ series: "Phần 3: Kiến trúc phần mềm"
 tags: ["architecture", "boundaries", "clean-architecture"]
 ---
 
-Trong kiến trúc phần mềm, có một loại quyết định mà mày đưa ra trong năm phút nhưng phải sống chung với nó trong năm năm. Đó là quyết định về **boundary** — ranh giới giữa các module, service, và domain.
+Trong kiến trúc phần mềm, có một loại quyết định mà bạn đưa ra trong năm phút nhưng phải sống chung với nó trong năm năm. Đó là quyết định về **boundary** — ranh giới giữa các module, service, và domain.
 
-Boundary sai không phải lúc nào cũng gây bug ngay lập tức. Nó gây ra một thứ tệ hơn: mỗi lần thêm feature, mày phải sửa code ở ba nơi thay vì một. Mỗi lần một thứ thay đổi, mày không chắc còn thứ gì khác bị ảnh hưởng. Hệ thống vẫn chạy — nhưng velocity của team giảm dần đều, và không ai giải thích được tại sao.
+Boundary sai không phải lúc nào cũng gây bug ngay lập tức. Nó gây ra một thứ tệ hơn: mỗi lần thêm feature, bạn phải sửa code ở ba nơi thay vì một. Mỗi lần một thứ thay đổi, bạn không chắc còn thứ gì khác bị ảnh hưởng. Hệ thống vẫn chạy — nhưng velocity của team giảm dần đều, và không ai giải thích được tại sao.
 
 ---
 
@@ -23,7 +23,7 @@ Boundary đúng nghĩa là: **khi một thứ thay đổi, chỉ những thứ l
 
 ## Dấu hiệu boundary đang sai
 
-Có một test đơn giản: mày vẽ vòng tròn quanh một module và hỏi, "nếu tao thay đổi thứ bên trong vòng tròn này, có gì bên ngoài bị ảnh hưởng không?"
+Có một test đơn giản: bạn vẽ vòng tròn quanh một module và hỏi, "nếu mình thay đổi thứ bên trong vòng tròn này, có gì bên ngoài bị ảnh hưởng không?"
 
 Trong HMS, xét hai cách tổ chức `DoctorSchedule`:
 
@@ -79,7 +79,7 @@ public class AppointmentService {
 }
 ```
 
-Sự khác biệt: trong version thứ nhất, `AppointmentService` biết rằng `DoctorSchedule` có field `currentPatients` và `maxPatients`, và biết logic so sánh chúng. Nếu sau này mày đổi logic — ví dụ thêm buffer slots cho emergency, hoặc đổi cách tính capacity — mày phải sửa `AppointmentService`. Nhưng `AppointmentService` không liên quan đến capacity của schedule, nó chỉ cần đặt lịch hẹn.
+Sự khác biệt: trong version thứ nhất, `AppointmentService` biết rằng `DoctorSchedule` có field `currentPatients` và `maxPatients`, và biết logic so sánh chúng. Nếu sau này bạn đổi logic — ví dụ thêm buffer slots cho emergency, hoặc đổi cách tính capacity — bạn phải sửa `AppointmentService`. Nhưng `AppointmentService` không liên quan đến capacity của schedule, nó chỉ cần đặt lịch hẹn.
 
 Trong version thứ hai, `AppointmentService` không biết gì về cách `DoctorSchedule` quản lý slots. Nó chỉ biết "có thể reserve không" — và `DoctorSchedule` tự quyết định điều đó.
 
@@ -105,11 +105,11 @@ Câu trả lời đúng: `DoctorScheduleModule` là owner của câu hỏi "doct
 
 ## Tại sao sai boundary lúc đầu khó nhận ra
 
-Boundary sai thường xuất hiện dưới dạng "tiện thì làm luôn." Mày đang trong `AppointmentService`, cần biết số slot còn lại, `scheduleRepository` đang inject sẵn — gọi luôn, nhanh gọn. Không ai reject PR vì lý do này.
+Boundary sai thường xuất hiện dưới dạng "tiện thì làm luôn." Bạn đang trong `AppointmentService`, cần biết số slot còn lại, `scheduleRepository` đang inject sẵn — gọi luôn, nhanh gọn. Không ai reject PR vì lý do này.
 
-Nhưng mỗi lần làm thế, mày đang rỉ knowledge về DoctorSchedule sang AppointmentService. Sau mười lần như vậy, hai module đã entangled đến mức không thể tách ra mà không viết lại.
+Nhưng mỗi lần làm thế, bạn đang rỉ knowledge về DoctorSchedule sang AppointmentService. Sau mười lần như vậy, hai module đã entangled đến mức không thể tách ra mà không viết lại.
 
-Dấu hiệu dễ nhận nhất: **nếu mày không thể test một module mà không cần setup data cho module khác**, boundary đang bị vi phạm.
+Dấu hiệu dễ nhận nhất: **nếu bạn không thể test một module mà không cần setup data cho module khác**, boundary đang bị vi phạm.
 
 ---
 

@@ -27,7 +27,7 @@ Có cách làm khác.
 
 ## Strangler Fig Pattern — migrate dần mà không dừng lại
 
-Cái tên nghe lạ nhưng ý tưởng rất thực tế: như cây strangler fig trong rừng nhiệt đới mọc dần quanh cây chủ, eventually thay thế hoàn toàn — mày build cấu trúc mới song song với cái cũ, và migrate từng phần nhỏ.
+Cái tên nghe lạ nhưng ý tưởng rất thực tế: như cây strangler fig trong rừng nhiệt đới mọc dần quanh cây chủ, eventually thay thế hoàn toàn — bạn build cấu trúc mới song song với cái cũ, và migrate từng phần nhỏ.
 
 Trong thực tế với HMS: giả sử `AppointmentService` đang fat và cần chuyển sang architecture Use Case. Thay vì viết lại toàn bộ:
 
@@ -47,11 +47,11 @@ Mỗi bước là một PR nhỏ, có thể review được, có thể test đư
 
 **Rule 1: Không bao giờ refactor và thêm feature trong cùng một PR.**
 
-Đây là quy tắc quan trọng nhất. Khi mày mix refactor với feature, không ai review được vì không rõ behavior nào mới, behavior nào cũ. Bug xuất hiện và không ai biết bug đến từ refactor hay từ feature. Giữ hai thứ tách biệt hoàn toàn.
+Đây là quy tắc quan trọng nhất. Khi bạn mix refactor với feature, không ai review được vì không rõ behavior nào mới, behavior nào cũ. Bug xuất hiện và không ai biết bug đến từ refactor hay từ feature. Giữ hai thứ tách biệt hoàn toàn.
 
 **Rule 2: Mỗi bước refactor phải có test cover trước khi làm.**
 
-Mày không thể refactor an toàn nếu không có test. Trình tự đúng: viết test cho behavior hiện tại → refactor → chạy test xác nhận behavior không đổi. Nếu không có test và mày refactor, mày đang đoán mò.
+Bạn không thể refactor an toàn nếu không có test. Trình tự đúng: viết test cho behavior hiện tại → refactor → chạy test xác nhận behavior không đổi. Nếu không có test và bạn refactor, bạn đang đoán mò.
 
 **Rule 3: Chọn điểm bắt đầu là nơi đau nhất, không phải nơi dễ nhất.**
 
@@ -116,7 +116,7 @@ Nhưng ngay cả khi viết lại, nguyên tắc tương tự áp dụng: không
 
 ## Takeaway
 
-Lần tới khi mày nhìn vào một class cần refactor, thay vì hỏi "viết lại hết mất bao lâu", hãy hỏi: *"Method nào trong class này tao có thể extract ra và migrate riêng trong một PR nhỏ?"* Bắt đầu từ đó.
+Lần tới khi bạn nhìn vào một class cần refactor, thay vì hỏi "viết lại hết mất bao lâu", hãy hỏi: *"Method nào trong class này mình có thể extract ra và migrate riêng trong một PR nhỏ?"* Bắt đầu từ đó.
 
 ---
 

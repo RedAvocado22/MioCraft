@@ -1,6 +1,6 @@
 ---
 title: "On-call — 15 phút đầu đọc log production"
-description: "Alert 5xx spike: correlation ID, timeline, thay đổi gần đây — trước khi grep exception ngẫu nhiên. Checklist junior vào on-call rotation."
+description: "Alert 5xx spike: correlation ID, timeline, thay đổi gần đây — trước khi grep exception ngẫu nhiên. Checklist cho lần đầu vào on-call rotation."
 category: programming
 pubDate: 2026-06-08
 series: "Phần 12: Production & Ops"
@@ -8,9 +8,9 @@ tags: ["production", "on-call", "logging", "incident"]
 ---
 
 
-3 giờ sáng Slack ping: *"HMS API lỗi"*. Junior SSH vào server, `tail -f` file log, thấy wall of stacktrace, panic restart pod — không hỏi **khi nào bắt đầu**, **bao nhiêu % request**, **deploy gì lúc 2:50**.
+3 giờ sáng Slack ping: *"HMS API lỗi"*. Người mới SSH vào server, `tail -f` file log, thấy wall of stacktrace, panic restart pod — không hỏi **khi nào bắt đầu**, **bao nhiêu % request**, **deploy gì lúc 2:50**.
 
-15 phút đầu quyết định mày đang debug hay đang làm tệ hơn.
+15 phút đầu quyết định bạn đang debug hay đang làm tệ hơn.
 
 ---
 

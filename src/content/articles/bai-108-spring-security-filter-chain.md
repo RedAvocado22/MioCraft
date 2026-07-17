@@ -8,9 +8,9 @@ tags: ["backend", "spring-security", "JWT", "filter"]
 ---
 
 
-Mày đặt breakpoint trong `AppointmentController.create()` — request đã có `Authentication` với `ROLE_PATIENT`, JWT đã parse xong, userId đã nằm trong `UserContext`. Nhưng mày không gọi bất kỳ dòng code nào "login" trong controller.
+Bạn đặt breakpoint trong `AppointmentController.create()` — request đã có `Authentication` với `ROLE_PATIENT`, JWT đã parse xong, userId đã nằm trong `UserContext`. Nhưng bạn không gọi bất kỳ dòng code nào "login" trong controller.
 
-Điều gì đã xảy ra giữa lúc TCP packet đến Tomcat và lúc method của mày chạy? Nếu mày không biết, mày sẽ debug security sai chỗ — sửa controller trong khi lỗi nằm ở filter, hoặc ngược lại.
+Điều gì đã xảy ra giữa lúc TCP packet đến Tomcat và lúc method của bạn chạy? Nếu bạn không biết, bạn sẽ debug security sai chỗ — sửa controller trong khi lỗi nằm ở filter, hoặc ngược lại.
 
 ---
 
@@ -31,7 +31,7 @@ HTTP Request
 
 `SecurityFilterChain` là danh sách filter được Spring Security sắp xếp. Mỗi filter có thể **short-circuit** — trả 401/403 ngay, không vào controller.
 
-Hiểu thứ tự giúp mày biết: JWT validate **trước** `@PreAuthorize` chạy; CORS preflight **trước** authentication.
+Hiểu thứ tự giúp bạn biết: JWT validate **trước** `@PreAuthorize` chạy; CORS preflight **trước** authentication.
 
 ---
 
@@ -39,10 +39,10 @@ Hiểu thứ tự giúp mày biết: JWT validate **trước** `@PreAuthorize` c
 
 Hai khái niệm bị nhầm liên tục:
 
-**Authentication** — *"Mày là ai?"*  
+**Authentication** — *"Bạn là ai?"
 Verify JWT signature, đọc `sub` (userId), roles từ Keycloak. Kết quả: object `Authentication` trong `SecurityContextHolder`.
 
-**Authorization** — *"Mày được làm gì?"*  
+**Authorization** — *"Bạn được làm gì?"
 `@PreAuthorize("hasRole('DOCTOR')")`, `authorizeHttpRequests`, ABAC check bệnh nhân thuộc bác sĩ nào.
 
 ```java
@@ -135,7 +135,7 @@ Blacklist check **sau** khi token format hợp lệ hoặc **thay** một phần
 
 ---
 
-## SecurityFilterChain — nơi mày định nghĩa luật
+## SecurityFilterChain — nơi bạn định nghĩa luật
 
 ```java
 @Bean

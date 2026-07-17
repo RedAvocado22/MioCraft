@@ -1,6 +1,6 @@
 ---
 title: "Optional<T> — khi nào nên dùng, khi nào không"
-description: "Optional không phải cách viết null an toàn cho mọi chỗ. Return type có lý, field và parameter thì gần như luôn sai — và senior reject vì lý do đó."
+description: "Optional không phải cách viết null an toàn cho mọi chỗ. Return type có lý, field và parameter thì gần như luôn sai — đó là lý do cách dùng này thường bị review lại."
 category: programming
 pubDate: 2026-05-22
 series: "Phần 2: Clean Code"
@@ -8,11 +8,11 @@ tags: ["clean-code", "java", "optional", "null"]
 ---
 
 
-Có một phase mà hầu hết junior Java đều trải qua: vừa học `Optional`, liền bọc mọi thứ bằng `Optional`. Entity có field `Optional<String> phoneNumber`. Service method nhận `Optional<UUID> doctorId`. Repository trả về `Optional` — cái đó thì đúng — nhưng rồi người ta chain `.map().flatMap()` ba tầng cho một logic tìm bệnh nhân theo mã hồ sơ.
+Có một phase mà hầu hết người mới Java đều trải qua: vừa học `Optional`, liền bọc mọi thứ bằng `Optional`. Entity có field `Optional<String> phoneNumber`. Service method nhận `Optional<UUID> doctorId`. Repository trả về `Optional` — cái đó thì đúng — nhưng rồi người ta chain `.map().flatMap()` ba tầng cho một logic tìm bệnh nhân theo mã hồ sơ.
 
-Code compile. Test pass. Senior comment một dòng: *"Đừng dùng Optional như thế."*
+Code compile. Test pass. Người có kinh nghiệm comment một dòng: *"Đừng dùng Optional như thế."*
 
-Không phải vì senior ghét Java 8. Mà vì `Optional` được thiết kế cho **một use case cụ thể**, và dùng sai chỗ tạo ra code khó đọc hơn null check thông thường.
+Không phải vì người có kinh nghiệm ghét Java 8. Mà vì `Optional` được thiết kế cho **một use case cụ thể**, và dùng sai chỗ tạo ra code khó đọc hơn null check thông thường.
 
 ---
 
@@ -29,7 +29,7 @@ public interface PatientRepository extends JpaRepository<Patient, UUID> {
 }
 ```
 
-Khi `PatientService` gọi method này, compiler và API contract nói rõ: *"Có thể không tìm thấy — mày phải quyết định xử lý thế nào."*
+Khi `PatientService` gọi method này, compiler và API contract nói rõ: *"Có thể không tìm thấy — bạn phải quyết định xử lý thế nào."*
 
 ```java
 public PatientResponse getByRecordNumber(String recordNumber) {
@@ -70,7 +70,7 @@ public class Patient {
 }
 ```
 
-Nếu mày muốn **bắt buộc** phải có số điện thoại khẩn cấp trước khi tạo hồ sơ — đó là business rule, enforce ở `PatientService.create()`, không phải bằng cách bọc field trong `Optional`.
+Nếu bạn muốn **bắt buộc** phải có số điện thoại khẩn cấp trước khi tạo hồ sơ — đó là business rule, enforce ở `PatientService.create()`, không phải bằng cách bọc field trong `Optional`.
 
 ---
 
@@ -146,7 +146,7 @@ public Appointment getById(UUID id) {
 
 ## Takeaway
 
-`Optional` trả lời câu hỏi: *"Method này có thể không có kết quả — mày đã xử lý chưa?"* Dùng nó ở **return type** khi absence là hợp lệ. Đừng đưa vào entity field, đừng làm parameter, đừng bọc collection. Nếu mày thấy mình viết `Optional<Optional<...>>` hoặc `.get()` không có `orElseThrow` — đó là dấu hiệu đang lạm dụng.
+`Optional` trả lời câu hỏi: *"Method này có thể không có kết quả — bạn đã xử lý chưa?"* Dùng nó ở **return type** khi absence là hợp lệ. Đừng đưa vào entity field, đừng làm parameter, đừng bọc collection. Nếu bạn thấy mình viết `Optional<Optional<...>>` hoặc `.get()` không có `orElseThrow` — đó là dấu hiệu đang lạm dụng.
 
 ---
 

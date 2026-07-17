@@ -7,7 +7,7 @@ series: "Phần 12: Production & Ops"
 tags: ["production", "on-call", "observability", "sre"]
 ---
 
-Tuần đầu on-call, junior nhận 40 Slack ping/đêm. Sáng hôm sau team thấy “alert fatigue”: mọi người mute channel, bỏ qua ping thật lẫn ping giả. Incident thật — payment webhook fail — chôn trong *“CPU > 70% trên pod staging”*.
+Tuần đầu on-call, người mới nhận 40 Slack ping/đêm. Sáng hôm sau team thấy “alert fatigue”: mọi người mute channel, bỏ qua ping thật lẫn ping giả. Incident thật — payment webhook fail — chôn trong *“CPU > 70% trên pod staging”*.
 
 Vấn đề không phải thiếu monitoring. Là **alert sai**.
 
@@ -70,7 +70,7 @@ Runbook: https://wiki/.../api-5xx
 Escalate: #hms-oncall → DBA nếu DB connection refused
 ```
 
-Junior lúc 3h sáng không cần nhớ hết — cần **bước đầu không làm tệ hơn** (đừng restart all pods trước khi biết phạm vi).
+Người mới lúc 3h sáng không cần nhớ hết — cần **bước đầu không làm tệ hơn** (đừng restart all pods trước khi biết phạm vi).
 
 ---
 

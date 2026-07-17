@@ -33,11 +33,11 @@ Microservices ra đời để giải quyết vấn đề scale của những cô
 
 Đổi lại, microservices tạo ra một tập vấn đề mới:
 
-**Network calls thay thế function calls.** Khi `AppointmentService` cần data từ `DoctorService`, đó không còn là một method call nữa — đó là HTTP request hoặc gRPC call, có latency, có thể fail, có thể timeout. Mày phải xử lý tất cả những case đó.
+**Network calls thay thế function calls.** Khi `AppointmentService` cần data từ `DoctorService`, đó không còn là một method call nữa — đó là HTTP request hoặc gRPC call, có latency, có thể fail, có thể timeout. Bạn phải xử lý tất cả những case đó.
 
-**Distributed transactions là địa ngục.** Nếu booking một appointment cần write vào cả `appointment-service` lẫn `notification-service`, và `notification-service` fail giữa chừng, mày rollback bằng cách nào? Đây là lý do Saga pattern tồn tại — và Saga pattern phức tạp hơn `@Transactional` rất nhiều.
+**Distributed transactions là địa ngục.** Nếu booking một appointment cần write vào cả `appointment-service` lẫn `notification-service`, và `notification-service` fail giữa chừng, bạn rollback bằng cách nào? Đây là lý do Saga pattern tồn tại — và Saga pattern phức tạp hơn `@Transactional` rất nhiều.
 
-**Operational overhead tăng đột biến.** Thay vì deploy một service, mày deploy mười service. Thay vì monitor một process, mày monitor mười process. Service discovery, load balancing, distributed tracing — tất cả đều trở thành thứ mày phải quản lý.
+**Operational overhead tăng đột biến.** Thay vì deploy một service, bạn deploy mười service. Thay vì monitor một process, bạn monitor mười process. Service discovery, load balancing, distributed tracing — tất cả đều trở thành thứ bạn phải quản lý.
 
 ---
 
@@ -49,7 +49,7 @@ Nếu câu trả lời là "team quá nhiều người, deploy block lẫn nhau"
 
 Nếu câu trả lời là "một component cần scale gấp mười lần phần còn lại" — microservices cho component đó có thể đáng xem xét.
 
-Nếu câu trả lời là "tao muốn hệ thống scale được sau này" — đó không phải vấn đề cần giải quyết ngay bây giờ.
+Nếu câu trả lời là "mình muốn hệ thống scale được sau này" — đó không phải vấn đề cần giải quyết ngay bây giờ.
 
 Amazon nổi tiếng với câu nói "we started as a monolith." Shopify vẫn chạy monolith Ruby on Rails ở scale hàng tỷ đô. Stack Overflow cho đến gần đây vẫn là một monolith phục vụ hàng triệu request mỗi ngày với đội ngũ kỹ thuật tương đối nhỏ.
 
@@ -59,7 +59,7 @@ Amazon nổi tiếng với câu nói "we started as a monolith." Shopify vẫn c
 
 Có một kiến trúc mà ít người nói đến nhưng rất practical: **Modular Monolith**. Đây là monolith được tổ chức thành modules có boundary rõ ràng — mỗi module có package riêng, không cho phép truy cập cross-module trực tiếp mà phải qua interface.
 
-Trong HMS của mày, đó có nghĩa là: `appointment` module không được import trực tiếp class từ `billing` module — chúng giao tiếp qua interface hoặc event. Codebase vẫn được deploy như một unit, nhưng về mặt code organization thì đã có separation đủ để sau này, nếu cần, tách ra thành microservices mà không phải viết lại toàn bộ.
+Trong HMS của bạn, đó có nghĩa là: `appointment` module không được import trực tiếp class từ `billing` module — chúng giao tiếp qua interface hoặc event. Codebase vẫn được deploy như một unit, nhưng về mặt code organization thì đã có separation đủ để sau này, nếu cần, tách ra thành microservices mà không phải viết lại toàn bộ.
 
 Đây là cách tiếp cận thực tế cho hầu hết team nhỏ và startup: build monolith với module boundary tốt, scale đến khi thật sự cần tách ra, rồi tách từng module có vấn đề scale.
 
@@ -98,7 +98,7 @@ public class AppointmentService {
 
 ## Takeaway
 
-Nếu mày đang xây HMS cho đồ án hoặc một startup nhỏ, câu trả lời gần như chắc chắn là monolith — nhưng là modular monolith với boundary rõ ràng. Đừng để "sau này sẽ phải scale" là lý do để add complexity ngay hôm nay. Complexity phải được justify bởi vấn đề hiện tại, không phải vấn đề tưởng tượng.
+Nếu bạn đang xây HMS cho đồ án hoặc một startup nhỏ, câu trả lời gần như chắc chắn là monolith — nhưng là modular monolith với boundary rõ ràng. Đừng để "sau này sẽ phải scale" là lý do để add complexity ngay hôm nay. Complexity phải được justify bởi vấn đề hiện tại, không phải vấn đề tưởng tượng.
 
 ---
 

@@ -116,7 +116,7 @@ public class AppointmentNotificationListener {
 
 `@TransactionalEventListener` giải quyết "gửi notification khi chưa commit" — nhưng tạo ra một vấn đề khác: listener chạy sau khi transaction đã đóng.
 
-Nếu listener cần làm gì đó liên quan đến database — vd: log notification history — nó không còn trong transaction gốc nữa. Spring sẽ throw `LazyInitializationException` nếu mày truy cập lazy-loaded field, hoặc không có active transaction để save record.
+Nếu listener cần làm gì đó liên quan đến database — vd: log notification history — nó không còn trong transaction gốc nữa. Spring sẽ throw `LazyInitializationException` nếu bạn truy cập lazy-loaded field, hoặc không có active transaction để save record.
 
 ```java
 @Component
@@ -209,7 +209,7 @@ Outbox pattern đảm bảo at-least-once delivery: notification có thể gửi
 
 ## Takeaway
 
-Bất cứ khi nào mày cần làm gì đó *phụ thuộc vào việc một transaction thành công* — gửi notification, publish event, call external service — đừng bao giờ đặt nó trong cùng transaction mà không dùng `@TransactionalEventListener`. Transaction chưa commit không phải là bảo đảm rằng data sẽ tồn tại. Và một cái notification gửi đi không thể unsend.
+Bất cứ khi nào bạn cần làm gì đó *phụ thuộc vào việc một transaction thành công* — gửi notification, publish event, call external service — đừng bao giờ đặt nó trong cùng transaction mà không dùng `@TransactionalEventListener`. Transaction chưa commit không phải là bảo đảm rằng data sẽ tồn tại. Và một cái notification gửi đi không thể unsend.
 
 ---
 

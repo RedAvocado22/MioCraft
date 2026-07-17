@@ -9,17 +9,17 @@ tags: ["design-patterns", "builder", "java", "lombok"]
 
 ---
 
-Có một dấu hiệu rất rõ ràng mà mày thường bỏ qua cho đến khi quá muộn: constructor của mày đang nhận quá nhiều tham số.
+Có một dấu hiệu rất rõ ràng mà bạn thường bỏ qua cho đến khi quá muộn: constructor của bạn đang nhận quá nhiều tham số.
 
 ```java
-// ❌ Vấn đề — mày đang nhìn vào cái này và không biết tham số nào là gì
+// ❌ Vấn đề — bạn đang nhìn vào cái này và không biết tham số nào là gì
 Appointment appointment = new Appointment(
     doctorId, patientId, scheduleId, LocalDate.now(),
     "10:00", AppointmentStatus.PENDING, false, null
 );
 ```
 
-Câu hỏi tự nhiên là: `false` là gì? `null` là gì? Mày phải nhảy vào class `Appointment` để đọc constructor mới biết. Và nếu mày truyền nhầm thứ tự hai UUID — compiler không báo lỗi vì cả hai đều là `UUID`.
+Câu hỏi tự nhiên là: `false` là gì? `null` là gì? Bạn phải nhảy vào class `Appointment` để đọc constructor mới biết. Và nếu bạn truyền nhầm thứ tự hai UUID — compiler không báo lỗi vì cả hai đều là `UUID`.
 
 Builder Pattern sinh ra để giải quyết chính xác vấn đề này.
 
@@ -29,9 +29,9 @@ Builder Pattern sinh ra để giải quyết chính xác vấn đề này.
 
 Khi mọi người nói "constructor có quá nhiều tham số là bad practice", họ không nói về con số. Họ nói về hai thứ cụ thể hơn:
 
-**Thứ nhất là ambiguity.** Khi nhìn vào `new Appointment(id1, id2, id3, ...)`, không có context nào cho mày biết `id1` là `doctorId` hay `patientId`. Code trở thành đố vui.
+**Thứ nhất là ambiguity.** Khi nhìn vào `new Appointment(id1, id2, id3, ...)`, không có context nào cho bạn biết `id1` là `doctorId` hay `patientId`. Code trở thành đố vui.
 
-**Thứ hai là optional parameters.** Trong Java, không có named parameters hay default values như Python hay Kotlin. Nếu một field có thể null, mày vẫn phải truyền `null` vào constructor — hoặc tạo ra năm overload khác nhau. Cả hai đều tệ.
+**Thứ hai là optional parameters.** Trong Java, không có named parameters hay default values như Python hay Kotlin. Nếu một field có thể null, bạn vẫn phải truyền `null` vào constructor — hoặc tạo ra năm overload khác nhau. Cả hai đều tệ.
 
 Builder giải quyết cả hai bằng cách biến construction thành một chuỗi method calls có tên rõ ràng.
 
@@ -53,9 +53,9 @@ Appointment appointment = Appointment.builder()
     .build();
 ```
 
-Không còn ambiguity. Không còn `false` lơ lửng không biết là gì. Và nếu mày bỏ qua một optional field — không cần truyền `null`.
+Không còn ambiguity. Không còn `false` lơ lửng không biết là gì. Và nếu bạn bỏ qua một optional field — không cần truyền `null`.
 
-Nếu mày dùng Lombok (và trong Spring Boot project hầu như ai cũng dùng), cái này free hoàn toàn:
+Nếu bạn dùng Lombok (và trong Spring Boot project hầu như ai cũng dùng), cái này free hoàn toàn:
 
 ```java
 @Builder
@@ -77,13 +77,13 @@ public class Appointment {
 }
 ```
 
-`@Builder` annotation generate toàn bộ builder class cho mày. `@Builder.Default` handle default values — field nào không được set sẽ dùng giá trị mặc định thay vì `null`.
+`@Builder` annotation generate toàn bộ builder class cho bạn. `@Builder.Default` handle default values — field nào không được set sẽ dùng giá trị mặc định thay vì `null`.
 
 ---
 
 ## Khi nào Builder thực sự cần, khi nào thì không
 
-Builder không phải pattern mày dùng cho mọi class. Có một ngưỡng khá rõ ràng:
+Builder không phải pattern bạn dùng cho mọi class. Có một ngưỡng khá rõ ràng:
 
 **Dùng Builder khi:**
 - Object có từ 4-5 fields trở lên cần set lúc construction
@@ -93,7 +93,7 @@ Builder không phải pattern mày dùng cho mọi class. Có một ngưỡng kh
 
 **Không cần Builder khi:**
 - Class chỉ có 2-3 fields — constructor bình thường đủ dùng
-- Mày đang dùng JPA Entity — Hibernate cần no-arg constructor và có setter riêng
+- Bạn đang dùng JPA Entity — Hibernate cần no-arg constructor và có setter riêng
 - Object có lifecycle phức tạp hơn chỉ là "tạo ra và dùng"
 
 Đây là lý do tại sao trong HMS, `Appointment` (domain object) dùng Builder, còn `AppointmentEntity` (JPA entity) thì không.
@@ -125,7 +125,7 @@ public class AppointmentCreateRequest {
 }
 ```
 
-Thay vì để validation nằm rải rác trong Service, mày đảm bảo rằng một `AppointmentCreateRequest` invalid không bao giờ được tạo ra. Đây là fail-fast — bắt lỗi sớm nhất có thể trong lifecycle của object.
+Thay vì để validation nằm rải rác trong Service, bạn đảm bảo rằng một `AppointmentCreateRequest` invalid không bao giờ được tạo ra. Đây là fail-fast — bắt lỗi sớm nhất có thể trong lifecycle của object.
 
 ---
 
@@ -147,13 +147,13 @@ Appointment appointment = Appointment.builder()
 
 Static factory method tốt cho trường hợp ít params và tên method nói rõ ý nghĩa (`Appointment.fromReschedule(originalId, newScheduleId)`). Builder tốt hơn khi params nhiều và cần flexibility.
 
-Không có cái nào "đúng hơn" — mày chọn dựa trên context.
+Không có cái nào "đúng hơn" — bạn chọn dựa trên context.
 
 ---
 
 ## Takeaway
 
-Lần tới khi mày viết constructor nhận quá 4 tham số, dừng lại và hỏi: *"Người đọc call site này sau 3 tháng có biết tham số nào là gì không?"* Nếu không chắc — Builder là câu trả lời đúng, và với Lombok thì chi phí là zero.
+Lần tới khi bạn viết constructor nhận quá 4 tham số, dừng lại và hỏi: *"Người đọc call site này sau 3 tháng có biết tham số nào là gì không?"* Nếu không chắc — Builder là câu trả lời đúng, và với Lombok thì chi phí là zero.
 
 ---
 

@@ -223,7 +223,7 @@ public class SlotBookingService {
 ```
 
 Lợi:
-- Works across multiple servers (nếu cậu có distributed HMS)
+- Works across multiple servers (nếu bạn có distributed HMS)
 - No database deadlock
 - Can implement queue (lock not acquired → queue request)
 
@@ -293,7 +293,7 @@ Vấn đề:
 | High contention (100+ users book same slot) | **Optimistic + Circuit Breaker** (reject early, don't retry) |
 | Distributed HMS (multiple servers) | **Redis distributed lock** |
 
-Cho HMS của cậu bây giờ: **dùng Atomic UPDATE cho slot booking**.
+Cho HMS của bạn bây giờ: **dùng Atomic UPDATE cho slot booking**.
 
 ```java
 @Transactional
@@ -323,9 +323,9 @@ public BookingResult bookSlot(UUID scheduleId, UUID userId) {
 
 ## Takeaway
 
-Race conditions không obvious. Cậu không thấy nó khi test locally (vì sequential). Chỉ khi load test hoặc production cậu thấy "2 users book 1 slot" bug.
+Race conditions không obvious. Bạn không thấy nó khi test locally (vì sequential). Chỉ khi load test hoặc production bạn thấy "2 users book 1 slot" bug.
 
-Nguyên tắc: **mỗi khi read + modify shared resource, cậu cần synchronization**. Chọn cơ chế (lock, version, atomic) dựa vào complexity + performance requirement.
+Nguyên tắc: **mỗi khi read + modify shared resource, bạn cần synchronization**. Chọn cơ chế (lock, version, atomic) dựa vào complexity + performance requirement.
 
 Atomic operation > Optimistic > Pessimistic. Thử từ trên xuống.
 

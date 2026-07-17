@@ -73,7 +73,7 @@ Hoặc tốt hơn nữa — với slot availability, đừng cache bằng Redis 
 
 ## Khi cache che giấu vấn đề thật sự
 
-Nếu query của mày chậm vì thiếu index, cache sẽ che điều đó đi hoàn toàn — cho đến khi cache miss đồng loạt xảy ra (cache stampede, đã có một bài riêng), hoặc khi mày cần một query variation mới mà không thể cache.
+Nếu query của bạn chậm vì thiếu index, cache sẽ che điều đó đi hoàn toàn — cho đến khi cache miss đồng loạt xảy ra (cache stampede, đã có một bài riêng), hoặc khi bạn cần một query variation mới mà không thể cache.
 
 Một query như thế này trong HMS:
 
@@ -94,19 +94,19 @@ Fix đúng là thêm composite index `(doctor_id, date)` vào bảng. Cache là 
 
 ## Cache làm tăng complexity của hệ thống
 
-Mỗi lần thêm cache, mày thêm vào hệ thống:
+Mỗi lần thêm cache, bạn thêm vào hệ thống:
 
 - Một data store thứ hai cần operate và monitor
 - Một class of bug mới: stale data, cache poisoning, inconsistency giữa cache và DB
-- Invalidation logic phải đúng ở mọi nơi data thay đổi — nếu có 3 chỗ update `DoctorSchedule` mà mày chỉ invalidate 2 chỗ, cache sẽ lie với mày
+- Invalidation logic phải đúng ở mọi nơi data thay đổi — nếu có 3 chỗ update `DoctorSchedule` mà bạn chỉ invalidate 2 chỗ, cache sẽ lie với bạn
 
-Đó không phải lý do để không dùng cache. Đó là lý do để chỉ dùng cache khi mày đã hiểu rõ vấn đề cần giải quyết.
+Đó không phải lý do để không dùng cache. Đó là lý do để chỉ dùng cache khi bạn đã hiểu rõ vấn đề cần giải quyết.
 
 ---
 
 ## Takeaway
 
-Trước khi thêm cache, hỏi: *"Database query của tao chậm vì thiếu index, vì đang load data thừa, hay vì genuinely cần nhiều compute?"* Nếu là hai cái đầu, fix đó trước. Cache chỉ có ý nghĩa khi query đã optimal rồi mà vẫn cần giảm thêm latency hoặc database load.
+Trước khi thêm cache, hỏi: *"Database query của mình chậm vì thiếu index, vì đang load data thừa, hay vì genuinely cần nhiều compute?"* Nếu là hai cái đầu, fix đó trước. Cache chỉ có ý nghĩa khi query đã optimal rồi mà vẫn cần giảm thêm latency hoặc database load.
 
 ---
 

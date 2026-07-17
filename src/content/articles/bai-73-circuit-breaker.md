@@ -19,13 +19,13 @@ Một service đang gặp vấn đề, hai service sập. Hiệu ứng này gọ
 
 Trong một hệ thống mà các service gọi nhau, khi một service chậm, tất cả service gọi đến nó đều bị block. Nếu chúng cũng bị block đủ lâu, chúng cũng sập. Và các service gọi đến những service đó cũng sẽ sập theo.
 
-Vấn đề ở đây là: **tài nguyên (threads, connections) là finite**. Khi mày không có cơ chế để "dừng lại" khi phát hiện downstream service đang có vấn đề, mày tiếp tục dùng tài nguyên để gọi những request biết trước là sẽ fail — cho đến khi không còn tài nguyên nữa.
+Vấn đề ở đây là: **tài nguyên (threads, connections) là finite**. Khi bạn không có cơ chế để "dừng lại" khi phát hiện downstream service đang có vấn đề, bạn tiếp tục dùng tài nguyên để gọi những request biết trước là sẽ fail — cho đến khi không còn tài nguyên nữa.
 
 ---
 
 ## Circuit Breaker — giải pháp vay từ kỹ thuật điện
 
-Cái tên "circuit breaker" đến từ công tắc điện trong nhà mày. Khi có chập điện, thay vì để toàn bộ hệ thống bị thiêu rụi, công tắc tự ngắt — ngăn dòng điện tiếp tục chạy. Sau khi vấn đề được khắc phục, mày bật lại.
+Cái tên "circuit breaker" đến từ công tắc điện trong nhà bạn. Khi có chập điện, thay vì để toàn bộ hệ thống bị thiêu rụi, công tắc tự ngắt — ngăn dòng điện tiếp tục chạy. Sau khi vấn đề được khắc phục, bạn bật lại.
 
 Circuit breaker trong software hoạt động theo nguyên lý tương tự, với ba trạng thái:
 
@@ -100,7 +100,7 @@ public class AppointmentService {
 
 ## Fallback strategy — không phải mọi thứ đều có thể fallback
 
-Khi circuit open, mày có một số lựa chọn cho fallback:
+Khi circuit open, bạn có một số lựa chọn cho fallback:
 
 **Return cached data:** Nếu notification service cũng cung cấp data (không chỉ side effect), trả về cached version từ Redis. User thấy data hơi cũ nhưng vẫn thấy gì đó.
 
@@ -108,7 +108,7 @@ Khi circuit open, mày có một số lựa chọn cho fallback:
 
 **Queue for later:** Như ví dụ trên — lưu pending notification vào database, một background job sẽ retry khi service recover.
 
-**Hard fail:** Đôi khi không có fallback hợp lý — nếu payment service down, mày không thể fallback việc charge tiền. Fail fast và trả về lỗi cho user là correct behavior.
+**Hard fail:** Đôi khi không có fallback hợp lý — nếu payment service down, bạn không thể fallback việc charge tiền. Fail fast và trả về lỗi cho user là correct behavior.
 
 Cái gì là fallback phù hợp phụ thuộc vào business logic, không phải technical preference.
 
@@ -132,9 +132,9 @@ resilience4j:
 
 ---
 
-## Circuit Breaker ở HMS của mày
+## Circuit Breaker ở HMS của bạn
 
-Trong HMS monolith, circuit breaker relevant nhất khi mày có external service calls — Keycloak, email provider, SMS gateway. Internal method calls trong cùng process không cần circuit breaker vì chúng không có network failure.
+Trong HMS monolith, circuit breaker relevant nhất khi bạn có external service calls — Keycloak, email provider, SMS gateway. Internal method calls trong cùng process không cần circuit breaker vì chúng không có network failure.
 
 Nếu sau này tách ra microservices, circuit breaker trở thành mandatory cho mọi service-to-service call.
 
@@ -142,7 +142,7 @@ Nếu sau này tách ra microservices, circuit breaker trở thành mandatory ch
 
 ## Takeaway
 
-Circuit breaker không ngăn service fail — nó ngăn failure lan rộng ra. Thiết kế hệ thống với assumption rằng bất kỳ external call nào cũng có thể fail, và mày đã có sẵn câu trả lời cho câu hỏi: *"Khi X fail, hệ thống của tao làm gì?"*
+Circuit breaker không ngăn service fail — nó ngăn failure lan rộng ra. Thiết kế hệ thống với assumption rằng bất kỳ external call nào cũng có thể fail, và bạn đã có sẵn câu trả lời cho câu hỏi: *"Khi X fail, hệ thống của mình làm gì?"*
 
 ---
 

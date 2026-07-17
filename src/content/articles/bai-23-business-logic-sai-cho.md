@@ -93,7 +93,7 @@ public class Appointment {
 }
 ```
 
-Sự khác biệt quan trọng: trong version cuối, mày **không thể** tạo một `Appointment` vi phạm rule nghiệp vụ. Không phải "cần nhớ gọi validate trước" — mà là rule được encode vào chính cấu trúc của object. Compiler là tuyến phòng thủ đầu tiên.
+Sự khác biệt quan trọng: trong version cuối, bạn **không thể** tạo một `Appointment` vi phạm rule nghiệp vụ. Không phải "cần nhớ gọi validate trước" — mà là rule được encode vào chính cấu trúc của object. Compiler là tuyến phòng thủ đầu tiên.
 
 ---
 
@@ -105,7 +105,7 @@ Bất cứ khi nào trong team có câu "nhớ gọi `validatePatient()` trướ
 
 **Dấu hiệu 2: Cùng một rule xuất hiện ở nhiều nơi**
 
-Nếu mày grep codebase và tìm thấy cùng một điều kiện check xuất hiện ở ba file khác nhau — đó là business logic đang bị duplicate. Mỗi lần rule thay đổi, mày phải nhớ update tất cả các chỗ. Sớm muộn cũng có chỗ bị bỏ sót.
+Nếu bạn grep codebase và tìm thấy cùng một điều kiện check xuất hiện ở ba file khác nhau — đó là business logic đang bị duplicate. Mỗi lần rule thay đổi, bạn phải nhớ update tất cả các chỗ. Sớm muộn cũng có chỗ bị bỏ sót.
 
 ---
 
@@ -119,7 +119,7 @@ Năm đầu: team vẫn nhớ quy ước, mọi thứ ổn. Năm hai: team rotat
 
 ## Takeaway
 
-Mỗi khi mày viết một validation hay một business rule, hỏi: *"Rule này có thể bị bypass không — bằng cách gọi sai thứ tự, hoặc gọi từ một entry point khác?"* Nếu có — rule đó đang ở sai chỗ.
+Mỗi khi bạn viết một validation hay một business rule, hỏi: *"Rule này có thể bị bypass không — bằng cách gọi sai thứ tự, hoặc gọi từ một entry point khác?"* Nếu có — rule đó đang ở sai chỗ.
 
 ---
 

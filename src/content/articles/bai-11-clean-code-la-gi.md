@@ -7,19 +7,19 @@ series: "Phần 2: Clean Code"
 tags: ["clean-code", "maintainability", "readability"]
 ---
 
-Có một khoảnh khắc mà hầu hết dev đều trải qua: mày mở lại một file mình viết sáu tháng trước, nhìn vào và không hiểu tại sao mình lại viết như vậy. Không phải vì code sai — nó vẫn chạy. Mà vì không còn ai đọc được nó nữa, kể cả tác giả.
+Có một khoảnh khắc mà hầu hết dev đều trải qua: bạn mở lại một file mình viết sáu tháng trước, nhìn vào và không hiểu tại sao mình lại viết như vậy. Không phải vì code sai — nó vẫn chạy. Mà vì không còn ai đọc được nó nữa, kể cả tác giả.
 
-Đây là lúc mày bắt đầu hiểu Clean Code thực sự là gì.
+Đây là lúc bạn bắt đầu hiểu Clean Code thực sự là gì.
 
 ## "Clean" không có nghĩa là hoàn hảo
 
 Sinh viên hay có một hiểu lầm rất phổ biến: Clean Code = code đẹp, code không có bug, code được viết bởi người giỏi. Nên khi nghe "viết Clean Code đi," phản ứng đầu tiên là lo — lo rằng mình chưa đủ giỏi để viết "clean."
 
-Thực ra định nghĩa đúng đơn giản hơn nhiều: **Clean Code là code mà một developer khác có thể đọc hiểu và sửa được mà không cần hỏi mày.**
+Thực ra định nghĩa đúng đơn giản hơn nhiều: **Clean Code là code mà một developer khác có thể đọc hiểu và sửa được mà không cần hỏi bạn.**
 
-Không phải code chạy nhanh nhất. Không phải code dùng ít line nhất. Không phải code thể hiện mày biết nhiều design pattern nhất.
+Không phải code chạy nhanh nhất. Không phải code dùng ít line nhất. Không phải code thể hiện bạn biết nhiều design pattern nhất.
 
-Code sống sót qua thời gian — khi mày off, khi mày nghỉ việc, khi teammate mới join, khi chính mày quay lại sau ba tháng không nhìn vào nó.
+Code sống sót qua thời gian — khi bạn off, khi bạn nghỉ việc, khi teammate mới join, khi chính bạn quay lại sau ba tháng không nhìn vào nó.
 
 ## Cái giá của code "chạy được nhưng không clean"
 
@@ -42,11 +42,11 @@ public List<Appointment> getA(Long id, String s, boolean b) {
 }
 ```
 
-Code này chạy được. Tao đảm bảo. Nhưng hỏi mày ba câu:
+Code này chạy được. Mình đảm bảo. Nhưng hỏi bạn ba câu:
 
 - `b` là cái gì? `true` hay `false` thì nên truyền vào?
 - Tại sao lại `findAll()` rồi filter trong Java thay vì filter ở database?
-- Sáu tháng sau mày có dám sửa function này không mà không sợ break thứ khác?
+- Sáu tháng sau bạn có dám sửa function này không mà không sợ break thứ khác?
 
 Bây giờ nhìn version này:
 
@@ -61,15 +61,15 @@ public List<Appointment> getUpcomingAppointmentsByDoctor(Long doctorId, Appointm
 }
 ```
 
-Ngắn hơn, rõ hơn, và bỏ luôn cái bug tiềm ẩn là `findAll()` kéo toàn bộ data về memory. Không phải vì tao "giỏi hơn" — mà vì tao nghĩ đến người đọc tiếp theo.
+Ngắn hơn, rõ hơn, và bỏ luôn cái bug tiềm ẩn là `findAll()` kéo toàn bộ data về memory. Không phải vì mình "giỏi hơn" — mà vì mình nghĩ đến người đọc tiếp theo.
 
 ## "Code cho người đọc, không phải cho máy chạy"
 
-Máy không quan tâm mày đặt tên biến là `x` hay `appointmentDate`. Nó chạy cả hai. Người đọc tiếp theo thì quan tâm rất nhiều.
+Máy không quan tâm bạn đặt tên biến là `x` hay `appointmentDate`. Nó chạy cả hai. Người đọc tiếp theo thì quan tâm rất nhiều.
 
-Trong một hệ thống thực tế như HMS, một AppointmentService có thể được đọc bởi: mày, teammate, senior review PR, junior mới join sau mày. Tất cả họ đều phải đọc code này mà không có mày ngồi cạnh giải thích.
+Trong một hệ thống thực tế như HMS, một AppointmentService có thể được đọc bởi: bạn, teammate, người có kinh nghiệm review PR, thành viên mới tham gia sau bạn. Tất cả họ đều phải đọc code này mà không có bạn ngồi cạnh giải thích.
 
-Đây là lý do tại sao Uncle Bob viết trong Clean Code: *"The ratio of time spent reading versus writing is well over 10 to 1."* Mày dành 1 giờ viết, nhưng cả team tốn 10 giờ đọc và hiểu nó trong vòng đời của codebase.
+Đây là lý do tại sao Uncle Bob viết trong Clean Code: *"The ratio of time spent reading versus writing is well over 10 to 1."* Bạn dành 1 giờ viết, nhưng cả team tốn 10 giờ đọc và hiểu nó trong vòng đời của codebase.
 
 Khi nghĩ như vậy, "đặt tên biến cho rõ" không còn là chuyện nhỏ nhặt nữa.
 
@@ -79,7 +79,7 @@ Không phải một checklist. Là một mindset. Nhưng nếu phải cụ thể
 
 **Tên nói lên ý định.** Không phải `data`, `result`, `temp`. Tên phải trả lời câu hỏi: đây là cái gì, nó đại diện cho điều gì trong domain.
 
-**Function làm đúng một việc.** Không phải "một function một trang code" — mà là một function có một lý do để thay đổi. Chi tiết tao sẽ nói ở P02/Bài 03.
+**Function làm đúng một việc.** Không phải "một function một trang code" — mà là một function có một lý do để thay đổi. Chi tiết mình sẽ nói ở P02/Bài 03.
 
 **Không có surprise.** Code làm đúng những gì tên nó nói. `getPatientById` không gọi thêm Keycloak bên trong. `calculateInsuranceCoverage` không tự gửi notification.
 
@@ -93,7 +93,7 @@ Clean Code không phải là không có comment. Không phải là code ngắn n
 
 Và quan trọng nhất: **Clean Code không phải là không có technical debt.**
 
-Mày vẫn sẽ có những chỗ viết tạm vì deadline. Vẫn có những chỗ chưa refactor xong. Điều quan trọng là mày *biết* những chỗ đó là debt, và mày có kế hoạch trả — không phải để nó mục đi trong codebase cho đến khi không ai dám đụng vào.
+Bạn vẫn sẽ có những chỗ viết tạm vì deadline. Vẫn có những chỗ chưa refactor xong. Điều quan trọng là bạn *biết* những chỗ đó là debt, và bạn có kế hoạch trả — không phải để nó mục đi trong codebase cho đến khi không ai dám đụng vào.
 
 Clean Code là code mà debt của nó *rõ ràng* và *có thể kiểm soát được* — không phải code không có debt.
 

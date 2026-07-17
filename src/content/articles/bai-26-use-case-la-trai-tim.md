@@ -7,7 +7,7 @@ series: "Phần 3: Kiến trúc phần mềm"
 tags: ["architecture", "use-case", "clean-architecture"]
 ---
 
-Có một câu hỏi tao hay dùng để đánh giá cách một developer suy nghĩ về kiến trúc: *"Hệ thống của mày làm gì?"*
+Có một câu hỏi mình hay dùng để đánh giá cách một developer suy nghĩ về kiến trúc: *"Hệ thống của bạn làm gì?"*
 
 Developer tư duy theo layer sẽ trả lời: "Có Controller, Service, Repository — Controller nhận request, Service xử lý, Repository lưu DB."
 
@@ -19,7 +19,7 @@ Câu trả lời thứ hai mô tả **use case** — những gì hệ thống th
 
 ## Tại sao "Service" không phải là đơn vị tổ chức tốt
 
-Trong Layered Architecture, đơn vị tổ chức code là layer: tất cả business logic nằm trong Service layer, tất cả data access nằm trong Repository layer. Cái tên mà mày đặt cho service thường là tên của entity: `AppointmentService`, `PatientService`, `DoctorScheduleService`.
+Trong Layered Architecture, đơn vị tổ chức code là layer: tất cả business logic nằm trong Service layer, tất cả data access nằm trong Repository layer. Cái tên mà bạn đặt cho service thường là tên của entity: `AppointmentService`, `PatientService`, `DoctorScheduleService`.
 
 Vấn đề: `AppointmentService` là một cái túi chứa *mọi thứ liên quan đến Appointment*. Đặt lịch, hủy lịch, xem lịch, tìm kiếm lịch, export báo cáo, kiểm tra conflict — tất cả nằm trong một class. Class đó không mô tả gì cụ thể ngoài "đây là nơi làm mọi thứ với Appointment."
 
@@ -82,7 +82,7 @@ public class BookAppointmentUseCase {
 
 So sánh với `AppointmentService.bookAppointment()` — về mặt code có vẻ giống nhau. Nhưng sự khác biệt quan trọng là về **tổ chức**:
 
-Khi mày đặt tên file là `BookAppointmentUseCase.java`, bất kỳ ai mở thư mục `usecases/` đều hiểu ngay hệ thống có thể làm gì mà không cần đọc một dòng code nào. Khi thêm một flow mới — ví dụ `RescheduleAppointmentUseCase` — mày tạo một file mới, không động vào code cũ. Khi `BookAppointmentUseCase` cần thêm logic phức tạp, nó không làm ảnh hưởng đến `CancelAppointmentUseCase`.
+Khi bạn đặt tên file là `BookAppointmentUseCase.java`, bất kỳ ai mở thư mục `usecases/` đều hiểu ngay hệ thống có thể làm gì mà không cần đọc một dòng code nào. Khi thêm một flow mới — ví dụ `RescheduleAppointmentUseCase` — bạn tạo một file mới, không động vào code cũ. Khi `BookAppointmentUseCase` cần thêm logic phức tạp, nó không làm ảnh hưởng đến `CancelAppointmentUseCase`.
 
 ---
 
@@ -120,7 +120,7 @@ Controller không có business logic. Không có validation phức tạp. Không
 
 ## Không phải mọi service đều nên thành Use Case
 
-Nếu mày có một method đơn giản như `getAppointmentById()` — fetch by ID, map sang DTO, return — không cần tạo `GetAppointmentByIdUseCase`. Đó chỉ là query, không phải business flow. Query service hoặc repository trực tiếp là đủ.
+Nếu bạn có một method đơn giản như `getAppointmentById()` — fetch by ID, map sang DTO, return — không cần tạo `GetAppointmentByIdUseCase`. Đó chỉ là query, không phải business flow. Query service hoặc repository trực tiếp là đủ.
 
 Use Case xứng đáng với sự phức tạp khi có ít nhất một trong: nhiều domain object interact với nhau, side effects (notification, event, audit log), hoặc state transition phức tạp.
 
@@ -128,8 +128,8 @@ Use Case xứng đáng với sự phức tạp khi có ít nhất một trong: n
 
 ## Takeaway
 
-Thử mở thư mục `service/` trong project của mày và đọc tên các class. Nếu tất cả đều là `XxxService` — mày biết có những entity nào, nhưng không biết hệ thống *làm gì*. Bây giờ tưởng tượng một thư mục `usecase/` với `BookAppointmentUseCase`, `CancelAppointmentUseCase`, `ConfirmAppointmentUseCase` — mày hiểu ngay hệ thống làm gì mà không cần đọc một dòng code nào.
+Thử mở thư mục `service/` trong project của bạn và đọc tên các class. Nếu tất cả đều là `XxxService` — bạn biết có những entity nào, nhưng không biết hệ thống *làm gì*. Bây giờ tưởng tượng một thư mục `usecase/` với `BookAppointmentUseCase`, `CancelAppointmentUseCase`, `ConfirmAppointmentUseCase` — bạn hiểu ngay hệ thống làm gì mà không cần đọc một dòng code nào.
 
 ---
 
-*Bài tiếp theo: DTO vs Entity vs Domain Model — ba thứ khác nhau, và mày cần cả ba*
+*Bài tiếp theo: DTO vs Entity vs Domain Model — ba thứ khác nhau, và bạn cần cả ba*

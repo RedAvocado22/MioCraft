@@ -9,7 +9,7 @@ tags: ["product-thinking", "problem-solving", "mindset"]
 
 Có một triệu chứng rất đặc trưng của developer mới vào nghề: họ mở IDE trước khi hiểu vấn đề xong. Không phải vì lười biếng hay thiếu cẩn thận — mà vì với họ, code *là* cách suy nghĩ. Gõ ra thì mới thấy rõ.
 
-Cái này không hoàn toàn sai. Nhưng nó có một side effect nguy hiểm: mày bắt đầu giải một bài toán trước khi chắc chắn đó là đúng bài toán cần giải.
+Cái này không hoàn toàn sai. Nhưng nó có một side effect nguy hiểm: bạn bắt đầu giải một bài toán trước khi chắc chắn đó là đúng bài toán cần giải.
 
 ---
 
@@ -51,9 +51,9 @@ Nhảy vào code ngay tức là chọn một trong những hypothesis đó mà k
 
 Không cần process phức tạp. Chỉ cần hai bước bắt buộc trước khi viết dòng code đầu tiên:
 
-**Bước 1 — Reproduce được vấn đề.** Không phải nghe mô tả, không phải đọc ticket. Tự tay reproduce. Nếu không reproduce được, mày chưa hiểu vấn đề. Nếu reproduce được, mày đã có thêm thông tin: chính xác điều kiện nào dẫn đến vấn đề đó.
+**Bước 1 — Reproduce được vấn đề.** Không phải nghe mô tả, không phải đọc ticket. Tự tay reproduce. Nếu không reproduce được, bạn chưa hiểu vấn đề. Nếu reproduce được, bạn đã có thêm thông tin: chính xác điều kiện nào dẫn đến vấn đề đó.
 
-**Bước 2 — Đặt ra ít nhất 3 hypothesis về root cause.** Không phải một. Một hypothesis duy nhất là confirmation bias — mày đang tìm bằng chứng ủng hộ thứ mày đã nghĩ, không phải tìm sự thật. Ba hypothesis buộc mày phải nghĩ rộng hơn, và thường một trong hai cái còn lại mới là thứ đúng.
+**Bước 2 — Đặt ra ít nhất 3 hypothesis về root cause.** Không phải một. Một hypothesis duy nhất là confirmation bias — bạn đang tìm bằng chứng ủng hộ thứ bạn đã nghĩ, không phải tìm sự thật. Ba hypothesis buộc bạn phải nghĩ rộng hơn, và thường một trong hai cái còn lại mới là thứ đúng.
 
 Sau hai bước đó, mới bắt đầu investigate — theo thứ tự từ hypothesis dễ verify nhất đến khó nhất.
 
@@ -68,13 +68,13 @@ Sau hai bước đó, mới bắt đầu investigate — theo thứ tự từ hy
 Đôi khi là một config change.
 Đôi khi là "đây không phải bug, đây là expected behavior, cần update documentation."
 
-Những giải pháp này không cần PR, không cần code review, không cần deploy. Nếu mày nhảy vào code ngay, mày sẽ miss hết những giải pháp đơn giản hơn này — và tạo ra complexity không cần thiết cho một vấn đề vốn dĩ không cần complexity.
+Những giải pháp này không cần PR, không cần code review, không cần deploy. Nếu bạn nhảy vào code ngay, bạn sẽ miss hết những giải pháp đơn giản hơn này — và tạo ra complexity không cần thiết cho một vấn đề vốn dĩ không cần complexity.
 
 ---
 
 ## Takeaway
 
-Lần tới khi nhận một ticket bug hoặc một feature request, hãy thử đặt quy tắc cho bản thân: không được mở IDE trong 15 phút đầu. Chỉ được đọc, hỏi, và viết ra những gì mày đã hiểu về vấn đề. Nếu sau 15 phút mày không viết được một câu mô tả rõ ràng vấn đề là gì — mày chưa sẵn sàng để giải nó.
+Lần tới khi nhận một ticket bug hoặc một feature request, hãy thử đặt quy tắc cho bản thân: không được mở IDE trong 15 phút đầu. Chỉ được đọc, hỏi, và viết ra những gì bạn đã hiểu về vấn đề. Nếu sau 15 phút bạn không viết được một câu mô tả rõ ràng vấn đề là gì — bạn chưa sẵn sàng để giải nó.
 
 ---
 

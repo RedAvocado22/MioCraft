@@ -7,13 +7,13 @@ series: "Phần 6: Database"
 tags: ["database", "normalization", "schema-design"]
 ---
 
-Lúc mày lên lớp, thầy dạy database design bắt normalize hết sạch — tách bảng cho đến 3NF (normal form thứ 3), không duplicate data, mỗi dữ liệu chỉ lưu một chỗ.
+Lúc bạn lên lớp, thầy dạy database design bắt normalize hết sạch — tách bảng cho đến 3NF (normal form thứ 3), không duplicate data, mỗi dữ liệu chỉ lưu một chỗ.
 
 Thật vậy, doctor ghi lại contact info, address — tách riêng bảng. Bệnh nhân cũng vậy. Payment method tách bảng riêng. Hết.
 
 Kết quả: 15 tables, 30 joins, query chạy 3 giây. User thấy "loading..." xong lại "timeout".
 
-Cái vấn đề là: **normalization cho consistency, denormalization cho performance. Mày cần balance, không phải pick một.**
+Cái vấn đề là: **normalization cho consistency, denormalization cho performance. Bạn cần balance, không phải pick một.**
 
 ---
 
@@ -72,7 +72,7 @@ Doctor name một chỗ. Update tên = một UPDATE statement.
 
 ---
 
-## Denormalization — tại sao mày cần nó?
+## Denormalization — tại sao bạn cần nó?
 
 Normalized database đạt consistent, nhưng query phải JOIN bảng này sang bảng khác. Với 100 appointments:
 

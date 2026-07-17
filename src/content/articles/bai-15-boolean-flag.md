@@ -7,13 +7,13 @@ series: "Phần 2: Clean Code"
 tags: ["clean-code", "boolean", "anti-patterns"]
 ---
 
-Mày đã bao giờ gặp một function call như này chưa:
+Bạn đã bao giờ gặp một function call như này chưa:
 
 ```java
 appointmentService.create(request, true, false, true);
 ```
 
-Ba cái boolean. Tao không biết `true`, `false`, `true` nghĩa là gì nếu không nhảy vào xem signature. Và đây chỉ là lúc gọi hàm — còn bên trong hàm, những cái boolean đó được dùng để rẽ nhánh logic theo cách mà không ai còn nhớ nổi sau ba tuần.
+Ba cái boolean. Mình không biết `true`, `false`, `true` nghĩa là gì nếu không nhảy vào xem signature. Và đây chỉ là lúc gọi hàm — còn bên trong hàm, những cái boolean đó được dùng để rẽ nhánh logic theo cách mà không ai còn nhớ nổi sau ba tuần.
 
 Boolean flag là một trong những thứ làm code thoái hóa chậm nhất — vì nó ít khi gây bug ngay lập tức, nhưng tích lũy đủ lâu là hệ thống trở nên không ai dám đụng vào.
 
@@ -109,7 +109,7 @@ if (appointment.isCancelled() && appointment.isPaid()) {
 }
 ```
 
-Có bao nhiêu trạng thái valid? Mày có thể có `isConfirmed=true` và `isCancelled=true` cùng lúc không? Không ai biết. Và khi thêm feature mới, dev không biết boolean nào nên set là `true`, boolean nào nên `false`.
+Có bao nhiêu trạng thái valid? Bạn có thể có `isConfirmed=true` và `isCancelled=true` cùng lúc không? Không ai biết. Và khi thêm feature mới, dev không biết boolean nào nên set là `true`, boolean nào nên `false`.
 
 Fix đúng là dùng enum để model state machine:
 
@@ -164,7 +164,7 @@ public List<Appointment> getAppointments(Long doctorId, boolean includeCompleted
 }
 ```
 
-Function này thực ra là hai function khác nhau được nhét vào một. Và ở call site, mày sẽ thấy `getAppointments(doctorId, true)` và `getAppointments(doctorId, false)` — không ai nhớ cái nào là cái nào.
+Function này thực ra là hai function khác nhau được nhét vào một. Và ở call site, bạn sẽ thấy `getAppointments(doctorId, true)` và `getAppointments(doctorId, false)` — không ai nhớ cái nào là cái nào.
 
 ```java
 // ✅ Tốt hơn — hai method rõ ràng
@@ -181,7 +181,7 @@ public List<Appointment> getAllAppointmentsByDoctor(Long doctorId) {
 
 ## Dấu hiệu nhận biết
 
-Mày đang dùng boolean flag sai khi:
+Bạn đang dùng boolean flag sai khi:
 
 - Phải tra signature để hiểu `true` hay `false` nghĩa là gì tại call site
 - Function có behavior hoàn toàn khác nhau tùy vào một boolean parameter
@@ -192,7 +192,7 @@ Không phải mọi boolean đều là vấn đề. `isActive`, `isVerified`, `h
 
 ## Takeaway
 
-Scan qua các method signature trong HMS, tìm bất kỳ cái nào có boolean parameter. Với mỗi cái, thử mô tả lại call site mà không cần nhìn vào signature — nếu mày không thể, đó là candidate để refactor.
+Scan qua các method signature trong HMS, tìm bất kỳ cái nào có boolean parameter. Với mỗi cái, thử mô tả lại call site mà không cần nhìn vào signature — nếu bạn không thể, đó là candidate để refactor.
 
 ---
 

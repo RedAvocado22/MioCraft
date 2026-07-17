@@ -7,7 +7,7 @@ series: "Phần 3: Kiến trúc phần mềm"
 tags: ["architecture", "anti-patterns", "refactoring"]
 ---
 
-Có hai antipattern mà mày sẽ thấy trong hầu hết mọi codebase Spring Boot đủ lớn. Chúng trông khác nhau về triệu chứng nhưng cùng một nguyên nhân gốc rễ.
+Có hai antipattern mà bạn sẽ thấy trong hầu hết mọi codebase Spring Boot đủ lớn. Chúng trông khác nhau về triệu chứng nhưng cùng một nguyên nhân gốc rễ.
 
 **Fat Controller**: Controller có hàng trăm dòng, chứa validation phức tạp, query database trực tiếp, gọi nhiều service khác nhau, và đưa ra quyết định nghiệp vụ thay vì delegate xuống dưới.
 

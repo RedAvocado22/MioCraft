@@ -7,9 +7,9 @@ series: "Phần 2: Clean Code"
 tags: ["clean-code", "comments", "readability"]
 ---
 
-Có một câu hỏi mà dev mới hay hỏi: "Code của tao có cần comment không?" Câu trả lời đúng không phải là có hoặc không — mà là: *nó phụ thuộc vào lý do mày muốn viết comment đó.*
+Có một câu hỏi mà dev mới hay hỏi: "Code của mình có cần comment không?" Câu trả lời đúng không phải là có hoặc không — mà là: *nó phụ thuộc vào lý do bạn muốn viết comment đó.*
 
-Vì có những comment là gold. Và có những comment là dấu hiệu mày đang cố che giấu code xấu bằng chữ.
+Vì có những comment là gold. Và có những comment là dấu hiệu bạn đang cố che giấu code xấu bằng chữ.
 
 ## Comment tệ nhất: giải thích code làm gì
 
@@ -49,7 +49,7 @@ if (daysSinceLastVisit > ANNUAL_CHECKUP_INTERVAL_DAYS) { ... }
 
 Không cần comment nữa. Code tự giải thích.
 
-Đây là rule quan trọng: **Comment không nên là cái nạng đỡ cho code không đứng vững được.** Nếu mày cảm thấy cần comment để giải thích một tên biến hoặc một function — đó là signal để refactor, không phải để viết comment.
+Đây là rule quan trọng: **Comment không nên là cái nạng đỡ cho code không đứng vững được.** Nếu bạn cảm thấy cần comment để giải thích một tên biến hoặc một function — đó là signal để refactor, không phải để viết comment.
 
 ## Comment tốt nhất: giải thích tại sao, không phải là gì
 
@@ -142,7 +142,7 @@ Nhưng với private method trong internal service — không cần JavaDoc. Cod
 
 ## Takeaway
 
-Lần tới mày định viết comment, dừng lại một giây và hỏi: "Mình viết comment này vì code chưa đủ rõ, hay vì có thông tin thật sự mà code không thể nói được?" Nếu là cái trước — refactor trước, comment sau.
+Lần tới bạn định viết comment, dừng lại một giây và hỏi: "Mình viết comment này vì code chưa đủ rõ, hay vì có thông tin thật sự mà code không thể nói được?" Nếu là cái trước — refactor trước, comment sau.
 
 ---
 

@@ -261,7 +261,7 @@ Vấn đề:
 
 ## Practical: Async export ở HMS
 
-Cho HMS của cậu, nếu cậu cần async export, database queue là pragmatic choice:
+Cho HMS của bạn, nếu bạn cần async export, database queue là pragmatic choice:
 
 ```java
 @PostMapping("/exports/appointments")
@@ -384,7 +384,7 @@ public NotifyResponse notifyRelated(@PathVariable UUID appointmentId) {
 
 ## Takeaway
 
-Queue không phải silver bullet. Dùng khi task tốn thời gian + không cần response ngay. Khi cậu introduce queue, cậu introduce complexity: retry logic, failure handling, monitoring. 
+Queue không phải silver bullet. Dùng khi task tốn thời gian + không cần response ngay. Khi bạn introduce queue, bạn introduce complexity: retry logic, failure handling, monitoring.
 
 Cân nhắc trước khi thêm. Database queue là entry point tốt nếu HMS vừa scale.
 

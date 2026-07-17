@@ -7,9 +7,9 @@ series: "Phần 3: Kiến trúc phần mềm"
 tags: ["architecture", "framework", "clean-architecture"]
 ---
 
-Có một thứ mà hầu hết developer học Spring Boot không nhận ra cho đến khi đã quá muộn: **Spring Boot không phải là hệ thống của mày — nó là công cụ mày dùng để xây hệ thống.**
+Có một thứ mà hầu hết developer học Spring Boot không nhận ra cho đến khi đã quá muộn: **Spring Boot không phải là hệ thống của bạn — nó là công cụ bạn dùng để xây hệ thống.**
 
-Nghe có vẻ hiển nhiên. Nhưng nếu business logic của mày không thể chạy mà không có Spring context, nếu domain object của mày import từ `org.springframework.*`, nếu mày không thể test một rule nghiệp vụ mà không boot application — thì mày đang xây hệ thống *bên trong* Spring thay vì dùng Spring như một tool.
+Nghe có vẻ hiển nhiên. Nhưng nếu business logic của bạn không thể chạy mà không có Spring context, nếu domain object của bạn import từ `org.springframework.*`, nếu bạn không thể test một rule nghiệp vụ mà không boot application — thì bạn đang xây hệ thống *bên trong* Spring thay vì dùng Spring như một tool.
 
 ---
 
@@ -70,15 +70,15 @@ Ba ví dụ trên là ba cách framework coupling xảy ra: security context tro
 
 ---
 
-## Tại sao điều này quan trọng hơn mày nghĩ
+## Tại sao điều này quan trọng hơn bạn nghĩ
 
 Hậu quả thực tế không phải là "code xấu" theo nghĩa trừu tượng. Nó ảnh hưởng trực tiếp đến tốc độ phát triển:
 
-**Test speed**: Mỗi unit test phải boot Spring context mất từ hai đến năm giây. Với 200 test, đó là mười phút chỉ để start. CI pipeline mày mất cả tiếng chỉ để chạy test.
+**Test speed**: Mỗi unit test phải boot Spring context mất từ hai đến năm giây. Với 200 test, đó là mười phút chỉ để start. CI pipeline bạn mất cả tiếng chỉ để chạy test.
 
 **Portability**: Khi team quyết định thêm một worker process không dùng Spring Web (chỉ dùng Spring Batch, hoặc native Java process) — business logic không thể reuse vì nó cần full Spring context.
 
-**Reasoning**: Khi business rule có bug, mày phải trace xuyên qua Spring proxy, annotation processing, AOP weaving — thay vì chỉ đọc code Java thuần.
+**Reasoning**: Khi business rule có bug, bạn phải trace xuyên qua Spring proxy, annotation processing, AOP weaving — thay vì chỉ đọc code Java thuần.
 
 ---
 
@@ -133,7 +133,7 @@ Import nào từ `org.springframework.*` xuất hiện trong class nằm trong p
 
 ## Takeaway
 
-Spring Boot là một trong những framework tốt nhất để xây backend — nhưng nó được thiết kế để serve domain của mày, không phải để trở thành domain của mày. Nếu mày phải explain business logic của hệ thống và câu trả lời liên quan đến Spring annotations — đó là dấu hiệu rõ ràng cần refactor.
+Spring Boot là một trong những framework tốt nhất để xây backend — nhưng nó được thiết kế để serve domain của bạn, không phải để trở thành domain của bạn. Nếu bạn phải explain business logic của hệ thống và câu trả lời liên quan đến Spring annotations — đó là dấu hiệu rõ ràng cần refactor.
 
 ---
 

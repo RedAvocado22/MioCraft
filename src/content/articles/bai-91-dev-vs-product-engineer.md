@@ -7,7 +7,7 @@ series: "Phần 11: Tư duy sản phẩm"
 tags: ["product-thinking", "mindset", "engineering"]
 ---
 
-Có một kiểu sprint planning rất phổ biến: PM mở ticket lên, đọc description, assign cho dev, dev gật đầu, estimate, done. Hỏi dev đó hôm nay làm gì, họ sẽ trả lời: *"Tao đang làm ticket HMS-342 — thêm filter theo ngày vào màn hình appointment list."*
+Có một kiểu sprint planning rất phổ biến: PM mở ticket lên, đọc description, assign cho dev, dev gật đầu, estimate, done. Hỏi dev đó hôm nay làm gì, họ sẽ trả lời: *"Mình đang làm ticket HMS-342 — thêm filter theo ngày vào màn hình appointment list."*
 
 Hỏi tại sao filter đó cần tồn tại? Họ nhìn lại ticket. Không có gì ngoài dòng "Add date filter to appointment list screen." Họ nhún vai: *"PM bảo làm thì làm thôi."*
 
@@ -15,13 +15,13 @@ Hỏi tại sao filter đó cần tồn tại? Họ nhìn lại ticket. Không c
 
 ---
 
-## Sự khác biệt không nằm ở seniority
+## Sự khác biệt không nằm ở kinh nghiệm
 
-Tao không nói đây là chuyện junior vs senior. Tao đã thấy senior dev 5 năm kinh nghiệm vẫn làm việc theo kiểu nhận ticket → implement → close. Và tao cũng thấy junior mới ra trường đã có thói quen hỏi *"feature này solve được vấn đề gì của user?"* trước khi viết dòng code đầu tiên.
+Mình không nói đây là chuyện khác biệt về kinh nghiệm. Mình đã thấy người có 5 năm kinh nghiệm vẫn làm việc theo kiểu nhận ticket → implement → close. Và mình cũng thấy người mới ra trường đã có thói quen hỏi *"feature này solve được vấn đề gì của user?"* trước khi viết dòng code đầu tiên.
 
 Sự khác biệt nằm ở cách họ định nghĩa công việc của mình.
 
-Dev thuần túy định nghĩa công việc theo task: *"Tao cần implement cái này."*
+Dev thuần túy định nghĩa công việc theo task: *"Mình cần implement cái này."*
 Product engineer định nghĩa công việc theo outcome: *"Cái này được implement để đạt được điều gì?"*
 
 Nghe có vẻ philosophical. Nhưng hệ quả của sự khác biệt đó rất cụ thể.
@@ -30,7 +30,7 @@ Nghe có vẻ philosophical. Nhưng hệ quả của sự khác biệt đó rấ
 
 ## Tại sao câu hỏi "tại sao" quan trọng đến vậy
 
-HMS có một lần tao nhớ mãi. Ticket yêu cầu thêm khả năng export danh sách bệnh nhân ra Excel. Estimate vài ngày, implement straightforward. Trước khi làm, ai đó hỏi: *"Export này dùng để làm gì?"*
+HMS có một lần mình nhớ mãi. Ticket yêu cầu thêm khả năng export danh sách bệnh nhân ra Excel. Estimate vài ngày, implement straightforward. Trước khi làm, ai đó hỏi: *"Export này dùng để làm gì?"*
 
 Câu trả lời: admin cần gửi báo cáo hàng tháng cho ban giám đốc.
 
@@ -50,7 +50,7 @@ Có một nỗi sợ phổ biến: hỏi nhiều quá thì PM nghĩ mình khó t
 
 Hỏi kiểu này nghe như đang challenge: *"Tại sao cần làm feature này? Nó có thực sự cần thiết không?"*
 
-Hỏi kiểu này nghe như đang partner: *"Mày có thể share thêm về use case cụ thể không? Tao muốn chắc là mình implement đúng theo cách sẽ solve được vấn đề đó."*
+Hỏi kiểu này nghe như đang partner: *"Bạn có thể share thêm về use case cụ thể không? Mình muốn chắc là mình implement đúng theo cách sẽ solve được vấn đề đó."*
 
 Cùng một intent, nhưng người nhận nghe khác hoàn toàn. Product engineer giỏi không hỏi để phán xét — họ hỏi để hiểu context đủ sâu để implement tốt hơn.
 
@@ -76,8 +76,8 @@ Không hỏi context → implement một trong ba → may thì đúng, xui thì 
 
 ## Takeaway
 
-Trước khi estimate bất kỳ ticket nào, hãy tự hỏi: *"Tao hiểu vấn đề mà feature này đang giải quyết chưa, hay tao chỉ đang hiểu implementation mà người khác đã quyết định?"* Hai thứ đó khác nhau — và biết cái nào mày đang thiếu là bước đầu tiên để chuyển từ dev làm task thành engineer giải vấn đề.
+Trước khi estimate bất kỳ ticket nào, hãy tự hỏi: *"Mình hiểu vấn đề mà feature này đang giải quyết chưa, hay mình chỉ đang hiểu implementation mà người khác đã quyết định?"* Hai thứ đó khác nhau — và biết cái nào bạn đang thiếu là bước đầu tiên để chuyển từ dev làm task thành engineer giải vấn đề.
 
 ---
 
-*Bài tiếp theo: User không quan tâm code của mày — họ quan tâm trải nghiệm*
+*Bài tiếp theo: User không quan tâm code của bạn — họ quan tâm trải nghiệm*

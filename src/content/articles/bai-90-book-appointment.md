@@ -65,7 +65,7 @@ Request có JWT nhưng sai role → 403 tại `@PreAuthorize`.
 // Nếu key đã tồn tại → trả về response cũ, không process tiếp
 ```
 
-Tại sao ở đây? Vì idempotency check cần xảy ra **trước** bất kỳ operation nào có side effect. Nếu mày check idempotency sau khi đã lock slot, và sau đó trả về "đã xử lý rồi" — mày đã lock một slot không cần thiết.
+Tại sao ở đây? Vì idempotency check cần xảy ra **trước** bất kỳ operation nào có side effect. Nếu bạn check idempotency sau khi đã lock slot, và sau đó trả về "đã xử lý rồi" — bạn đã lock một slot không cần thiết.
 
 *(Chi tiết implementation: P10/Bài 02)*
 
@@ -217,15 +217,15 @@ Nhìn vào 10 bước trên, dễ thấy một pattern: mỗi concern được t
 - *Điều gì xảy ra nếu DB fail sau khi notification đã gửi?* → AFTER_COMMIT listener
 - *Điều gì xảy ra nếu patient cố đặt lịch cho người khác?* → ABAC policy
 
-Từng câu hỏi đó, nếu không được hỏi, tạo ra một lỗ hổng trong hệ thống. Và những lỗ hổng đó không xuất hiện trong happy path test. Chúng xuất hiện trên production, lúc hệ thống đang chịu tải thật, với user thật, làm những thứ mày không expect.
+Từng câu hỏi đó, nếu không được hỏi, tạo ra một lỗ hổng trong hệ thống. Và những lỗ hổng đó không xuất hiện trong happy path test. Chúng xuất hiện trên production, lúc hệ thống đang chịu tải thật, với user thật, làm những thứ bạn không expect.
 
-Senior dev không giỏi hơn junior vì họ code nhanh hơn hay biết nhiều API hơn. Họ giỏi hơn vì họ đã thấy đủ edge cases để biết cần hỏi những câu hỏi đó từ đầu.
+Kinh nghiệm không nằm ở việc code nhanh hơn hay biết nhiều API hơn. Nó đến từ việc đã thấy đủ edge case để biết cần hỏi những câu hỏi đó từ đầu.
 
 ---
 
 ## Takeaway
 
-Lần tới khi mày nhận một feature requirement — dù đơn giản đến đâu — hãy trace qua toàn bộ flow và hỏi về từng failure mode. Không phải để over-engineer, mà để biết mình đang accept risk gì và risk nào cần được address ngay. Một cái nút "Book Appointment" là đơn giản với user. Nhưng code phía sau xứng đáng được thiết kế nghiêm túc.
+Lần tới khi bạn nhận một feature requirement — dù đơn giản đến đâu — hãy trace qua toàn bộ flow và hỏi về từng failure mode. Không phải để over-engineer, mà để biết mình đang accept risk gì và risk nào cần được address ngay. Một cái nút "Book Appointment" là đơn giản với user. Nhưng code phía sau xứng đáng được thiết kế nghiêm túc.
 
 ---
 

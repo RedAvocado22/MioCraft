@@ -8,7 +8,7 @@ tags: ["case-study", "search", "mysql", "elasticsearch", "database"]
 ---
 
 
-Receptionist gõ "Nguyen Van" vào ô tìm bệnh nhân. Mày viết:
+Receptionist gõ "Nguyen Van" vào ô tìm bệnh nhân. Bạn viết:
 
 ```java
 @Query("SELECT p FROM Patient p WHERE LOWER(p.fullName) LIKE LOWER(CONCAT('%', :q, '%'))")
@@ -17,7 +17,7 @@ List<Patient> search(@Param("q") String query);
 
 10.000 bệnh nhân — chạy nhanh. 500.000 bệnh nhân — receptionist bấm tìm, uống cà phê, quay lại spinner vẫn quay. EXPLAIN cho thấy `type: ALL`, `rows: 500000`.
 
-Không phải MySQL chậm. Mày yêu cầu database **quét toàn bộ bảng** vì leading wildcard `%` khiến B-tree index vô dụng.
+Không phải MySQL chậm. Bạn yêu cầu database **quét toàn bộ bảng** vì leading wildcard `%` khiến B-tree index vô dụng.
 
 Search trong HMS không phải một query — là **trade-off giữa độ chính xác, tốc độ, và chi phí vận hành**.
 

@@ -9,7 +9,7 @@ tags: ["caching", "performance", "distributed-systems"]
 
 Có một loại bug hiếm gặp nhưng rất nguy hiểm ở production: cache stampede (hay thundering herd).
 
-Tưởng tượng HMS của cậu chạy tốt mấy tuần liền. Bất ngờ một hôm, lúc 2 giờ sáng, HMS bị down hoàn toàn. Alarm rải rác. Devops chạy vào check — database CPU 99%, memory cache full, application threads tất cả chặn. Nhưng không có data corruption, không có bug code mới, không có traffic spike. Tại sao?
+Tưởng tượng HMS của bạn chạy tốt mấy tuần liền. Bất ngờ một hôm, lúc 2 giờ sáng, HMS bị down hoàn toàn. Alarm rải rác. Devops chạy vào check — database CPU 99%, memory cache full, application threads tất cả chặn. Nhưng không có data corruption, không có bug code mới, không có traffic spike. Tại sao?
 
 Đó chính là **cache stampede**.
 
@@ -38,7 +38,7 @@ Nếu cùng lúc 100 requests hit cache miss (vì cache expire cùng lúc), tấ
 
 Lúc đó, database CPU spike lên 100%. Các queries khác (appointment booking, payment) bị delay. Vì thread pool của Spring Boot chặn chờ database, requests mới bắt đầu queue up.
 
-Nếu database không crash, cậu sẽ thấy:
+Nếu database không crash, bạn sẽ thấy:
 - Response time từ bình thường 100ms → jump lên 5s
 - User timeout
 - Cascading failures (client retry, thêm requests, thêm load)

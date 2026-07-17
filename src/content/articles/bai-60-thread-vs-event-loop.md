@@ -11,7 +11,7 @@ Trên Node.js, một request không cần một thread riêng. Mọi request chi
 
 Trên Spring Boot, mỗi request cần một **thread từ pool**, và thread chặn chờ I/O.
 
-Tại sao hai model khác nhau? Tại sao Spring Boot không chọn event loop như Node.js? Và quan trọng hơn — khi nào cậu sẽ muốn switch sang model async?
+Tại sao hai model khác nhau? Tại sao Spring Boot không chọn event loop như Node.js? Và quan trọng hơn — khi nào bạn sẽ muốn switch sang model async?
 
 ---
 
@@ -99,15 +99,15 @@ public Mono<AppointmentResponse> bookAppointment(BookingRequest req) {
 
 Spring WebFlux dùng **Netty** (non-blocking framework) thay vì Tomcat. Thread pool nhỏ hơn (core count * 2), requests chia sẻ threads, không chặn.
 
-**Tại sao HMS của cậu không dùng WebFlux:**
+**Tại sao HMS của bạn không dùng WebFlux:**
 
-1. Cậu đã quen Spring Data JPA + Tomcat. Switching sang WebFlux = rewrite cơ bản.
-2. JPA (Hibernate) là **blocking**. Để dùng WebFlux đúng cách, cậu cần R2DBC (reactive database driver). Database config khác, query khác, behavior khác.
-3. Cậu đang làm sinh viên, deadline dí. Đừng add complexity không cần thiết.
+1. Bạn đã quen Spring Data JPA + Tomcat. Switching sang WebFlux = rewrite cơ bản.
+2. JPA (Hibernate) là **blocking**. Để dùng WebFlux đúng cách, bạn cần R2DBC (reactive database driver). Database config khác, query khác, behavior khác.
+3. Bạn đang làm sinh viên, deadline dí. Đừng add complexity không cần thiết.
 
 ---
 
-## Khi nào cậu sẽ cần event loop / reactive?
+## Khi nào bạn sẽ cần event loop / reactive?
 
 Đó là khi **thread pool exhaustion** xảy ra ở production.
 
@@ -128,7 +128,7 @@ Lúc đó, hai lựa chọn:
 
 **C) Switch sang reactive** — event loop, ít threads, scales better. Nhưng rewrite code, rewrite tests, training.
 
-Cậu nên thử A và B trước. Chỉ khi nào cậu **chứng minh được** A + B không đủ, mới xem xét C.
+Bạn nên thử A và B trước. Chỉ khi nào bạn **chứng minh được** A + B không đủ, mới xem xét C.
 
 ---
 
@@ -143,7 +143,7 @@ Nếu thấy:
 - 180+ threads ở state `WAITING` (chặn I/O) → thread pool nearly exhausted
 - Tất cả threads ở state `RUNNABLE` → CPU-bound, không phải I/O
 
-Nếu vấn đề là thread exhaustion, cậu có thể:
+Nếu vấn đề là thread exhaustion, bạn có thể:
 1. Tối ưu database (tạo index, tối ưu query)
 2. Tăng thread pool (không quá lâu)
 3. Dùng async pattern — ví dụ, không chặn user chờ payment completion, dùng callback/webhook thay thế
@@ -152,9 +152,9 @@ Nếu vấn đề là thread exhaustion, cậu có thể:
 
 ## Takeaway
 
-Spring Boot chọn **thread per request** vì **code đơn giản và isolation tốt**, không phải vì nó optimal ở mọi scenario. Khi cậu hit thread pool limit ở production, cậu có ba lựa chọn: optimize IO, scale horizontally, hoặc switch sang reactive. 
+Spring Boot chọn **thread per request** vì **code đơn giản và isolation tốt**, không phải vì nó optimal ở mọi scenario. Khi bạn hit thread pool limit ở production, bạn có ba lựa chọn: optimize IO, scale horizontally, hoặc switch sang reactive.
 
-Biết limitation của model mà cậu đang dùng là lần đầu để recognize khi nào cậu cần đổi.
+Biết limitation của model mà bạn đang dùng là lần đầu để recognize khi nào bạn cần đổi.
 
 ---
 

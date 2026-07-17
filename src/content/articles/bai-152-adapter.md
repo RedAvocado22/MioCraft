@@ -9,7 +9,7 @@ tags: ["adapter", "design-pattern", "integration", "spring"]
 
 HMS ban đầu dùng VNPay để xử lý thanh toán. Sau 6 tháng, product team quyết định thêm Momo vì nhiều bệnh nhân không có thẻ ngân hàng. Tháng sau thêm ZaloPay. Mỗi provider có SDK riêng, interface riêng, error code riêng.
 
-Nếu `PaymentService` gọi thẳng VNPay SDK, Momo SDK, ZaloPay SDK — mỗi lần thêm provider là mày phải sửa `PaymentService`. Mỗi lần provider đổi API là mày phải sửa business logic.
+Nếu `PaymentService` gọi thẳng VNPay SDK, Momo SDK, ZaloPay SDK — mỗi lần thêm provider là bạn phải sửa `PaymentService`. Mỗi lần provider đổi API là bạn phải sửa business logic.
 
 Đây chính xác là bài GoF viết Adapter để giải.
 
@@ -17,7 +17,7 @@ Nếu `PaymentService` gọi thẳng VNPay SDK, Momo SDK, ZaloPay SDK — mỗi 
 
 ## Adapter là cái phích cắm chuyển
 
-Mày đi Mỹ, cầm cái sạc điện thoại cắm vào ổ điện Mỹ không vừa. Mày mua cái adapter phích cắm — không thay đổi gì ở cái sạc, không thay đổi gì ở ổ điện, chỉ làm cho hai thứ đó fit nhau.
+Bạn đi Mỹ, cầm cái sạc điện thoại cắm vào ổ điện Mỹ không vừa. Bạn mua cái adapter phích cắm — không thay đổi gì ở cái sạc, không thay đổi gì ở ổ điện, chỉ làm cho hai thứ đó fit nhau.
 
 GoF mô tả chính xác như vậy: **Adapter chuyển đổi interface của một class thành interface khác mà client mong đợi. Cho phép các class có interface không tương thích làm việc được với nhau.**
 
@@ -53,7 +53,7 @@ public record PaymentResult(
 VNPay SDK có interface hoàn toàn khác — tên method khác, kiểu dữ liệu khác, error handling khác:
 
 ```java
-// VNPay SDK — mày không sửa được cái này
+// VNPay SDK — bạn không sửa được cái này
 public class VnPayClient {
     public VnPayResponse createPaymentUrl(VnPayRequest vnPayRequest) { /* ... */ }
     public VnPayRefundResponse requestRefund(String txnRef, Long amount, String reason) { /* ... */ }
@@ -165,15 +165,15 @@ Trong ví dụ trên: nếu `PaymentService` biết về VNPay và chỉ muốn 
 
 ## Khi nào không cần Adapter
 
-Adapter hữu ích khi có hai interface không khớp và mày không thể sửa một trong hai. Nếu mày đang viết cả hai bên, đừng tạo ra sự không tương thích rồi viết Adapter để fix — thiết kế interface đúng từ đầu là câu trả lời đúng hơn.
+Adapter hữu ích khi có hai interface không khớp và bạn không thể sửa một trong hai. Nếu bạn đang viết cả hai bên, đừng tạo ra sự không tương thích rồi viết Adapter để fix — thiết kế interface đúng từ đầu là câu trả lời đúng hơn.
 
-Cũng không nên dùng Adapter như một cách che giấu interface xấu của code mình viết. Adapter che giấu sự không tương thích của *external* dependency — không phải để mày trốn trách nhiệm thiết kế interface nội bộ.
+Cũng không nên dùng Adapter như một cách che giấu interface xấu của code mình viết. Adapter che giấu sự không tương thích của *external* dependency — không phải để bạn trốn trách nhiệm thiết kế interface nội bộ.
 
 ---
 
 ## Takeaway
 
-Adapter xuất hiện tự nhiên khi mày integrate với third-party SDK, legacy system, hoặc external API mà mày không kiểm soát được interface của họ. Dấu hiệu cần Adapter: code của mày phải biết quá nhiều về internal của external library để gọi nó. Khi đó hãy đặt một lớp translate ở giữa — giữ domain language của mày sạch, để Adapter chịu trách nhiệm dịch thuật.
+Adapter xuất hiện tự nhiên khi bạn integrate với third-party SDK, legacy system, hoặc external API mà bạn không kiểm soát được interface của họ. Dấu hiệu cần Adapter: code của bạn phải biết quá nhiều về internal của external library để gọi nó. Khi đó hãy đặt một lớp translate ở giữa — giữ domain language của bạn sạch, để Adapter chịu trách nhiệm dịch thuật.
 
 ---
 

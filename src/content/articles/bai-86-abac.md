@@ -61,7 +61,7 @@ public ResponseEntity<List<MedicalRecordResponse>> getMedicalRecords(
 
 ```java
 // ❌ Vấn đề 2: Check đúng nhưng data vẫn leak qua endpoint khác
-// Mày check ở GET /medical-records/{patientId}
+// Bạn check ở GET /medical-records/{patientId}
 // Nhưng quên check ở GET /patients/{patientId}/summary
 // Hay GET /appointments/{appointmentId}/medical-history
 // Security check phân tán = security holes phân tán

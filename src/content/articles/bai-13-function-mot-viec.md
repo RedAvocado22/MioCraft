@@ -7,15 +7,15 @@ series: "Phần 2: Clean Code"
 tags: ["clean-code", "SRP", "functions"]
 ---
 
-"Function nên làm một việc." Mày đã nghe câu này rồi. Tao cũng đã nghe. Vấn đề là không ai giải thích "một việc" nghĩa là gì — vì nó không có định nghĩa tuyệt đối. Và đó là lý do câu rule tưởng đơn giản này bị áp dụng sai nhiều đến vậy.
+"Function nên làm một việc." Bạn đã nghe câu này rồi. Mình cũng đã nghe. Vấn đề là không ai giải thích "một việc" nghĩa là gì — vì nó không có định nghĩa tuyệt đối. Và đó là lý do câu rule tưởng đơn giản này bị áp dụng sai nhiều đến vậy.
 
 Có người split function đến mức mỗi function chỉ có hai dòng. Có người nghĩ "một việc" là "một use case hoàn chỉnh" nên nhét cả đống logic vào một chỗ. Cả hai đều sai.
 
 ## Định nghĩa thực dụng
 
-Thay vì định nghĩa triết học, tao dùng cái test này: **Mày có thể mô tả function bằng một câu duy nhất, không dùng "và" không?**
+Thay vì định nghĩa triết học, mình dùng cái test này: **Bạn có thể mô tả function bằng một câu duy nhất, không dùng "và" không?**
 
-Nếu câu mô tả của mày có "và" — function đó đang làm nhiều hơn một việc.
+Nếu câu mô tả của bạn có "và" — function đó đang làm nhiều hơn một việc.
 
 ```java
 // ❌ Vấn đề — làm 3 việc
@@ -39,17 +39,17 @@ public void processAppointment(Long appointmentId) {
 }
 ```
 
-Đọc function này, mày thấy nó "làm một việc" — xử lý appointment. Nhưng thực ra nó đang làm ba việc ở ba layer khác nhau: tính toán tài chính, state management, và side effect (notification). Đây là vấn đề.
+Đọc function này, bạn thấy nó "làm một việc" — xử lý appointment. Nhưng thực ra nó đang làm ba việc ở ba layer khác nhau: tính toán tài chính, state management, và side effect (notification). Đây là vấn đề.
 
 ## Tại sao lại là vấn đề?
 
-Khi một function làm nhiều việc, mày không thể:
+Khi một function làm nhiều việc, bạn không thể:
 
-**Test từng phần độc lập.** Nếu muốn test logic tính bảo hiểm, mày bắt buộc phải mock cả notification service. Không liên quan nhưng vẫn phải làm.
+**Test từng phần độc lập.** Nếu muốn test logic tính bảo hiểm, bạn bắt buộc phải mock cả notification service. Không liên quan nhưng vẫn phải làm.
 
-**Reuse từng phần.** Nếu có chỗ khác chỉ cần tính tiền bảo hiểm mà không cần confirm appointment, mày không thể dùng lại.
+**Reuse từng phần.** Nếu có chỗ khác chỉ cần tính tiền bảo hiểm mà không cần confirm appointment, bạn không thể dùng lại.
 
-**Thay đổi từng phần an toàn.** Nếu logic gửi notification thay đổi, mày phải vào function này sửa — và có nguy cơ ảnh hưởng đến logic tính tiền nằm ngay bên cạnh.
+**Thay đổi từng phần an toàn.** Nếu logic gửi notification thay đổi, bạn phải vào function này sửa — và có nguy cơ ảnh hưởng đến logic tính tiền nằm ngay bên cạnh.
 
 **Đặt tên rõ ràng.** Không có cái tên nào mô tả đúng function này mà không dùng "và."
 
@@ -130,7 +130,7 @@ Bây giờ `bookAppointment` đọc như một câu chuyện ở mức business.
 
 ## Khi nào thì quá nhỏ?
 
-Split quá nhỏ cũng là vấn đề. Nếu mày phải nhảy qua năm function để hiểu một luồng logic đơn giản — mày đã split quá tay.
+Split quá nhỏ cũng là vấn đề. Nếu bạn phải nhảy qua năm function để hiểu một luồng logic đơn giản — bạn đã split quá tay.
 
 Rule of thumb: private helper method chỉ đáng tạo khi nó được dùng ở nhiều chỗ, hoặc khi nó có logic đủ phức tạp để tách biệt giúp `readability` tăng lên rõ ràng. Nếu nó chỉ là ba dòng code hiển nhiên — cứ để inline.
 
@@ -158,7 +158,7 @@ public void saveAppointment(Appointment appointment) {
 
 ## Takeaway
 
-Lấy một service method dài nhất trong HMS của mày và áp dụng bài test câu "và": đọc method đó, thử mô tả nó bằng một câu. Nếu mày dùng "và" — identify xem nó đang làm mấy việc, và quyết định việc nào nên tách ra.
+Lấy một service method dài nhất trong HMS của bạn và áp dụng bài test câu "và": đọc method đó, thử mô tả nó bằng một câu. Nếu bạn dùng "và" — identify xem nó đang làm mấy việc, và quyết định việc nào nên tách ra.
 
 ---
 

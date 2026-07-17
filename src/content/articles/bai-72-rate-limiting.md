@@ -7,9 +7,9 @@ series: "Phần 8: System Design"
 tags: ["system-design", "rate-limiting", "security"]
 ---
 
-Giả sử HMS của mày có endpoint `/api/appointments/book`. Một buổi sáng, mày nhận được cảnh báo: CPU đang ở 100%, database pool đã cạn, hệ thống không response được nữa.
+Giả sử HMS của bạn có endpoint `/api/appointments/book`. Một buổi sáng, bạn nhận được cảnh báo: CPU đang ở 100%, database pool đã cạn, hệ thống không response được nữa.
 
-Mày check log. Một IP address đang gửi 500 request mỗi giây vào endpoint đó. Không phải hacker tinh vi — chỉ là ai đó viết script test load, hoặc một cái bug trong frontend gây ra retry loop. Nhưng kết quả thì như nhau: hệ thống của mày đang chết.
+Bạn check log. Một IP address đang gửi 500 request mỗi giây vào endpoint đó. Không phải hacker tinh vi — chỉ là ai đó viết script test load, hoặc một cái bug trong frontend gây ra retry loop. Nhưng kết quả thì như nhau: hệ thống của bạn đang chết.
 
 Rate limiting là cái ngăn điều đó xảy ra.
 
@@ -23,7 +23,7 @@ Rate limiting là cơ chế giới hạn số lượng request mà một client 
 
 - **Accidental abuse:** Frontend bug gây retry loop, script test load quá mạnh
 - **Fair usage:** Đảm bảo một user không chiếm hết resource, ảnh hưởng đến user khác
-- **Cost control:** Nếu mày dùng external API có charge theo request, rate limiting giúp mày không bị bill shock
+- **Cost control:** Nếu bạn dùng external API có charge theo request, rate limiting giúp bạn không bị bill shock
 
 ---
 
@@ -41,7 +41,7 @@ Rate limiting là cơ chế giới hạn số lượng request mà một client 
 
 ## Rate limiting trong Spring Boot với Redis
 
-Rate limiting cần state — mày phải nhớ user này đã gửi bao nhiêu request rồi. State đó cần được share giữa tất cả instance của service (vì có load balancer). Redis là lựa chọn tự nhiên.
+Rate limiting cần state — bạn phải nhớ user này đã gửi bao nhiêu request rồi. State đó cần được share giữa tất cả instance của service (vì có load balancer). Redis là lựa chọn tự nhiên.
 
 Resilience4j có sẵn rate limiter, nhưng nó in-memory (không share giữa instances). Với production setup, cần implement trên Redis:
 

@@ -7,9 +7,9 @@ series: "Phần 8: System Design"
 tags: ["api-gateway", "load-balancer", "microservices", "system-design", "interview"]
 ---
 
-Phỏng vấn system design, interviewer hỏi: "Mày có nhiều service, client cần gọi vào — mày đặt gì trước các service đó?" Junior trả lời: "Load balancer." Senior trả lời: "Tùy — load balancer, API gateway, hay cả hai, tùy bài toán."
+Phỏng vấn system design, interviewer hỏi: "Bạn có nhiều service, client cần gọi vào — bạn đặt gì trước các service đó?" Người mới trả lời: "Load balancer." Người có kinh nghiệm trả lời: "Tùy — load balancer, API gateway, hay cả hai, tùy bài toán."
 
-Câu trả lời khác nhau không phải vì senior biết nhiều từ hơn. Họ hiểu hai thứ này giải quyết **vấn đề khác nhau**.
+Câu trả lời khác nhau không phải vì người có kinh nghiệm biết nhiều từ hơn. Họ hiểu hai thứ này giải quyết **vấn đề khác nhau**.
 
 ---
 
@@ -92,9 +92,9 @@ Nhiều gateway có tính năng load balance tích hợp. Kong, AWS API Gateway,
 
 Phụ thuộc scale và topology:
 
-Nếu mày dùng Kubernetes, K8s Service đã là load balancer cho từng deployment. Gateway route đến K8s Service name, K8s lo phân phối vào các pod. Không cần LB riêng cho internal routing.
+Nếu bạn dùng Kubernetes, K8s Service đã là load balancer cho từng deployment. Gateway route đến K8s Service name, K8s lo phân phối vào các pod. Không cần LB riêng cho internal routing.
 
-Nếu mày không có K8s, dùng bare-metal hay VM, thì gateway + LB riêng biệt (hoặc gateway đảm nhiệm cả hai) là hướng đi.
+Nếu bạn không có K8s, dùng bare-metal hay VM, thì gateway + LB riêng biệt (hoặc gateway đảm nhiệm cả hai) là hướng đi.
 
 Điểm quan trọng: gateway và load balancer giải quyết problem ở **hai tầng khác nhau**, không phải cạnh tranh nhau.
 

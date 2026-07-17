@@ -83,7 +83,7 @@ Khác biệt:
 - **Blocking**: Thread chặn chờ Keycloak 120ms. Thread tốn resource trong 120ms đó.
 - **Non-blocking**: Thread gửi request rồi trả lại pool ngay. Khi response tới, callback được trigger. Thread khác (hoặc thread pool khác) xử lý callback.
 
-Với non-blocking, cùng 200 threads, cậu có thể handle **hàng chục ngàn concurrent requests** vì threads không chặn.
+Với non-blocking, cùng 200 threads, bạn có thể handle **hàng chục ngàn concurrent requests** vì threads không chặn.
 
 ---
 
@@ -107,11 +107,11 @@ Khác biệt:
 - JPA trả về `User` ngay (blocked khi query)
 - R2DBC trả về `Mono<User>` (async wrapper, không block)
 
-Nhưng HMS của cậu dùng JPA, nên tất cả database calls đều **blocking**.
+Nhưng HMS của bạn dùng JPA, nên tất cả database calls đều **blocking**.
 
 ---
 
-## Tại sao cậu nên care về blocking?
+## Tại sao bạn nên care về blocking?
 
 Vì **mỗi blocking call** trong HMS:
 
@@ -124,19 +124,19 @@ Nếu book appointment gọi tất cả 4 cái, mỗi request tốn `50 + 120 + 
 
 Với 200 threads: `200 / 0.67 = 298 requests/second` là peak.
 
-Nếu 500 users đang dùng app cùng lúc, mỗi user 10 requests/minute, cậu cần `500 * 10 / 60 = 83 req/s`. Vẫn ổn.
+Nếu 500 users đang dùng app cùng lúc, mỗi user 10 requests/minute, bạn cần `500 * 10 / 60 = 83 req/s`. Vẫn ổn.
 
 **Nhưng** nếu Keycloak chậm hôm nay (1 second thay vì 120ms), book appointment bây giờ tốn `1050ms`. Peak throughput giảm xuống `200 / 1.05 = 190 req/s`. Hệ thống bắt đầu backing up.
 
-Nếu Keycloak chậm còn hơn (2 seconds), peak throughput = `200 / 2.05 = 97 req/s`. Mà cậu cần 83. Borderline.
+Nếu Keycloak chậm còn hơn (2 seconds), peak throughput = `200 / 2.05 = 97 req/s`. Mà bạn cần 83. Borderline.
 
-Nếu có thêm một cascading failure (payment gateway cũng chậm), cậu sẽ out of capacity.
+Nếu có thêm một cascading failure (payment gateway cũng chậm), bạn sẽ out of capacity.
 
 ---
 
 ## Cách minimize blocking trong Spring Boot
 
-Khi cậu không thể switch sang non-blocking:
+Khi bạn không thể switch sang non-blocking:
 
 **1. Parallel blocking calls** — nếu không có dependency:
 

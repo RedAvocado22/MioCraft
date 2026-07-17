@@ -9,7 +9,7 @@ tags: ["production", "deploy", "kubernetes", "zero-downtime"]
 
 Deploy HMS lúc 14h — bệnh nhân vẫn đặt lịch. Không banner “bảo trì”. Đó là kỳ vọng **zero-downtime**: không có khoảng thời gian API trả 502 hàng loạt.
 
-Nhưng “không downtime” không đồng nghĩa “không rủi ro”. Hai chiến lược phổ biến — **rolling** và **blue-green** — trade-off khác nhau. Junior hay gọi nhầm cả hai là “deploy K8s”.
+Nhưng “không downtime” không đồng nghĩa “không rủi ro”. Hai chiến lược phổ biến — **rolling** và **blue-green** — trade-off khác nhau. Người mới hay gọi nhầm cả hai là “deploy K8s”.
 
 ---
 
@@ -28,7 +28,7 @@ spec:
 
 **Ưu:** Đơn giản, không cần gấp đôi tài nguyên lâu dài. Phù hợp deploy hàng ngày, patch nhỏ.
 
-**Nhược:** Trong vài phút, **cả version cũ và mới cùng chạy**. Client có thể hit pod cũ rồi pod mới — schema/API phải **backward compatible** (expand-contract, bài 120). Nếu version mới có bug, một phần user đã dính trước khi mày rollback xong.
+**Nhược:** Trong vài phút, **cả version cũ và mới cùng chạy**. Client có thể hit pod cũ rồi pod mới — schema/API phải **backward compatible** (expand-contract, bài 120). Nếu version mới có bug, một phần user đã dính trước khi bạn rollback xong.
 
 Rolling không thay thế **graceful shutdown** (bài 119): pod cũ vẫn phải xử lý xong request đang chạy trước khi chết.
 

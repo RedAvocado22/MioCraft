@@ -7,13 +7,13 @@ series: "Phần 3: Kiến trúc phần mềm"
 tags: ["architecture", "domain-driven-design", "clean-architecture"]
 ---
 
-Đây là một câu hỏi mà hầu hết developer không bao giờ nghĩ đến: *tại sao business logic lại cần biết mày đang dùng MySQL?*
+Đây là một câu hỏi mà hầu hết developer không bao giờ nghĩ đến: *tại sao business logic lại cần biết bạn đang dùng MySQL?*
 
-Quy tắc "bệnh nhân không thể đặt lịch nếu có appointment đang confirmed" không có gì liên quan đến MySQL. Nó cũng không liên quan đến PostgreSQL, MongoDB, hay Redis. Đó là quy tắc của bệnh viện — tồn tại độc lập với mọi infrastructure decision mày đưa ra. Nhưng trong hầu hết codebase Spring Boot, business logic và database bị tie chặt với nhau đến mức mày không thể test một cái mà không cần cái kia.
+Quy tắc "bệnh nhân không thể đặt lịch nếu có appointment đang confirmed" không có gì liên quan đến MySQL. Nó cũng không liên quan đến PostgreSQL, MongoDB, hay Redis. Đó là quy tắc của bệnh viện — tồn tại độc lập với mọi infrastructure decision bạn đưa ra. Nhưng trong hầu hết codebase Spring Boot, business logic và database bị tie chặt với nhau đến mức bạn không thể test một cái mà không cần cái kia.
 
 ---
 
-## JPA annotations đang làm gì với domain của mày
+## JPA annotations đang làm gì với domain của bạn
 
 Nhìn vào một entity HMS điển hình:
 
@@ -49,7 +49,7 @@ public class Appointment {
 
 Class này đang làm hai việc cùng lúc. Nó là **domain object** — chứa rule nghiệp vụ như `cancel()`. Và nó đồng thời là **JPA entity** — `@Entity`, `@Table`, `@JoinColumn` là những annotation cho Hibernate biết cách map object này sang database.
 
-Vấn đề không phải là sự kết hợp đó sai về mặt kỹ thuật. Trong nhiều trường hợp, nó là trade-off chấp nhận được. Vấn đề là **domain object giờ đây phụ thuộc vào JPA** — mày không thể instantiate `Appointment` trong unit test mà không load Spring context, không có Hibernate, không có database.
+Vấn đề không phải là sự kết hợp đó sai về mặt kỹ thuật. Trong nhiều trường hợp, nó là trade-off chấp nhận được. Vấn đề là **domain object giờ đây phụ thuộc vào JPA** — bạn không thể instantiate `Appointment` trong unit test mà không load Spring context, không có Hibernate, không có database.
 
 Thử test method `cancel()`:
 
@@ -85,7 +85,7 @@ class AppointmentTest {
 }
 ```
 
-Cái thứ hai chạy trong milliseconds. Cái đầu chạy trong giây — vì phải boot Spring, kết nối DB, run migrations. Nhân lên cho 500 test cases, mày có một CI pipeline mất 15 phút.
+Cái thứ hai chạy trong milliseconds. Cái đầu chạy trong giây — vì phải boot Spring, kết nối DB, run migrations. Nhân lên cho 500 test cases, bạn có một CI pipeline mất 15 phút.
 
 ---
 
@@ -147,13 +147,13 @@ Hai class, hai trách nhiệm. `Appointment` là domain object thuần túy — 
 
 Cách tiếp cận này có chi phí: thêm code, thêm conversion logic, thêm class cần maintain. Với một CRUD đơn giản — tạo patient, lấy danh sách, update tên — chi phí đó không xứng đáng.
 
-Nhưng với những aggregate phức tạp như `Appointment` — có state machine, có nhiều rule nghiệp vụ, cần test nhiều transition — tách domain khỏi persistence là đầu tư xứng đáng. Nó cho phép mày test toàn bộ business logic trong milliseconds, và đảm bảo rằng khi database schema thay đổi, domain logic không bị kéo theo.
+Nhưng với những aggregate phức tạp như `Appointment` — có state machine, có nhiều rule nghiệp vụ, cần test nhiều transition — tách domain khỏi persistence là đầu tư xứng đáng. Nó cho phép bạn test toàn bộ business logic trong milliseconds, và đảm bảo rằng khi database schema thay đổi, domain logic không bị kéo theo.
 
 ---
 
 ## Takeaway
 
-Mỗi khi mày viết một business rule trong một class có `@Entity`, hỏi: *"Rule này cần biết mày đang dùng MySQL không?"* Nếu không — nó thuộc về domain object, không phải JPA entity.
+Mỗi khi bạn viết một business rule trong một class có `@Entity`, hỏi: *"Rule này cần biết bạn đang dùng MySQL không?"* Nếu không — nó thuộc về domain object, không phải JPA entity.
 
 ---
 

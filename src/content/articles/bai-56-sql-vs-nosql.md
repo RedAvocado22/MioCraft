@@ -7,9 +7,9 @@ series: "Phần 6: Database"
 tags: ["database", "SQL", "NoSQL", "trade-off"]
 ---
 
-Mày nghe tin NoSQL "scale tốt hơn", "flexible hơn", "không cần schema". Cân nhắc dùng MongoDB cho HMS thay vì MySQL.
+Bạn nghe tin NoSQL "scale tốt hơn", "flexible hơn", "không cần schema". Cân nhắc dùng MongoDB cho HMS thay vì MySQL.
 
-Rồi 6 tháng sau, mày phát hiện:
+Rồi 6 tháng sau, bạn phát hiện:
 - Report query phức tạp không viết được dễ
 - Data inconsistent vì không có transaction
 - Index strategy phức tạp hơn SQL
@@ -17,7 +17,7 @@ Rồi 6 tháng sau, mày phát hiện:
 
 Muốn refactor lại? Đã quá muộn. Cả terabyte data.
 
-Chọn database type là decision lâu dài. Mày cần hiểu khi nào nên SQL, khi nào nên NoSQL.
+Chọn database type là decision lâu dài. Bạn cần hiểu khi nào nên SQL, khi nào nên NoSQL.
 
 ---
 
@@ -204,8 +204,8 @@ public void bookAppointment(UUID scheduleId, UUID patientId) {
 
 ## Takeaway
 
-SQL là default. NoSQL chỉ khi SQL proven not fit (prove bằng metrics: slow query, write bottleneck). HMS của mày — SQL + Redis là đủ năm tới.
+SQL là default. NoSQL chỉ khi SQL proven not fit (prove bằng metrics: slow query, write bottleneck). HMS của bạn — SQL + Redis là đủ năm tới.
 
 ---
 
-*Bài tiếp theo: Soft Delete — đơn giản hơn mày nghĩ, và phức tạp hơn mày tưởng*
+*Bài tiếp theo: Soft Delete — đơn giản hơn bạn nghĩ, và phức tạp hơn bạn tưởng*

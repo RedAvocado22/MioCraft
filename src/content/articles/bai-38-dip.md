@@ -7,11 +7,11 @@ series: "Phần 4: SOLID"
 tags: ["SOLID", "DIP", "dependency-injection"]
 ---
 
-Hãy tưởng tượng mày xây một cái nhà. Mày chọn thợ điện giỏi nhất — nhưng thay vì dùng ổ cắm chuẩn, thợ điện đó hàn thẳng dây điện vào từng thiết bị trong nhà. Tivi hàn vào tường. Tủ lạnh hàn vào tường. Laptop hàn vào tường.
+Hãy tưởng tượng bạn xây một cái nhà. Bạn chọn thợ điện giỏi nhất — nhưng thay vì dùng ổ cắm chuẩn, thợ điện đó hàn thẳng dây điện vào từng thiết bị trong nhà. Tivi hàn vào tường. Tủ lạnh hàn vào tường. Laptop hàn vào tường.
 
-Một ngày nào đó mày muốn thay tivi mới. Mày phải đập tường.
+Một ngày nào đó bạn muốn thay tivi mới. Bạn phải đập tường.
 
-Đây chính xác là điều xảy ra khi business logic của mày phụ thuộc trực tiếp vào infrastructure — database, Redis, email service, Keycloak. Không phải ngay lập tức. Nhưng khi thứ đó cần thay đổi, mày sẽ phải đập tường.
+Đây chính xác là điều xảy ra khi business logic của bạn phụ thuộc trực tiếp vào infrastructure — database, Redis, email service, Keycloak. Không phải ngay lập tức. Nhưng khi thứ đó cần thay đổi, bạn sẽ phải đập tường.
 
 ---
 
@@ -72,9 +72,9 @@ public class AppointmentService {
 
 Có mấy vấn đề ở đây:
 
-**Vấn đề 1 — Không thể test business logic một mình.** Muốn unit test `book()`, mày phải setup JavaMailSender mock (tức là phải import Spring Mail vào test), RedisTemplate mock, tất cả. Để test business rule "đặt lịch thành công thì status là PENDING" — mày phải chuẩn bị infrastructure của email lẫn Redis.
+**Vấn đề 1 — Không thể test business logic một mình.** Muốn unit test `book()`, bạn phải setup JavaMailSender mock (tức là phải import Spring Mail vào test), RedisTemplate mock, tất cả. Để test business rule "đặt lịch thành công thì status là PENDING" — bạn phải chuẩn bị infrastructure của email lẫn Redis.
 
-**Vấn đề 2 — Thay đổi infrastructure kéo theo thay đổi business logic.** Team quyết định chuyển từ email sang Kafka event để gửi notification? Mày phải mở `AppointmentService` ra sửa. Business logic không thay đổi, nhưng mày vẫn phải sửa nó vì infrastructure thay đổi.
+**Vấn đề 2 — Thay đổi infrastructure kéo theo thay đổi business logic.** Team quyết định chuyển từ email sang Kafka event để gửi notification? Bạn phải mở `AppointmentService` ra sửa. Business logic không thay đổi, nhưng bạn vẫn phải sửa nó vì infrastructure thay đổi.
 
 **Vấn đề 3 — Business code biết quá nhiều về infrastructure detail.** `MimeMessage`, `MimeMessageHelper`, Redis key structure — những thứ này không thuộc về business logic. Chúng là chi tiết kỹ thuật.
 
@@ -158,7 +158,7 @@ Bây giờ:
 
 Đây là điều quan trọng cần hiểu: **Spring's dependency injection là một cơ chế để thực hiện DIP.**
 
-Khi mày dùng constructor injection với interface:
+Khi bạn dùng constructor injection với interface:
 
 ```java
 @Service
@@ -175,13 +175,13 @@ public class AppointmentService {
 
 Spring quyết định inject `EmailAppointmentNotifier` hay `KafkaAppointmentNotifier` — `AppointmentService` không biết và không cần biết. Dependency được inject từ bên ngoài vào, không phải được tạo ra bên trong. Đó chính là "inversion of control" — thứ mà Spring được xây dựng xung quanh.
 
-Mày đã dùng DIP từ ngày đầu code Spring Boot, chỉ là chưa có tên cho nó.
+Bạn đã dùng DIP từ ngày đầu code Spring Boot, chỉ là chưa có tên cho nó.
 
 ---
 
 ## Repository pattern là DIP áp dụng cho database
 
-Lý do tại sao Spring Data JPA tồn tại — và tại sao mày không gọi `entityManager.createQuery()` thẳng trong service — cũng là DIP.
+Lý do tại sao Spring Data JPA tồn tại — và tại sao bạn không gọi `entityManager.createQuery()` thẳng trong service — cũng là DIP.
 
 ```java
 // AppointmentService không biết database là MySQL hay PostgreSQL
@@ -192,14 +192,14 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
 }
 ```
 
-Nếu ngày mai team quyết định move một phần sang MongoDB — mày chỉ cần tạo `MongoAppointmentRepository implements AppointmentRepository`. `AppointmentService` không cần biết.
+Nếu ngày mai team quyết định move một phần sang MongoDB — bạn chỉ cần tạo `MongoAppointmentRepository implements AppointmentRepository`. `AppointmentService` không cần biết.
 
 ---
 
 ## Takeaway
 
-Mỗi lần mày thấy business logic đang import class từ `org.springframework.mail`, `org.springframework.data.redis`, hay `javax.persistence` — hỏi: *"Logic này có cần biết về infrastructure detail không, hay nó chỉ cần biết kết quả?"* Nếu chỉ cần kết quả — tạo abstraction. Đặt interface ở giữa. Business logic phụ thuộc vào interface, infrastructure implement interface. Dependency chảy từ detail lên abstraction — không phải ngược lại.
+Mỗi lần bạn thấy business logic đang import class từ `org.springframework.mail`, `org.springframework.data.redis`, hay `javax.persistence` — hỏi: *"Logic này có cần biết về infrastructure detail không, hay nó chỉ cần biết kết quả?"* Nếu chỉ cần kết quả — tạo abstraction. Đặt interface ở giữa. Business logic phụ thuộc vào interface, infrastructure implement interface. Dependency chảy từ detail lên abstraction — không phải ngược lại.
 
 ---
 
-*Bài tiếp theo: SOLID không làm code tốt hơn nếu mày dùng nó sai thời điểm*
+*Bài tiếp theo: SOLID không làm code tốt hơn nếu bạn dùng nó sai thời điểm*

@@ -82,7 +82,7 @@ public ResponseEntity<ApiError> handleValidation(MethodArgumentNotValidException
 }
 ```
 
-**404 Not Found** — resource ID không tồn tại (hoặc không visible với user — có team dùng 404 thay vì 403 để không leak "tồn tại nhưng không phải của mày").
+**404 Not Found** — resource ID không tồn tại (hoặc không visible với user — có team dùng 404 thay vì 403 để không leak "tồn tại nhưng không phải của bạn").
 
 **409 Conflict** — state hiện tại không cho phép action: đặt slot đã full, cancel appointment đã completed:
 
@@ -134,9 +134,9 @@ public class GlobalExceptionHandler {
 
 ## Tại sao monitoring cần status đúng
 
-Alert rule: *"5xx rate > 1% trong 5 phút"* — chỉ có nghĩa khi 5xx thật sự là server fault. Nếu mày nhét 404 vào 200 body — alert không bao giờ fire cho spike "not found" bất thường (có thể attack scan ID).
+Alert rule: *"5xx rate > 1% trong 5 phút"* — chỉ có nghĩa khi 5xx thật sự là server fault. Nếu bạn nhét 404 vào 200 body — alert không bao giờ fire cho spike "not found" bất thường (có thể attack scan ID).
 
-API gateway, CDN, client retry library — đều dựa status code. Chuẩn hóa giúp **cả hệ sinh thái** hoạt động, không chỉ app React của mày.
+API gateway, CDN, client retry library — đều dựa status code. Chuẩn hóa giúp **cả hệ sinh thái** hoạt động, không chỉ app React của bạn.
 
 ---
 
@@ -158,7 +158,7 @@ if (!data.success) { ... }  // phải nhớ check
 
 Mất lợi ích của `res.ok`. Test integration khó assert. Cache có thể cache "200" cho error response.
 
-Nếu mày cần machine-readable error trong body — vẫn dùng đúng status **và** body:
+Nếu bạn cần machine-readable error trong body — vẫn dùng đúng status **và** body:
 
 ```json
 HTTP/1.1 404 Not Found
@@ -169,7 +169,7 @@ HTTP/1.1 404 Not Found
 
 ## Takeaway
 
-Status code là API contract phần không thể thương lượng. 2xx = thành công, 4xx = caller sửa request hoặc quyền, 5xx = server phải investigate. 201 khi tạo mới, 409 khi conflict. Trước khi ship endpoint mới, hỏi: *"Nếu tao là Prometheus alert, tao hiểu request này fail vì ai không?"* — nếu câu trả lời chỉ nằm trong JSON body với status 200, mày đang làm sai.
+Status code là API contract phần không thể thương lượng. 2xx = thành công, 4xx = caller sửa request hoặc quyền, 5xx = server phải investigate. 201 khi tạo mới, 409 khi conflict. Trước khi ship endpoint mới, hỏi: *"Nếu mình là Prometheus alert, mình hiểu request này fail vì ai không?"* — nếu câu trả lời chỉ nằm trong JSON body với status 200, bạn đang làm sai.
 
 ---
 

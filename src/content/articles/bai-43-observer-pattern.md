@@ -67,7 +67,7 @@ Với `@EventListener` thuần, handler này chạy **trong cùng transaction** 
 
 ## `@TransactionalEventListener` — đúng tool cho đúng việc
 
-Spring cung cấp `@TransactionalEventListener` để giải quyết chính xác vấn đề này. Nó cho phép mày chỉ định handler chạy ở **phase nào của transaction lifecycle**.
+Spring cung cấp `@TransactionalEventListener` để giải quyết chính xác vấn đề này. Nó cho phép bạn chỉ định handler chạy ở **phase nào của transaction lifecycle**.
 
 ```java
 // ✅ Tốt hơn: chỉ gửi notification sau khi transaction commit thành công
@@ -84,7 +84,7 @@ public class AppointmentNotificationListener {
 
 `AFTER_COMMIT` đảm bảo: nếu transaction rollback, handler không bao giờ chạy. Không có SMS gửi đi khi dữ liệu chưa được persist.
 
-Các phase khác mà mày cần biết:
+Các phase khác mà bạn cần biết:
 
 - `BEFORE_COMMIT` — chạy trước khi commit, vẫn trong transaction, có thể throw để rollback
 - `AFTER_COMMIT` — chạy sau commit thành công, không thể rollback nữa
@@ -95,7 +95,7 @@ Các phase khác mà mày cần biết:
 
 ## Một gotcha quan trọng
 
-`@TransactionalEventListener` với `AFTER_COMMIT` chạy **sau khi transaction đã đóng**. Nếu handler của mày cần làm gì đó với database — ví dụ lưu notification log — nó sẽ cần một transaction mới.
+`@TransactionalEventListener` với `AFTER_COMMIT` chạy **sau khi transaction đã đóng**. Nếu handler của bạn cần làm gì đó với database — ví dụ lưu notification log — nó sẽ cần một transaction mới.
 
 ```java
 @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
@@ -108,7 +108,7 @@ public void onAppointmentConfirmed(AppointmentConfirmedEvent event) {
 }
 ```
 
-Nếu mày quên `REQUIRES_NEW`, Spring sẽ không có transaction active để mày dùng, và JPA sẽ throw exception.
+Nếu bạn quên `REQUIRES_NEW`, Spring sẽ không có transaction active để bạn dùng, và JPA sẽ throw exception.
 
 ---
 

@@ -104,7 +104,7 @@ Internal service-to-service: có thể deploy cùng lúc cả hai bên. **Public
 
 ## Versioning không cứu API tệ
 
-Nếu mỗi sprint thêm `/v3` vì đổi tên field bừa — mày đang trả nợ thiết kế (bài 69). DTO tách entity, additive changes trên v1 trước khi nhảy v2.
+Nếu mỗi sprint thêm `/v3` vì đổi tên field bừa — bạn đang trả nợ thiết kế (bài 69). DTO tách entity, additive changes trên v1 trước khi nhảy v2.
 
 ---
 

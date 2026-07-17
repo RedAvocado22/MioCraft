@@ -7,7 +7,7 @@ series: "Phần 7: Backend & Hệ thống"
 tags: ["spring", "async", "transaction", "concurrency"]
 ---
 
-Sau khi đặt lịch thành công, HMS gửi email xác nhận — mất 800ms qua SMTP. User chờ spinner vì dev gọi `mailSender.send()` **trong** request thread. Senior gợi ý `@Async`. Junior thêm annotation, deploy — email vẫn chạy sync. Rồi thêm `@Async` **bên trong** cùng class `AppointmentService` — vẫn sync.
+Sau khi đặt lịch thành công, HMS gửi email xác nhận — mất 800ms qua SMTP. User chờ spinner vì dev gọi `mailSender.send()` **trong** request thread. Người có kinh nghiệm gợi ý `@Async`. Người mới thêm annotation, deploy — email vẫn chạy sync. Rồi thêm `@Async` **bên trong** cùng class `AppointmentService` — vẫn sync.
 
 `@Async` trông một dòng. Cơ chế proxy và transaction boundary mới là chỗ hay vấp.
 

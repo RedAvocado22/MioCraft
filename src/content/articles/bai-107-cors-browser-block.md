@@ -8,7 +8,7 @@ tags: ["backend", "CORS", "spring", "security"]
 ---
 
 
-Frontend React chạy `localhost:5173`. API Spring Boot chạy `localhost:8080`. Mày gọi `fetch('/api/appointments')` — Postman trả 200 đầy đủ JSON. Browser console đỏ lòm:
+Frontend React chạy `localhost:5173`. API Spring Boot chạy `localhost:8080`. Bạn gọi `fetch('/api/appointments')` — Postman trả 200 đầy đủ JSON. Browser console đỏ lòm:
 
 ```
 Access to fetch at 'http://localhost:8080/api/appointments' from origin
@@ -17,7 +17,7 @@ Access to fetch at 'http://localhost:8080/api/appointments' from origin
 
 Không phải backend down. Không phải JWT sai. **Browser** chủ động chặn response vì server không cho phép origin `5173` đọc resource từ `8080`.
 
-Junior thường mất nửa ngày sửa JWT, CORS filter copy từ Stack Overflow, rồi mới hiểu CORS không phải lỗi server — là **cơ chế bảo vệ của browser**.
+Người mới thường mất nửa ngày sửa JWT, CORS filter copy từ Stack Overflow, rồi mới hiểu CORS không phải lỗi server — là **cơ chế bảo vệ của browser**.
 
 ---
 
@@ -33,7 +33,7 @@ Hai URL cùng **origin** khi protocol, host, port giống nhau:
 
 Trang web độc hại `evil.com` không được đọc response từ `bank.com` khi user đang login ngân hàng — JavaScript trên `evil.com` bị same-origin policy chặn.
 
-CORS (Cross-Origin Resource Sharing) là cách **server nói với browser**: *"Origin X được phép đọc response của tôi."* Browser enforce; Postman và curl **không** enforce — đó là lý do mày thấy "API chạy được mà frontend không".
+CORS (Cross-Origin Resource Sharing) là cách **server nói với browser**: *"Origin X được phép đọc response của tôi."* Browser enforce; Postman và curl **không** enforce — đó là lý do bạn thấy "API chạy được mà frontend không".
 
 ---
 
@@ -166,7 +166,7 @@ CORS chỉ nói browser có cho JS đọc response không. **Không** ngăn atta
 
 ## Takeaway
 
-CORS là contract giữa **browser** và **server**, không phải giữa Postman và server. Preflight OPTIONS phải pass trước DELETE/PUT có JWT. Config origin theo môi trường, không wildcard khi dùng credentials. Và khi senior nói "fix CORS đúng chỗ" — họ muốn `CorsConfigurationSource` + Security chain, không phải tắt security cho tiện.
+CORS là contract giữa **browser** và **server**, không phải giữa Postman và server. Preflight OPTIONS phải pass trước DELETE/PUT có JWT. Config origin theo môi trường, không wildcard khi dùng credentials. Và khi người có kinh nghiệm nói "fix CORS đúng chỗ" — họ muốn `CorsConfigurationSource` + Security chain, không phải tắt security cho tiện.
 
 ---
 

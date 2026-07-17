@@ -1,5 +1,5 @@
 ---
-title: "Template Method — pattern mày đang dùng hàng ngày mà không biết tên"
+title: "Template Method — pattern bạn đang dùng hàng ngày mà không biết tên"
 description: "Bất cứ khi nào bạn có một quy trình cố định nhưng các bước có thể thay đổi — Template Method đang ở đó. Abstract class trong Spring Boot là ví dụ điển hình."
 category: programming
 pubDate: 2024-02-10
@@ -7,9 +7,9 @@ series: "Phần 5: Design Patterns"
 tags: ["design-patterns", "template-method", "OOP"]
 ---
 
-Nếu mày đang dùng Spring Boot và có một `BaseService` với vài method abstract, hoặc một abstract class với một method `execute()` gọi vài step theo thứ tự cố định — mày đã dùng Template Method rồi. Chỉ là mày chưa gọi nó bằng tên.
+Nếu bạn đang dùng Spring Boot và có một `BaseService` với vài method abstract, hoặc một abstract class với một method `execute()` gọi vài step theo thứ tự cố định — bạn đã dùng Template Method rồi. Chỉ là bạn chưa gọi nó bằng tên.
 
-Đây là pattern phổ biến nhất trong Java backend mà ít người để ý, vì nó ẩn trong cách Java hoạt động — inheritance, abstract method, override. Nhưng khi hiểu nó đúng, mày sẽ nhận ra tại sao một số codebase đọc rất dễ trong khi codebase khác cứ lặp đi lặp lại cùng một đoạn logic ở mười mấy chỗ.
+Đây là pattern phổ biến nhất trong Java backend mà ít người để ý, vì nó ẩn trong cách Java hoạt động — inheritance, abstract method, override. Nhưng khi hiểu nó đúng, bạn sẽ nhận ra tại sao một số codebase đọc rất dễ trong khi codebase khác cứ lặp đi lặp lại cùng một đoạn logic ở mười mấy chỗ.
 
 ---
 
@@ -23,7 +23,7 @@ HMS có nhiều loại notification: khi appointment được confirm, khi lịc
 4. Gửi qua channel phù hợp (email, SMS, push)
 5. Log kết quả
 
-Nếu không có structure, mày sẽ viết 5 cái service, mỗi cái một đống if-else, và bước 1, 3, 5 bị copy-paste khắp nơi. Ba tháng sau có bug ở bước validate — mày sửa ở 3 chỗ, quên mất 2 chỗ, production báo lỗi lúc 2 giờ sáng.
+Nếu không có structure, bạn sẽ viết 5 cái service, mỗi cái một đống if-else, và bước 1, 3, 5 bị copy-paste khắp nơi. Ba tháng sau có bug ở bước validate — bạn sửa ở 3 chỗ, quên mất 2 chỗ, production báo lỗi lúc 2 giờ sáng.
 
 Template Method giải quyết đúng vấn đề này.
 
@@ -122,7 +122,7 @@ public class LabResultSender extends NotificationSender {
 
 Để ý keyword `final` trên method `send()`. Đây không phải chi tiết nhỏ.
 
-`final` đảm bảo không ai — kể cả class con — có thể override method đó và phá vỡ thứ tự các bước. Nếu mày quên `final`, class con hoàn toàn có thể override `send()` và bỏ qua bước validate, bước log, hoặc bất kỳ thứ gì. Skeleton trở thành optional thay vì mandatory.
+`final` đảm bảo không ai — kể cả class con — có thể override method đó và phá vỡ thứ tự các bước. Nếu bạn quên `final`, class con hoàn toàn có thể override `send()` và bỏ qua bước validate, bước log, hoặc bất kỳ thứ gì. Skeleton trở thành optional thay vì mandatory.
 
 Trong Template Method, cái "template" là bất khả xâm phạm. Class con chỉ được phép điền vào chỗ trống đã được chỉ định.
 
@@ -140,7 +140,7 @@ Trong Template Method, cái "template" là bất khả xâm phạm. Class con ch
 
 ## Takeaway
 
-Nhìn lại code HMS của mày — có class nào đang có logic lặp lại giữa nhiều service không? Nếu có, thử vẽ ra các bước, xác định bước nào cố định và bước nào thay đổi. Nếu pattern đó xuất hiện ít nhất 3 lần — đó là lúc Template Method đáng được refactor vào.
+Nhìn lại code HMS của bạn — có class nào đang có logic lặp lại giữa nhiều service không? Nếu có, thử vẽ ra các bước, xác định bước nào cố định và bước nào thay đổi. Nếu pattern đó xuất hiện ít nhất 3 lần — đó là lúc Template Method đáng được refactor vào.
 
 ---
 

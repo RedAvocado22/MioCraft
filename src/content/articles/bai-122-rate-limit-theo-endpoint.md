@@ -26,7 +26,7 @@ Mỗi endpoint có **chi phí** và **rủi ro** khác nhau:
 | `POST /api/payments` | Side effect, gateway | Rất thấp |
 | `POST /webhooks/payment` | Không JWT user — theo IP/signature | Riêng |
 
-Junior hay gắn một `@RateLimiter` global. Senior map **policy name → limit** trước khi viết filter.
+Người mới hay gắn một `@RateLimiter` global. Người có kinh nghiệm map **policy name → limit** trước khi viết filter.
 
 ---
 

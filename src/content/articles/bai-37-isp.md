@@ -7,11 +7,11 @@ series: "Phần 4: SOLID"
 tags: ["SOLID", "ISP", "interface"]
 ---
 
-Tưởng tượng mày vào làm việc ở một công ty, và sếp đưa cho mày một bản mô tả công việc dài mười trang. Trong đó có: thiết kế database, viết code backend, deploy infrastructure, vẽ UI, viết marketing copy, handle customer support, và đôi khi nếu cần thì lái xe đi giao tài liệu.
+Tưởng tượng bạn vào làm việc ở một công ty, và sếp đưa cho bạn một bản mô tả công việc dài mười trang. Trong đó có: thiết kế database, viết code backend, deploy infrastructure, vẽ UI, viết marketing copy, handle customer support, và đôi khi nếu cần thì lái xe đi giao tài liệu.
 
-Mày sẽ sign không?
+Bạn sẽ sign không?
 
-Trong code, đây là chính xác những gì xảy ra khi mày tạo ra một interface quá to. Và đây là điều mà **Interface Segregation Principle** muốn giải quyết.
+Trong code, đây là chính xác những gì xảy ra khi bạn tạo ra một interface quá to. Và đây là điều mà **Interface Segregation Principle** muốn giải quyết.
 
 ---
 
@@ -44,9 +44,9 @@ public interface DoctorScheduleService {
 }
 ```
 
-Bây giờ mày có một `AppointmentService` cần query slot khả dụng. Để làm điều đó, nó phải inject `DoctorScheduleService` — và theo mặc định, nó phải "biết về" tất cả methods khác trong interface đó: `bulkUpdateStatus`, `exportSchedulesToPdf`, tất cả. Dù nó chỉ dùng `getAvailableSlots` và `isSlotAvailable`.
+Bây giờ bạn có một `AppointmentService` cần query slot khả dụng. Để làm điều đó, nó phải inject `DoctorScheduleService` — và theo mặc định, nó phải "biết về" tất cả methods khác trong interface đó: `bulkUpdateStatus`, `exportSchedulesToPdf`, tất cả. Dù nó chỉ dùng `getAvailableSlots` và `isSlotAvailable`.
 
-Còn khi viết unit test cho `AppointmentService`? Mày phải mock toàn bộ `DoctorScheduleService` — tám method mày không care, cộng với hai method mày cần. Nếu sau này team thêm method thứ chín vào interface, tất cả mock trong tất cả test đều phải update.
+Còn khi viết unit test cho `AppointmentService`? Bạn phải mock toàn bộ `DoctorScheduleService` — tám method bạn không care, cộng với hai method bạn cần. Nếu sau này team thêm method thứ chín vào interface, tất cả mock trong tất cả test đều phải update.
 
 ---
 
@@ -129,7 +129,7 @@ public class DoctorScheduleServiceImpl implements
 
 ISP không chỉ áp dụng cho interface. Nó cũng áp dụng cho data contracts — DTO, response object.
 
-Mày đã từng viết một `DoctorResponse` chứa tất cả thông tin về doctor rồi dùng nó ở khắp nơi chưa?
+Bạn đã từng viết một `DoctorResponse` chứa tất cả thông tin về doctor rồi dùng nó ở khắp nơi chưa?
 
 ```java
 // ❌ Vấn đề — một DTO cho mọi use case
@@ -149,7 +149,7 @@ public class DoctorResponse {
 }
 ```
 
-Bệnh nhân booking appointment chỉ cần `id`, `name`, `specialization`, `averageRating`. Nhưng mày đang load `licenseNumber`, `qualifications`, `schedules`, `totalPatients`, `department` — tất cả chỉ để hiển thị tên và chuyên khoa trong dropdown.
+Bệnh nhân booking appointment chỉ cần `id`, `name`, `specialization`, `averageRating`. Nhưng bạn đang load `licenseNumber`, `qualifications`, `schedules`, `totalPatients`, `department` — tất cả chỉ để hiển thị tên và chuyên khoa trong dropdown.
 
 ISP trong context này: tạo DTO riêng cho từng use case.
 
@@ -180,13 +180,13 @@ public class DoctorAdminResponse {         // dùng trong admin dashboard
 }
 ```
 
-Đây cũng là lý do tại sao trong HMS mày có `mapper.toSummaryResponse()`, `mapper.toDetailResponse()`, `mapper.toAdminResponse()` — mỗi cái phục vụ một use case cụ thể, không phải một DTO "all-in-one" cho mọi caller.
+Đây cũng là lý do tại sao trong HMS bạn có `mapper.toSummaryResponse()`, `mapper.toDetailResponse()`, `mapper.toAdminResponse()` — mỗi cái phục vụ một use case cụ thể, không phải một DTO "all-in-one" cho mọi caller.
 
 ---
 
 ## Cách nhận biết interface đang quá béo
 
-Khi mày implement một interface và thấy mình viết bất kỳ cái này:
+Khi bạn implement một interface và thấy mình viết bất kỳ cái này:
 
 ```java
 @Override
@@ -195,15 +195,15 @@ public void bulkUpdateStatus(List<UUID> ids, ScheduleStatus status) {
 }
 ```
 
-Đó là dấu hiệu rõ ràng nhất: mày đang bị ép implement thứ mày không cần. Interface cần được tách.
+Đó là dấu hiệu rõ ràng nhất: bạn đang bị ép implement thứ bạn không cần. Interface cần được tách.
 
-Dấu hiệu tế nhị hơn: khi test setup trở nên nặng nề vì phải mock quá nhiều method không liên quan đến thứ đang được test. Nếu mày đang mock mười methods chỉ để test hai methods, interface đang quá to.
+Dấu hiệu tế nhị hơn: khi test setup trở nên nặng nề vì phải mock quá nhiều method không liên quan đến thứ đang được test. Nếu bạn đang mock mười methods chỉ để test hai methods, interface đang quá to.
 
 ---
 
 ## Takeaway
 
-Nhìn vào một interface mày đang dùng và hỏi: *"Bao nhiêu phần trăm methods trong interface này tao thực sự dùng?"* Nếu dưới 60% — interface đó đang quá béo và mày đang phụ thuộc vào contract mà mày không cần. Tách nó ra trước khi nó phình to thêm.
+Nhìn vào một interface bạn đang dùng và hỏi: *"Bao nhiêu phần trăm methods trong interface này mình thực sự dùng?"* Nếu dưới 60% — interface đó đang quá béo và bạn đang phụ thuộc vào contract mà bạn không cần. Tách nó ra trước khi nó phình to thêm.
 
 ---
 

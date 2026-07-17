@@ -7,7 +7,7 @@ series: "Phần 9: Không phải lúc nào cũng đúng"
 tags: ["tech-myths", "architecture", "layered-architecture"]
 ---
 
-Có một giai đoạn trong quá trình học về architecture mà mày bắt đầu thấy layers ở khắp nơi. Controller layer. Service layer. Repository layer. Mapper layer. Validation layer. DTO layer. Và sau khi đọc thêm về Clean Architecture: Use Case layer, Domain layer, Application layer, Infrastructure layer.
+Có một giai đoạn trong quá trình học về architecture mà bạn bắt đầu thấy layers ở khắp nơi. Controller layer. Service layer. Repository layer. Mapper layer. Validation layer. DTO layer. Và sau khi đọc thêm về Clean Architecture: Use Case layer, Domain layer, Application layer, Infrastructure layer.
 
 Nhiều layer hơn có vẻ như = design nghiêm túc hơn = code tốt hơn. Đây là một trong những misconception phổ biến nhất — và có hại nhất.
 
@@ -21,7 +21,7 @@ Mỗi layer trong một well-designed system tồn tại vì một lý do cụ t
 
 **Service layer** — chứa business logic, orchestrate operations, quản lý transaction boundary.
 
-**Repository layer** — tách database concern ra khỏi business logic. Service không cần biết mày đang dùng JPA hay JDBC hay gì khác.
+**Repository layer** — tách database concern ra khỏi business logic. Service không cần biết bạn đang dùng JPA hay JDBC hay gì khác.
 
 Ba layer đó giải quyết ba separation of concern thật sự. Đó là lý do layered architecture kinh điển vẫn đúng cho hầu hết project.
 
@@ -29,7 +29,7 @@ Ba layer đó giải quyết ba separation of concern thật sự. Đó là lý 
 
 ## Khi layer trở thành pass-through
 
-Vấn đề bắt đầu khi mày thêm layer vì "nên có" thay vì vì "cần thiết." Kết quả là pass-through layer — một layer không làm gì ngoài delegate sang layer tiếp theo.
+Vấn đề bắt đầu khi bạn thêm layer vì "nên có" thay vì vì "cần thiết." Kết quả là pass-through layer — một layer không làm gì ngoài delegate sang layer tiếp theo.
 
 ```java
 // ❌ ValidationService không làm gì ngoài gọi validator
@@ -82,15 +82,15 @@ public class AppointmentReminderScheduler {
 
 ---
 
-## Cách nhận ra mày đang over-layering
+## Cách nhận ra bạn đang over-layering
 
-Mày trace một feature từ controller đến database và đi qua 7 class, nhưng chỉ 2-3 trong số đó thực sự có logic.
+Bạn trace một feature từ controller đến database và đi qua 7 class, nhưng chỉ 2-3 trong số đó thực sự có logic.
 
-Mày viết unit test cho một service và phải mock 4 dependency — nhưng service đó chỉ làm 2 thứ thực sự.
+Bạn viết unit test cho một service và phải mock 4 dependency — nhưng service đó chỉ làm 2 thứ thực sự.
 
-Mày không thể giải thích tại sao một class tồn tại tách biệt với class kia ngoài câu "để clean architecture."
+Bạn không thể giải thích tại sao một class tồn tại tách biệt với class kia ngoài câu "để clean architecture."
 
-Những dấu hiệu đó không có nghĩa mày sai hoàn toàn. Chúng có nghĩa là đã đến lúc ngồi lại và hỏi: *"Class này làm gì mà không thể sống trong class kia?"*
+Những dấu hiệu đó không có nghĩa bạn sai hoàn toàn. Chúng có nghĩa là đã đến lúc ngồi lại và hỏi: *"Class này làm gì mà không thể sống trong class kia?"*
 
 ---
 

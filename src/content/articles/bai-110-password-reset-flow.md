@@ -14,9 +14,9 @@ User bấm "Quên mật khẩu", nhập email, nhận link:
 https://hms.example.com/reset-password?password=TempPass123&userId=abc-uuid
 ```
 
-Junior nghĩ tiện — frontend đọc query param, gọi API đổi password xong. Link forward qua Slack, lộ trong browser history, server access log, Referer header khi load asset — **password mới chưa đổi đã public**.
+Người mới nghĩ tiện — frontend đọc query param, gọi API đổi password xong. Link forward qua Slack, lộ trong browser history, server access log, Referer header khi load asset — **password mới chưa đổi đã public**.
 
-Senior reject không vì UX. Vì **reset flow là security feature**, không phải form CRUD thông thường.
+Người có kinh nghiệm reject không vì UX. Vì **reset flow là security feature**, không phải form CRUD thông thường.
 
 ---
 
@@ -145,7 +145,7 @@ Log audit: ai request reset, IP, thời điểm — không log token raw.
 
 ## Takeaway
 
-Reset password = cấp **quyền tạm thời** qua one-time token có expiry, hash trong DB, invalidate sau dùng. Link email chỉ mang token. Password mới chỉ qua form POST. Và nếu mày thấy `?password=` trong URL bất kỳ đâu — xóa feature đó trước khi merge, không phải sau khi security audit.
+Reset password = cấp **quyền tạm thời** qua one-time token có expiry, hash trong DB, invalidate sau dùng. Link email chỉ mang token. Password mới chỉ qua form POST. Và nếu bạn thấy `?password=` trong URL bất kỳ đâu — xóa feature đó trước khi merge, không phải sau khi security audit.
 
 ---
 

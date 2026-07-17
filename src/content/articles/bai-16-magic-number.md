@@ -32,13 +32,13 @@ if (queueSize > 100) {
 appointmentRepository.findByStatus("PENDING");
 ```
 
-Với mỗi con số này, câu hỏi đặt ra là: 30 phút thì sao? Tại sao 30 mà không phải 15 hay 60? 3 lần thất bại thì lock — quyết định này đến từ đâu? 100 là limit của hệ thống, hay limit của business, hay chỉ là con số mày đoán?
+Với mỗi con số này, câu hỏi đặt ra là: 30 phút thì sao? Tại sao 30 mà không phải 15 hay 60? 3 lần thất bại thì lock — quyết định này đến từ đâu? 100 là limit của hệ thống, hay limit của business, hay chỉ là con số bạn đoán?
 
 Người đọc tiếp theo không có câu trả lời. Và nguy hiểm hơn — họ không biết mình không có câu trả lời.
 
 ## Hậu quả thực tế
 
-**Sửa một chỗ bỏ sót chỗ khác.** Nếu timeout được define là `30` ở năm chỗ khác nhau và business quyết định đổi thành 45 phút, mày phải grep toàn bộ codebase và hy vọng không bỏ sót. Và thường thì sẽ bỏ sót.
+**Sửa một chỗ bỏ sót chỗ khác.** Nếu timeout được define là `30` ở năm chỗ khác nhau và business quyết định đổi thành 45 phút, bạn phải grep toàn bộ codebase và hy vọng không bỏ sót. Và thường thì sẽ bỏ sót.
 
 **Không biết giá trị nào liên quan đến nhau.** `30` trong timeout và `30` trong "max retry attempts" — có phải là cùng một `30` không? Hay chỉ tình cờ giống nhau? Không ai biết.
 
@@ -74,7 +74,7 @@ if (failedAttempts >= SecurityPolicy.MAX_FAILED_LOGIN_ATTEMPTS) {
 }
 ```
 
-Khi business quyết định đổi timeout, mày sửa một chỗ. Khi security audit yêu cầu review, mày biết giá trị này đến từ đâu. Khi dev mới đọc code, họ hiểu ngay `MAX_FAILED_LOGIN_ATTEMPTS` không phải con số ngẫu nhiên.
+Khi business quyết định đổi timeout, bạn sửa một chỗ. Khi security audit yêu cầu review, bạn biết giá trị này đến từ đâu. Khi một dev mới đọc code, họ hiểu ngay `MAX_FAILED_LOGIN_ATTEMPTS` không phải con số ngẫu nhiên.
 
 ## Magic string cũng nguy hiểm không kém
 
@@ -142,8 +142,8 @@ Rule of thumb: nếu người đọc có thể hỏi "con số này từ đâu r
 
 ## Takeaway
 
-Tìm trong HMS của mày một chỗ nào đó có số `30`, `60`, `100`, hoặc bất kỳ timeout/limit nào được hardcode trực tiếp. Extract nó ra thành named constant hoặc `@ConfigurationProperties`, và thử viết comment ngắn giải thích tại sao giá trị đó được chọn.
+Tìm trong HMS của bạn một chỗ nào đó có số `30`, `60`, `100`, hoặc bất kỳ timeout/limit nào được hardcode trực tiếp. Extract nó ra thành named constant hoặc `@ConfigurationProperties`, và thử viết comment ngắn giải thích tại sao giá trị đó được chọn.
 
 ---
 
-*Bài tiếp theo: Đừng nuốt lỗi — hệ thống sẽ trả giá thay mày*
+*Bài tiếp theo: Đừng nuốt lỗi — hệ thống sẽ trả giá thay bạn*

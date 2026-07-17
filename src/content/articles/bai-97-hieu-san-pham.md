@@ -1,17 +1,17 @@
 ---
 title: "Hiểu sản phẩm kiếm tiền thế nào để viết code tốt hơn"
-description: "Developer hiểu business model sẽ ưu tiên đúng hơn, estimate chính xác hơn, và đưa ra đề xuất kỹ thuật có business context. Đây là thứ phân biệt senior và staff engineer."
+description: "Developer hiểu business model sẽ ưu tiên đúng hơn, estimate chính xác hơn, và đưa ra đề xuất kỹ thuật có business context. Đó là một bước phát triển quan trọng trong tư duy kỹ thuật."
 category: programming
 pubDate: 2024-04-07
 series: "Phần 11: Tư duy sản phẩm"
-tags: ["product-thinking", "business", "senior"]
+tags: ["product-thinking", "business", "engineering-growth"]
 ---
 
-Câu hỏi này nghe có vẻ lạ khi đặt ra cho engineer: *"Sản phẩm mày đang build kiếm tiền bằng cách nào?"*
+Câu hỏi này nghe có vẻ lạ khi đặt ra cho engineer: *"Sản phẩm bạn đang build kiếm tiền bằng cách nào?"*
 
-Phần lớn dev không biết câu trả lời. Không phải vì họ không thông minh — mà vì không ai thấy nó liên quan đến công việc hàng ngày. Tao implement feature, tao fix bug, tao maintain service. Chuyện tiền bạc là của PM và business.
+Phần lớn dev không biết câu trả lời. Không phải vì họ không thông minh — mà vì không ai thấy nó liên quan đến công việc hàng ngày. Mình implement feature, mình fix bug, mình maintain service. Chuyện tiền bạc là của PM và business.
 
-Nhưng nếu tao không biết sản phẩm kiếm tiền từ đâu, tao không biết cái gì thật sự quan trọng. Và không biết cái gì quan trọng, mọi decision đều có weight như nhau — điều này không đúng.
+Nhưng nếu mình không biết sản phẩm kiếm tiền từ đâu, mình không biết cái gì thật sự quan trọng. Và không biết cái gì quan trọng, mọi decision đều có weight như nhau — điều này không đúng.
 
 ---
 
@@ -47,15 +47,15 @@ Cùng một mức engineering effort bỏ vào hai chỗ đó có ROI khác nhau
 
 ---
 
-## Không phải để mày lo chuyện business
+## Không phải để bạn lo chuyện business
 
-Tao không nói mày cần trở thành business analyst hay learn finance. Tao nói: hiểu enough để prioritize đúng.
+Mình không nói bạn cần trở thành business analyst hay learn finance. Mình nói: hiểu enough để prioritize đúng.
 
 Đủ để biết cái nào là critical path, cái nào là nice-to-have.
 Đủ để biết khi nào cần over-engineer (vì cost of failure cao), khi nào có thể under-engineer (vì feature không quan trọng với business outcome).
-Đủ để trong sprint planning, khi có trade-off, mày có thêm một dimension để ra quyết định.
+Đủ để trong sprint planning, khi có trade-off, bạn có thêm một dimension để ra quyết định.
 
-Câu hỏi đơn giản nhất để bắt đầu: hỏi PM hoặc lead *"Flow nào trong hệ thống mà nếu nó down 1 tiếng thì business thiệt nhất?"* Câu trả lời đó là map của cái mày cần bảo vệ nhất.
+Câu hỏi đơn giản nhất để bắt đầu: hỏi PM hoặc lead *"Flow nào trong hệ thống mà nếu nó down 1 tiếng thì business thiệt nhất?"* Câu trả lời đó là map của cái bạn cần bảo vệ nhất.
 
 ---
 
@@ -63,9 +63,9 @@ Câu hỏi đơn giản nhất để bắt đầu: hỏi PM hoặc lead *"Flow n
 
 Đây là bài cuối của *Code Sống Sót*.
 
-Nhưng thật ra series này không có điểm kết thúc — vì những thứ được nói trong 97 bài là thứ mày sẽ học lại nhiều lần, ở nhiều level khác nhau, trong nhiều project khác nhau. Mỗi lần đọc lại một bài, mày sẽ hiểu khác đi vì context của mày đã khác.
+Nhưng thật ra series này không có điểm kết thúc — vì những thứ được nói trong 97 bài là thứ bạn sẽ học lại nhiều lần, ở nhiều level khác nhau, trong nhiều project khác nhau. Mỗi lần đọc lại một bài, bạn sẽ hiểu khác đi vì context của bạn đã khác.
 
-Thứ tao muốn mày mang theo không phải là checklist hay framework. Mà là một thói quen: **hỏi tại sao trước khi hỏi như thế nào.**
+Thứ mình muốn bạn mang theo không phải là checklist hay framework. Mà là một thói quen: **hỏi tại sao trước khi hỏi như thế nào.**
 
 Tại sao feature này tồn tại. Tại sao cần design pattern này ở đây. Tại sao trade-off này được chọn. Tại sao đây là vấn đề quan trọng cần solve.
 
@@ -75,7 +75,7 @@ Dev giỏi biết *how*. Engineer giỏi biết *why*.
 
 ## Takeaway
 
-Bỏ ra 30 phút để hiểu business model của sản phẩm mày đang build. Hỏi PM: revenue đến từ đâu, user nào là user quan trọng nhất, flow nào là flow không được phép chết. Những câu trả lời đó sẽ reshape cách mày prioritize technical work — và làm cho mày trở thành engineer được trust hơn, không phải chỉ dev implement ticket tốt hơn.
+Bỏ ra 30 phút để hiểu business model của sản phẩm bạn đang build. Hỏi PM: revenue đến từ đâu, user nào là user quan trọng nhất, flow nào là flow không được phép chết. Những câu trả lời đó sẽ reshape cách bạn prioritize technical work — và làm cho bạn trở thành engineer được trust hơn, không phải chỉ dev implement ticket tốt hơn.
 
 ---
 

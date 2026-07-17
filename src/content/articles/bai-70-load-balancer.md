@@ -7,9 +7,9 @@ series: "Phần 8: System Design"
 tags: ["system-design", "load-balancer", "scalability"]
 ---
 
-Khi mày chạy Spring Boot trên máy local, có một server đang lắng nghe ở port 8080. Một request vào, server xử lý, trả response. Mọi thứ sequential và đơn giản.
+Khi bạn chạy Spring Boot trên máy local, có một server đang lắng nghe ở port 8080. Một request vào, server xử lý, trả response. Mọi thứ sequential và đơn giản.
 
-Bây giờ tưởng tượng hệ thống đó phục vụ một bệnh viện lớn. 8 giờ sáng thứ Hai, bệnh nhân đổ xô vào đặt lịch — vài trăm request mỗi giây cùng lúc. Một server đơn không thể xử lý hết. Mày cần nhiều server hơn.
+Bây giờ tưởng tượng hệ thống đó phục vụ một bệnh viện lớn. 8 giờ sáng thứ Hai, bệnh nhân đổ xô vào đặt lịch — vài trăm request mỗi giây cùng lúc. Một server đơn không thể xử lý hết. Bạn cần nhiều server hơn.
 
 Nhưng client biết gọi vào server nào? Làm sao phân phối traffic đều? Nếu một server chết thì sao? Đây là vấn đề mà load balancer giải quyết.
 
@@ -29,7 +29,7 @@ Client không biết có bao nhiêu server phía sau. Load balancer che giấu t
 
 Hai lợi ích chính:
 
-**Horizontal scaling:** Thay vì mua một server khủng để chịu được load cao (vertical scaling), mày có thể chạy nhiều server vừa phải. Khi cần thêm capacity, thêm server mới và đăng ký với load balancer — không cần downtime.
+**Horizontal scaling:** Thay vì mua một server khủng để chịu được load cao (vertical scaling), bạn có thể chạy nhiều server vừa phải. Khi cần thêm capacity, thêm server mới và đăng ký với load balancer — không cần downtime.
 
 **High availability:** Nếu một server chết, load balancer phát hiện ra (qua health check) và ngừng gửi traffic đến server đó. Client không biết chuyện gì xảy ra, hệ thống vẫn chạy.
 
@@ -51,9 +51,9 @@ Hai lợi ích chính:
 
 Stateless có nghĩa là: một request có thể đến bất kỳ server nào và được xử lý hoàn toàn — không cần biết request trước đó đã đến server nào.
 
-Trong Spring Boot, điều này ảnh hưởng đến cách mày handle authentication. Nếu mày lưu session trong memory của server (HTTP session truyền thống), thì request thứ hai của user phải đến đúng server đó mới còn session. Với nhiều server thì không đảm bảo được điều đó.
+Trong Spring Boot, điều này ảnh hưởng đến cách bạn handle authentication. Nếu bạn lưu session trong memory của server (HTTP session truyền thống), thì request thứ hai của user phải đến đúng server đó mới còn session. Với nhiều server thì không đảm bảo được điều đó.
 
-JWT giải quyết vấn đề này: token được client giữ, gửi kèm mỗi request, server verify token mà không cần lookup bất kỳ state nào. Bất kỳ server nào cũng xử lý được. Đây là một trong những lý do HMS của mày dùng JWT thay vì session truyền thống.
+JWT giải quyết vấn đề này: token được client giữ, gửi kèm mỗi request, server verify token mà không cần lookup bất kỳ state nào. Bất kỳ server nào cũng xử lý được. Đây là một trong những lý do HMS của bạn dùng JWT thay vì session truyền thống.
 
 ```java
 // ❌ Stateful — lưu user context trong session, không scale được
@@ -78,7 +78,7 @@ public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
 
 Load balancer định kỳ gửi request đến một endpoint đặc biệt của mỗi server — thường là `/actuator/health` trong Spring Boot. Nếu server trả về 200, nó được coi là healthy. Nếu không response hoặc trả về lỗi, load balancer đánh dấu server đó là down và ngừng gửi traffic.
 
-Spring Boot Actuator cung cấp health endpoint sẵn. Mày có thể customize nó để check cả database connection, Redis connection — bất kỳ dependency nào mà nếu down thì server cũng không còn serve được:
+Spring Boot Actuator cung cấp health endpoint sẵn. Bạn có thể customize nó để check cả database connection, Redis connection — bất kỳ dependency nào mà nếu down thì server cũng không còn serve được:
 
 ```java
 // application.properties
@@ -103,7 +103,7 @@ public class RedisHealthIndicator implements HealthIndicator {
 }
 ```
 
-Nếu Redis chết và slot booking của mày phụ thuộc vào Redis, thì việc báo server là unhealthy và nhận ít traffic hơn là behavior đúng.
+Nếu Redis chết và slot booking của bạn phụ thuộc vào Redis, thì việc báo server là unhealthy và nhận ít traffic hơn là behavior đúng.
 
 ---
 
@@ -119,7 +119,7 @@ Trong thực tế, Layer 7 là lựa chọn phổ biến cho web application vì
 
 ## Takeaway
 
-Thiết kế Spring Boot service của mày luôn với assumption rằng nó sẽ chạy nhiều instance. Kiểm tra một điều: *"Nếu tao chạy ba instance của service này cùng lúc, có gì break không?"* — bất kỳ thứ gì lưu state trong memory của server (local cache không share, in-memory session) đều là candidate cho vấn đề.
+Thiết kế Spring Boot service của bạn luôn với assumption rằng nó sẽ chạy nhiều instance. Kiểm tra một điều: *"Nếu mình chạy ba instance của service này cùng lúc, có gì break không?"* — bất kỳ thứ gì lưu state trong memory của server (local cache không share, in-memory session) đều là candidate cho vấn đề.
 
 ---
 

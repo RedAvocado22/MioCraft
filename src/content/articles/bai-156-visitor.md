@@ -1,15 +1,15 @@
 ---
-title: "Visitor — khi mày cần thêm operation vào object hierarchy mà không sửa class"
-description: "GoF gặp một mâu thuẫn kinh điển: thêm operation mới mà không sửa class cũ, hoặc thêm class mới mà không sửa operation cũ — mày chỉ được chọn một. Visitor giải nửa bài đó."
+title: "Visitor — khi bạn cần thêm operation vào object hierarchy mà không sửa class"
+description: "GoF gặp một mâu thuẫn kinh điển: thêm operation mới mà không sửa class cũ, hoặc thêm class mới mà không sửa operation cũ — bạn chỉ được chọn một. Visitor giải nửa bài đó."
 category: programming
 pubDate: 2026-08-16
 series: "Phần 5: Design Patterns"
 tags: ["visitor", "design-pattern", "double-dispatch", "java"]
 ---
 
-Visitor là pattern khó nhất trong batch này để giải thích — không phải vì implementation phức tạp, mà vì pain point nó giải quyết không hiển nhiên cho đến khi mày gặp nó.
+Visitor là pattern khó nhất trong batch này để giải thích — không phải vì implementation phức tạp, mà vì pain point nó giải quyết không hiển nhiên cho đến khi bạn gặp nó.
 
-Để hiểu Visitor, mày cần hiểu một mâu thuẫn trước.
+Để hiểu Visitor, bạn cần hiểu một mâu thuẫn trước.
 
 ---
 
@@ -17,7 +17,7 @@ Visitor là pattern khó nhất trong batch này để giải thích — không 
 
 HMS có document system: bệnh nhân ký các loại document khác nhau — `ConsentForm`, `InsuranceClaim`, `ReferralLetter`. Mỗi loại là một class riêng.
 
-Mày cần thực hiện nhiều operation trên những document này: render ra PDF, export ra JSON cho HL7 FHIR, validate theo từng loại, tính fee.
+Bạn cần thực hiện nhiều operation trên những document này: render ra PDF, export ra JSON cho HL7 FHIR, validate theo từng loại, tính fee.
 
 Cách thứ nhất: đặt tất cả operation vào class hierarchy.
 
@@ -47,13 +47,13 @@ public class DocumentPdfRenderer {
 
 Thêm operation mới? Tạo class mới — dễ. Thêm document mới? Sửa TẤT CẢ class operation — đau.
 
-Đây là *Expression Problem*: mày chỉ được chọn một chiều để extend dễ. Visitor chọn chiều “thêm operation dễ” — trả giá bằng “thêm class khó hơn”.
+Đây là *Expression Problem*: bạn chỉ được chọn một chiều để extend dễ. Visitor chọn chiều “thêm operation dễ” — trả giá bằng “thêm class khó hơn”.
 
 ---
 
 ## Visitor: đưa dispatch về đúng chỗ
 
-Vấn đề với `instanceof` chain: Java không tự biết gọi đúng `render` method cho đúng document type — mày phải hỏi thủ công. Visitor dùng *double dispatch* để làm điều đó tự động.
+Vấn đề với `instanceof` chain: Java không tự biết gọi đúng `render` method cho đúng document type — bạn phải hỏi thủ công. Visitor dùng *double dispatch* để làm điều đó tự động.
 
 ```java
 // Document interface: chỉ có một method — accept visitor
@@ -170,7 +170,7 @@ Thêm operation mới `HL7v2Exporter`? Tạo class mới implement `DocumentVisi
 
 ## Tại sao phải đi vòng qua `accept`?
 
-Mày nhìn vào code trên và thắc mắc: tại sao không gọi thẳng `visitor.visit(doc)` mà phải đi vòng `doc.accept(visitor)`?
+Bạn nhìn vào code trên và thắc mắc: tại sao không gọi thẳng `visitor.visit(doc)` mà phải đi vòng `doc.accept(visitor)`?
 
 Thử gọi thẳng xem:
 
@@ -180,7 +180,7 @@ MedicalDocument doc = getDocumentById(id); // type thật là ConsentForm, nhưn
 visitor.visit(doc); // ❌ compile error — không có overload visit(MedicalDocument)
 ```
 
-Java không có overload `visit(MedicalDocument)`. Mày phải cast:
+Java không có overload `visit(MedicalDocument)`. Bạn phải cast:
 
 ```java
 if (doc instanceof ConsentForm f)    visitor.visit(f);
@@ -188,7 +188,7 @@ else if (doc instanceof InsuranceClaim c) visitor.visit(c);
 // ...
 ```
 
-Và đây chính xác là cái `instanceof` chain mày muốn thoát khỏi từ đầu bài.
+Và đây chính xác là cái `instanceof` chain bạn muốn thoát khỏi từ đầu bài.
 
 Vấn đề nằm ở cách Java chọn overload: quyết định được đưa ra lúc **compile time**, dựa trên type được khai báo của biến — không phải type thật lúc runtime. `doc` được khai báo là `MedicalDocument`, nên Java không biết gọi `visit(ConsentForm)` hay `visit(InsuranceClaim)`.
 
@@ -216,7 +216,7 @@ public byte[] renderPdf(MedicalDocument doc) {
 }
 ```
 
-Sealed class đảm bảo `switch` phải exhaustive — compiler báo lỗi nếu mày thêm document type mà quên update switch. Nhiều trường hợp trước đây cần Visitor, sealed class + pattern matching giải gọn hơn.
+Sealed class đảm bảo `switch` phải exhaustive — compiler báo lỗi nếu bạn thêm document type mà quên update switch. Nhiều trường hợp trước đây cần Visitor, sealed class + pattern matching giải gọn hơn.
 
 ---
 
@@ -226,9 +226,9 @@ Visitor là pattern cồng kềnh — hierarchy document phải biết về `Doc
 
 Đừng dùng khi:
 
-Mày hay thêm document type mới hơn operation mới — mỗi lần thêm type là phải sửa tất cả Visitor implementation. Đảo chiều: nếu type hierarchy ổn định nhưng operation hay thêm, Visitor phù hợp.
+Bạn hay thêm document type mới hơn operation mới — mỗi lần thêm type là phải sửa tất cả Visitor implementation. Đảo chiều: nếu type hierarchy ổn định nhưng operation hay thêm, Visitor phù hợp.
 
-Mày đang dùng Java 17+ và sealed class giải bài tốt hơn với ít code hơn.
+Bạn đang dùng Java 17+ và sealed class giải bài tốt hơn với ít code hơn.
 
 Hierarchy chỉ có 2–3 type và logic không phức tạp — `instanceof` pattern matching đọc thẳng hơn.
 
@@ -236,7 +236,7 @@ Hierarchy chỉ có 2–3 type và logic không phức tạp — `instanceof` pa
 
 ## Takeaway
 
-Visitor giải một bài rất cụ thể: type hierarchy ổn định, nhưng operation hay thêm mới, và mày không muốn sửa toàn bộ class mỗi lần thêm operation. Nếu mày đang maintain một đống `instanceof` chain hay `switch (type)` phân tán khắp codebase, Visitor gom logic operation vào một chỗ. Nếu mày đang dùng Java 17+, sealed class + pattern matching là lựa chọn thường clean hơn cho bài tương tự.
+Visitor giải một bài rất cụ thể: type hierarchy ổn định, nhưng operation hay thêm mới, và bạn không muốn sửa toàn bộ class mỗi lần thêm operation. Nếu bạn đang maintain một đống `instanceof` chain hay `switch (type)` phân tán khắp codebase, Visitor gom logic operation vào một chỗ. Nếu bạn đang dùng Java 17+, sealed class + pattern matching là lựa chọn thường clean hơn cho bài tương tự.
 
 ---
 

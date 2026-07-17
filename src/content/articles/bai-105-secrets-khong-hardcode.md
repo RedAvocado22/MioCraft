@@ -18,9 +18,9 @@ spring:
 
 Repo private. Chỉ team xem. Không sao đâu.
 
-Sáu tháng sau repo được mirror sang CI log, một contractor được add vào org, hoặc ai đó fork nhầm sang public template. Password vẫn nằm trong git history — `git log -p` vẫn đọc được dù mày đã xóa dòng đó ở commit sau. Rotate password toàn bộ stack, audit access log, báo security — vì một dòng config "tạm thời cho dev chạy được".
+Sáu tháng sau repo được mirror sang CI log, một contractor được add vào org, hoặc ai đó fork nhầm sang public template. Password vẫn nằm trong git history — `git log -p` vẫn đọc được dù bạn đã xóa dòng đó ở commit sau. Rotate password toàn bộ stack, audit access log, báo security — vì một dòng config "tạm thời cho dev chạy được".
 
-Senior không reject vì mày dùng sai syntax YAML. Họ reject vì **secret và code không được sống chung**.
+Người có kinh nghiệm không reject vì bạn dùng sai syntax YAML. Họ reject vì **secret và code không được sống chung**.
 
 ---
 
@@ -98,7 +98,7 @@ DB_PASSWORD=change_me
 KEYCLOAK_CLIENT_SECRET=change_me
 ```
 
-Junior copy `.env.example` → `.env`, điền giá trị thật, không bao giờ commit `.env`.
+Người mới copy `.env.example` → `.env`, điền giá trị thật, không bao giờ commit `.env`.
 
 ---
 
@@ -188,7 +188,7 @@ Image Docker build từ code **không** chứa prod password. Cùng image chạy
 
 ## Takeaway
 
-Rule đơn giản: **nếu mất git repo mà attacker có quyền đọc toàn bộ history, họ không được có prod password.** Mọi secret là env var hoặc secret manager; YAML trong repo chỉ là skeleton. Copy `.env.example`, add `.env` vào `.gitignore`, và khi senior hỏi "password lấy từ đâu?" — câu trả lời đúng không bao giờ là "trong file application.yml dòng 42".
+Rule đơn giản: **nếu mất git repo mà attacker có quyền đọc toàn bộ history, họ không được có prod password.** Mọi secret là env var hoặc secret manager; YAML trong repo chỉ là skeleton. Copy `.env.example`, add `.env` vào `.gitignore`, và khi người có kinh nghiệm hỏi "password lấy từ đâu?" — câu trả lời đúng không bao giờ là "trong file application.yml dòng 42".
 
 ---
 

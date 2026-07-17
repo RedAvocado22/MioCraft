@@ -7,17 +7,17 @@ series: "Phần 2: Clean Code"
 tags: ["clean-code", "naming", "readability"]
 ---
 
-Tao từng review một codebase mà trong đó có một biến tên là `data2`. Không phải `data2` ở scope nhỏ, không phải trong vòng lặp. Là một field cấp class, được dùng ở tám chỗ khác nhau trong service. Khi tao hỏi tác giả "cái này là gì," anh ấy suy nghĩ mất bốn giây rồi nói: "À, đó là danh sách bệnh nhân đã thanh toán xong."
+Mình từng review một codebase mà trong đó có một biến tên là `data2`. Không phải `data2` ở scope nhỏ, không phải trong vòng lặp. Là một field cấp class, được dùng ở tám chỗ khác nhau trong service. Khi mình hỏi tác giả "cái này là gì," anh ấy suy nghĩ mất bốn giây rồi nói: "À, đó là danh sách bệnh nhân đã thanh toán xong."
 
 Vậy tại sao không đặt tên nó là `paidPatients`?
 
 ## Tên xấu không phải vì lười — mà vì không nghĩ đủ
 
-Phần lớn tên biến tệ không xuất phát từ việc dev lười biếng. Nó xuất phát từ việc đặt tên *trước khi hiểu rõ* cái mình đang xây dựng. Mày đang code, cần một biến để chứa tạm cái gì đó, gõ `temp` rồi tiếp tục. Sau đó nó nằm đó mãi.
+Phần lớn tên biến tệ không xuất phát từ việc dev lười biếng. Nó xuất phát từ việc đặt tên *trước khi hiểu rõ* cái mình đang xây dựng. Bạn đang code, cần một biến để chứa tạm cái gì đó, gõ `temp` rồi tiếp tục. Sau đó nó nằm đó mãi.
 
-Hoặc ngược lại: mày đặt tên quá sớm khi domain chưa rõ. Gọi là `result` vì chưa biết nó là gì. Sau khi logic rõ ra thì không quay lại đổi nữa.
+Hoặc ngược lại: bạn đặt tên quá sớm khi domain chưa rõ. Gọi là `result` vì chưa biết nó là gì. Sau khi logic rõ ra thì không quay lại đổi nữa.
 
-Đặt tên tốt đòi hỏi mày phải hiểu cái mình đang xây dựng trước khi đặt tên. Đó là lý do nó là kỹ năng — không phải thói quen.
+Đặt tên tốt đòi hỏi bạn phải hiểu cái mình đang xây dựng trước khi đặt tên. Đó là lý do nó là kỹ năng — không phải thói quen.
 
 ## Ba câu hỏi để đặt tên tốt
 
@@ -137,7 +137,7 @@ findAvailableDoctorBySpecialty(String specialtyCode, boolean acceptsWalkIn);
 
 ## Tên trong HMS cụ thể — một ví dụ thực tế
 
-Trong codebase HMS, tao thấy pattern này khá phổ biến:
+Trong codebase HMS, mình thấy pattern này khá phổ biến:
 
 ```java
 // ❌ Vấn đề — dto là gì? map sang gì?
@@ -161,7 +161,7 @@ public List<AppointmentSlot> getAvailableSlotsByDoctorId(Long doctorId) { ... }
 
 ## Một quy tắc nhỏ nhưng cực kỳ hữu ích
 
-Nếu mày phải thêm comment để giải thích tên biến — nghĩa là tên biến đó chưa đủ tốt.
+Nếu bạn phải thêm comment để giải thích tên biến — nghĩa là tên biến đó chưa đủ tốt.
 
 ```java
 // ❌ Vấn đề — phải dùng comment để bù cho tên xấu
@@ -171,11 +171,11 @@ int d; // số ngày kể từ lần khám cuối
 int daysSinceLastVisit;
 ```
 
-Comment nên giải thích *tại sao*, không phải *là gì*. Nếu mày đang dùng comment để giải thích "cái này là gì" — đó là warning.
+Comment nên giải thích *tại sao*, không phải *là gì*. Nếu bạn đang dùng comment để giải thích "cái này là gì" — đó là warning.
 
 ## Takeaway
 
-Lấy một class bất kỳ trong HMS mày đang viết, đọc qua tất cả tên biến và method. Với mỗi cái, thử đặt câu hỏi: nếu tao xóa toàn bộ comment và chỉ giữ lại tên — người đọc có hiểu được không? Bao nhiêu cái cần đổi tên?
+Lấy một class bất kỳ trong HMS bạn đang viết, đọc qua tất cả tên biến và method. Với mỗi cái, thử đặt câu hỏi: nếu mình xóa toàn bộ comment và chỉ giữ lại tên — người đọc có hiểu được không? Bao nhiêu cái cần đổi tên?
 
 ---
 

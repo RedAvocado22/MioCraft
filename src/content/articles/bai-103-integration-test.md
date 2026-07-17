@@ -21,10 +21,10 @@ Unit test giỏi trong việc verify isolated logic: *"Hàm này với input X c
 
 Nhưng hầu hết bugs production không nằm ở isolated logic. Chúng nằm ở **chỗ các mảnh ghép lại với nhau**:
 
-- Code của mày gọi query đúng, nhưng schema database đã thay đổi
-- Service của mày gọi đúng method, nhưng config Keycloak ở môi trường staging khác local
-- Logic của mày đúng, nhưng JSON serialization ra format mà client không parse được
-- Transaction của mày đúng, nhưng foreign key constraint ở database không cho phép
+- Code của bạn gọi query đúng, nhưng schema database đã thay đổi
+- Service của bạn gọi đúng method, nhưng config Keycloak ở môi trường staging khác local
+- Logic của bạn đúng, nhưng JSON serialization ra format mà client không parse được
+- Transaction của bạn đúng, nhưng foreign key constraint ở database không cho phép
 
 Unit test mock hết những dependency này — nên nó không bắt được những lỗi ở boundary.
 
@@ -80,7 +80,7 @@ Test này verify toàn bộ stack: HTTP layer → Controller → Service → Rep
 
 ## Database test với Testcontainers
 
-Test với H2 in-memory là anti-pattern phổ biến — H2 có behavior khác MySQL, đặc biệt với SQL dialect, constraint, và function. Mày đang test với database giả thay vì database thật.
+Test với H2 in-memory là anti-pattern phổ biến — H2 có behavior khác MySQL, đặc biệt với SQL dialect, constraint, và function. Bạn đang test với database giả thay vì database thật.
 
 Testcontainers khởi động một MySQL container thật trong quá trình test:
 
@@ -115,13 +115,13 @@ class AppointmentRepositoryIntegrationTest {
 }
 ```
 
-Container tự động start trước test và teardown sau — mày không cần manage lifecycle thủ công. Và vì đây là MySQL thật, behavior giống production 1:1.
+Container tự động start trước test và teardown sau — bạn không cần manage lifecycle thủ công. Và vì đây là MySQL thật, behavior giống production 1:1.
 
 ---
 
 ## Phân biệt khi nào dùng gì
 
-Integration test chậm hơn unit test — một test suite với Testcontainers có thể mất vài phút. Mày không dùng nó thay thế unit test, mà dùng song song:
+Integration test chậm hơn unit test — một test suite với Testcontainers có thể mất vài phút. Bạn không dùng nó thay thế unit test, mà dùng song song:
 
 **Unit test — test isolated logic:**
 ```java
@@ -177,7 +177,7 @@ Slice tests nhanh hơn full integration test nhưng vẫn verify nhiều hơn un
 
 ## Takeaway
 
-Unit test và integration test không phải lựa chọn "cái này hoặc cái kia" — chúng test những thứ khác nhau. Nếu test suite của mày chỉ có unit test, mày đang có coverage trên giấy nhưng không verify thứ hay fail nhất trong production: chỗ các mảnh ghép lại với nhau. Thêm ít nhất một integration test cho mỗi critical flow — book appointment, process payment, send notification — là đủ để bắt được 80% bugs production trước khi chúng đến tay user.
+Unit test và integration test không phải lựa chọn "cái này hoặc cái kia" — chúng test những thứ khác nhau. Nếu test suite của bạn chỉ có unit test, bạn đang có coverage trên giấy nhưng không verify thứ hay fail nhất trong production: chỗ các mảnh ghép lại với nhau. Thêm ít nhất một integration test cho mỗi critical flow — book appointment, process payment, send notification — là đủ để bắt được 80% bugs production trước khi chúng đến tay user.
 
 ---
 

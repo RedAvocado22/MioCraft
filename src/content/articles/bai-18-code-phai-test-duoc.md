@@ -7,9 +7,9 @@ series: "Phần 2: Clean Code"
 tags: ["clean-code", "testing", "testability"]
 ---
 
-Có một bài kiểm tra nhanh tao hay dùng để đánh giá chất lượng code: thử viết unit test cho nó. Không cần chạy — chỉ cần thử *viết*.
+Có một bài kiểm tra nhanh mình hay dùng để đánh giá chất lượng code: thử viết unit test cho nó. Không cần chạy — chỉ cần thử *viết*.
 
-Nếu mày phải spin up database để test business logic — code có vấn đề. Nếu mày phải mock mười dependency khác nhau để test một function hai mươi dòng — code có vấn đề. Nếu mày không thể nghĩ ra cách test nó mà không cần cả hệ thống chạy lên — code có vấn đề nghiêm trọng.
+Nếu bạn phải spin up database để test business logic — code có vấn đề. Nếu bạn phải mock mười dependency khác nhau để test một function hai mươi dòng — code có vấn đề. Nếu bạn không thể nghĩ ra cách test nó mà không cần cả hệ thống chạy lên — code có vấn đề nghiêm trọng.
 
 Testability không phải là attribute tách rời của code. Nó là triệu chứng.
 
@@ -39,7 +39,7 @@ public class AppointmentService {
 }
 ```
 
-Để test `calculatePatientShare`, mày cần database thật, insurance service thật, notification service thật. Đây không phải unit test nữa — đây là integration test ngẫu nhiên bị mắc kẹt trong service layer.
+Để test `calculatePatientShare`, bạn cần database thật, insurance service thật, notification service thật. Đây không phải unit test nữa — đây là integration test ngẫu nhiên bị mắc kẹt trong service layer.
 
 ## Code testable trông như thế nào
 
@@ -116,7 +116,7 @@ Không cần database. Không cần Spring context. Chạy trong milliseconds. T
 
 ## Ba dấu hiệu code không testable
 
-**1. New operator trong business logic.** Bất cứ khi nào business logic dùng `new SomeService()` hay `new SomeRepository()` — đó là hard dependency. Mày không thể thay thế nó bằng mock.
+**1. New operator trong business logic.** Bất cứ khi nào business logic dùng `new SomeService()` hay `new SomeRepository()` — đó là hard dependency. Bạn không thể thay thế nó bằng mock.
 
 **2. Static method calls với side effect.** `LocalDateTime.now()`, `UUID.randomUUID()` — những cái này ổn ở mức độ nào đó. Nhưng `ExternalPaymentGateway.charge()` là static với side effect — không thể test mà không gọi thật.
 
@@ -124,11 +124,11 @@ Không cần database. Không cần Spring context. Chạy trong milliseconds. T
 
 ## Điều quan trọng hơn test coverage
 
-Sinh viên hay hỏi: "Cần bao nhiêu phần trăm coverage?" Câu hỏi đó đặt sai. Coverage cao không đồng nghĩa với test tốt. Mày có thể đạt 90% coverage với những test không assert gì, hoặc chỉ test happy path mà bỏ qua toàn bộ edge case.
+Sinh viên hay hỏi: "Cần bao nhiêu phần trăm coverage?" Câu hỏi đó đặt sai. Coverage cao không đồng nghĩa với test tốt. Bạn có thể đạt 90% coverage với những test không assert gì, hoặc chỉ test happy path mà bỏ qua toàn bộ edge case.
 
 Câu hỏi đúng là: **Test có thể bắt được bug thật không?**
 
-Và để test bắt được bug thật, mày phải test:
+Và để test bắt được bug thật, bạn phải test:
 
 - Happy path: input hợp lệ, kết quả đúng
 - Edge case: null, empty, boundary value
@@ -148,7 +148,7 @@ void calculatePatientShare_whenInsuranceServiceFails_shouldThrowProperException(
 
 ## Testability là design feedback
 
-Đây là insight quan trọng nhất của bài này: **khi code khó test, đó là design đang phàn nàn với mày.**
+Đây là insight quan trọng nhất của bài này: **khi code khó test, đó là design đang phàn nàn với bạn.**
 
 Code dễ test thường là code với:
 - Separation of concerns rõ ràng
@@ -156,11 +156,11 @@ Code dễ test thường là code với:
 - Business logic tách biệt khỏi infrastructure
 - Function nhỏ và làm một việc
 
-Code khó test thường là code vi phạm những nguyên tắc trên. Testability không phải là mục đích — nó là hệ quả của design tốt. Và nếu mày không thể test được, đó là signal để nhìn lại design.
+Code khó test thường là code vi phạm những nguyên tắc trên. Testability không phải là mục đích — nó là hệ quả của design tốt. Và nếu bạn không thể test được, đó là signal để nhìn lại design.
 
 ## Takeaway
 
-Chọn một service method quan trọng trong HMS — `confirmAppointment`, `processPayment`, bất kỳ method nào mà nếu sai thì nghiêm trọng. Thử viết một unit test cho nó. Xem mày gặp khó khăn ở đâu — đó chính là điểm yếu trong design của mày.
+Chọn một service method quan trọng trong HMS — `confirmAppointment`, `processPayment`, bất kỳ method nào mà nếu sai thì nghiêm trọng. Thử viết một unit test cho nó. Xem bạn gặp khó khăn ở đâu — đó chính là điểm yếu trong design của bạn.
 
 ---
 

@@ -7,9 +7,9 @@ series: "Phần 5: Design Patterns"
 tags: ["design-patterns", "facade", "abstraction"]
 ---
 
-Khi HMS cần tạo một user mới trong Keycloak, flow không đơn giản chỉ là một API call. Mày cần: lấy admin token, tạo user với thông tin cơ bản, gán role, set temporary password, rồi handle từng loại lỗi khác nhau cho từng bước. Nếu bước nào fail — cần rollback hoặc cleanup những gì đã làm trước đó.
+Khi HMS cần tạo một user mới trong Keycloak, flow không đơn giản chỉ là một API call. Bạn cần: lấy admin token, tạo user với thông tin cơ bản, gán role, set temporary password, rồi handle từng loại lỗi khác nhau cho từng bước. Nếu bước nào fail — cần rollback hoặc cleanup những gì đã làm trước đó.
 
-Nếu mày để hết logic đó trực tiếp trong `PatientService` hay `EmployeeService` — những service cần tạo Keycloak account — mày vừa làm hỏng hai thứ cùng lúc: service chính bị ô nhiễm bởi Keycloak implementation details, và logic Keycloak bị duplicate ở nhiều chỗ.
+Nếu bạn để hết logic đó trực tiếp trong `PatientService` hay `EmployeeService` — những service cần tạo Keycloak account — bạn vừa làm hỏng hai thứ cùng lúc: service chính bị ô nhiễm bởi Keycloak implementation details, và logic Keycloak bị duplicate ở nhiều chỗ.
 
 Đó là lý do `KeycloakService` — hay nói chính xác hơn, `KeycloakFacade` — tồn tại.
 
@@ -70,7 +70,7 @@ public class PatientService {
 }
 ```
 
-Đây là service đang làm quá nhiều việc. Khi Keycloak thay đổi API, khi cần thêm bước mới vào flow tạo user — mày phải tìm và sửa ở mọi nơi PatientService, DoctorService, EmployeeService, v.v.
+Đây là service đang làm quá nhiều việc. Khi Keycloak thay đổi API, khi cần thêm bước mới vào flow tạo user — bạn phải tìm và sửa ở mọi nơi PatientService, DoctorService, EmployeeService, v.v.
 
 ---
 
@@ -154,7 +154,7 @@ public class PatientService {
 
 ## Facade không phải chỉ cho external systems
 
-Facade hữu ích bất cứ khi nào mày có một nhóm operations liên quan đến nhau mà caller không nên phải orchestrate từng bước.
+Facade hữu ích bất cứ khi nào bạn có một nhóm operations liên quan đến nhau mà caller không nên phải orchestrate từng bước.
 
 Trong HMS: một `AppointmentFacade` có thể gom lại các bước book appointment — kiểm tra slot, tạo appointment record, giữ slot trong Redis, gửi confirmation — vào một method duy nhất. Thay vì caller phải gọi 4 service theo thứ tự đúng.
 
@@ -162,9 +162,9 @@ Trong HMS: một `AppointmentFacade` có thể gom lại các bước book appoi
 
 ## Khi nào không dùng
 
-Facade không phải garbage bin. Nếu mày nhét mọi thứ vào một class và gọi nó là Facade, mày đang tạo ra một God Object.
+Facade không phải garbage bin. Nếu bạn nhét mọi thứ vào một class và gọi nó là Facade, bạn đang tạo ra một God Object.
 
-Dấu hiệu Facade đang sai chỗ: class có quá nhiều responsibility không liên quan đến nhau, hoặc mày thấy mình cần inject 10 dependency vào nó. Facade nên cover một subsystem cụ thể — không phải toàn bộ ứng dụng.
+Dấu hiệu Facade đang sai chỗ: class có quá nhiều responsibility không liên quan đến nhau, hoặc bạn thấy mình cần inject 10 dependency vào nó. Facade nên cover một subsystem cụ thể — không phải toàn bộ ứng dụng.
 
 ---
 
@@ -174,4 +174,4 @@ Nhìn lại HMS — có service nào đang phải biết quá nhiều về imple
 
 ---
 
-*Bài tiếp theo: Decorator — kế thừa không sai, sai là mày dùng nó để mở rộng hành vi*
+*Bài tiếp theo: Decorator — kế thừa không sai, sai là bạn dùng nó để mở rộng hành vi*

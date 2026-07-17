@@ -9,7 +9,7 @@ tags: ["postmortem", "incident", "production", "on-call"]
 
 2 giờ sáng team rollback xong — API ổn, Slack im. Tuần sau manager hỏi: *"Postmortem đâu?"*
 
-Junior nghĩ đó là buổi họp tìm **ai deploy sai**. Senior biết postmortem tìm **hệ thống cho phép deploy sai chui qua** — và sửa guardrail để lần sau khó lặp lại hơn, không phải khó hơn cho một người.
+Người mới nghĩ đó là buổi họp tìm **ai deploy sai**. Người có kinh nghiệm biết postmortem tìm **hệ thống cho phép deploy sai chui qua** — và sửa guardrail để lần sau khó lặp lại hơn, không phải khó hơn cho một người.
 
 P12/Bài 09 là 15 phút đầu. Postmortem là **48–72 giờ sau**, khi đầu óc đã nguội và log còn đủ retention.
 

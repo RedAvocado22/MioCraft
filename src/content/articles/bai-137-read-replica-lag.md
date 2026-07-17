@@ -17,7 +17,7 @@ Bệnh nhân vừa đổi họ tên, API trả 200. Refresh trang profile — **
 
 MySQL replication mặc định **asynchronous**: primary commit xong trả client, replica nhận binlog và apply **sau**. Tải cao, replica yếu hơn primary, migration nặng, long transaction trên replica — lag tăng từ vài ms lên giây.
 
-Junior hay tưởng: *“Có 2 DB thì gấp đôi an toàn và đồng bộ tức thì.”* Thực tế: **scale read** đổi lấy **eventual consistency** trên read path.
+Người mới hay tưởng: *“Có 2 DB thì gấp đôi an toàn và đồng bộ tức thì.”* Thực tế: **scale read** đổi lấy **eventual consistency** trên read path.
 
 ---
 

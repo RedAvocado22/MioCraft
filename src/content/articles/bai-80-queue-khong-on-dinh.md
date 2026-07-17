@@ -57,11 +57,11 @@ Thêm Kafka vào đây không làm nó ổn định hơn. Nó thêm vào: một 
 
 Đây là điều ít người hiểu rõ: queue không làm operation reliable hơn, nó **defer** failure và làm failure visible ở một chỗ khác.
 
-Nếu `NotificationService` down, không có queue hay có queue thì notification vẫn không được gửi. Với queue, notification nằm trong queue và eventually được gửi khi service recover — đó là điểm tốt. Nhưng mày cũng phải xử lý: message expire trong queue, consumer fail sau khi consume nhưng trước khi process xong (at-least-once → idempotency requirement), poison message làm consumer crash loop.
+Nếu `NotificationService` down, không có queue hay có queue thì notification vẫn không được gửi. Với queue, notification nằm trong queue và eventually được gửi khi service recover — đó là điểm tốt. Nhưng bạn cũng phải xử lý: message expire trong queue, consumer fail sau khi consume nhưng trước khi process xong (at-least-once → idempotency requirement), poison message làm consumer crash loop.
 
 Spring's `@TransactionalEventListener` mà HMS đang dùng cho notification sau booking là một ví dụ của "just enough async" — event được publish sau khi transaction commit, xử lý trong cùng process, không cần external broker. Nếu fail thì fail rõ ràng và có thể retry với mechanism đơn giản hơn.
 
-Upgrade lên Kafka chỉ có nghĩa khi `NotificationService` cần tách ra thành một separate service với separate deployment — tức là khi mày đang đi theo hướng microservices với lý do rõ ràng.
+Upgrade lên Kafka chỉ có nghĩa khi `NotificationService` cần tách ra thành một separate service với separate deployment — tức là khi bạn đang đi theo hướng microservices với lý do rõ ràng.
 
 ---
 

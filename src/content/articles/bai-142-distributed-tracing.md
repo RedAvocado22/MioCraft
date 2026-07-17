@@ -7,7 +7,7 @@ series: "Phần 12: Production & Ops"
 tags: ["distributed-tracing", "micrometer", "zipkin", "observability", "spring-boot"]
 ---
 
-User báo: "Tôi bấm đặt lịch, nó xoay mấy giây rồi báo lỗi." Mày mở log `AppointmentService` — không thấy exception. Mở log `NotificationService` — không thấy gì liên quan. `PaymentService` — cũng không. Mày không biết request đó đã đi đến đâu, dừng ở đâu, tốn bao lâu ở từng bước.
+User báo: "Tôi bấm đặt lịch, nó xoay mấy giây rồi báo lỗi." Bạn mở log `AppointmentService` — không thấy exception. Mở log `NotificationService` — không thấy gì liên quan. `PaymentService` — cũng không. Bạn không biết request đó đã đi đến đâu, dừng ở đâu, tốn bao lâu ở từng bước.
 
 Trong monolith, thread ID theo request qua toàn bộ call stack — một log file, một search. Trong microservices, request nhảy qua 4 service, 4 log file riêng, 4 server riêng. Không có gì link chúng lại.
 
@@ -32,13 +32,13 @@ Trace ID: a3f8c291b47e2105
         ← TIMEOUT ở đây
 ```
 
-Cái diagram này — gọi là **waterfall** — chỉ mày ngay: 360ms trong 450ms tổng là bị giữ ở SMS external call. Không cần lục log thủ công.
+Cái diagram này — gọi là **waterfall** — chỉ bạn ngay: 360ms trong 450ms tổng là bị giữ ở SMS external call. Không cần lục log thủ công.
 
 ---
 
 ## Setup trong Spring Boot 3
 
-Spring Boot 3 dùng **Micrometer Tracing** làm abstraction layer — code instrumentation của mày không phụ thuộc vào vendor (Zipkin, Jaeger, Tempo). Phần lớn instrumentation là **tự động** cho Spring components.
+Spring Boot 3 dùng **Micrometer Tracing** làm abstraction layer — code instrumentation của bạn không phụ thuộc vào vendor (Zipkin, Jaeger, Tempo). Phần lớn instrumentation là **tự động** cho Spring components.
 
 Dependency (chọn Zipkin làm backend):
 
@@ -80,7 +80,7 @@ logging:
     level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
 ```
 
-Sau khi config, log của mày trông như thế này:
+Sau khi config, log của bạn trông như thế này:
 
 ```
 INFO [appointment-service,a3f8c291b47e2105,9d4a1e8b] - Creating appointment for patient 123
@@ -104,13 +104,13 @@ X-B3-Sampled: 1
 
 `NotificationService` tự động extract header này (nếu cũng cấu hình Micrometer Tracing) và tạo span con với cùng trace ID. Không cần code gì thêm cho HTTP-to-HTTP call.
 
-Nếu mày dùng `RestTemplate` cũ thay vì `RestClient` (Spring Boot 3.2+), vẫn được auto-instrument. Nếu dùng Feign client, cũng được. Hầu hết HTTP client phổ biến đã có bridge.
+Nếu bạn dùng `RestTemplate` cũ thay vì `RestClient` (Spring Boot 3.2+), vẫn được auto-instrument. Nếu dùng Feign client, cũng được. Hầu hết HTTP client phổ biến đã có bridge.
 
 ---
 
 ## Custom span cho business logic quan trọng
 
-Auto-instrumentation cover HTTP, JDBC, Redis. Nhưng đôi khi mày muốn trace **business operation** cụ thể — ví dụ: validation bệnh nhân mất bao lâu, slot-booking Lua script tốn bao nhiêu:
+Auto-instrumentation cover HTTP, JDBC, Redis. Nhưng đôi khi bạn muốn trace **business operation** cụ thể — ví dụ: validation bệnh nhân mất bao lâu, slot-booking Lua script tốn bao nhiêu:
 
 ```java
 @Service
@@ -145,7 +145,7 @@ public class AppointmentService {
 }
 ```
 
-Span `slot-booking-lua` sẽ xuất hiện trong waterfall diagram, mày thấy chính xác nó tốn bao lâu trong tổng thời gian của request.
+Span `slot-booking-lua` sẽ xuất hiện trong waterfall diagram, bạn thấy chính xác nó tốn bao lâu trong tổng thời gian của request.
 
 ---
 
@@ -165,14 +165,14 @@ notification-service sendSms (external)                    ═══════
                                                                   ↑ TIMEOUT
 ```
 
-Cái gì mày học ngay từ diagram này:
+Cái gì bạn học ngay từ diagram này:
 
 - `sendSms` external call chiếm 360ms trong 450ms tổng — bottleneck rõ ràng.
 - `slot-booking-lua` chỉ 8ms — không phải vấn đề.
 - Database query `SELECT patient` 12ms — acceptable.
-- Nếu có Circuit Breaker (bài 139) trip ở đây, mày thấy error tag trên span `sendSms`.
+- Nếu có Circuit Breaker (bài 139) trip ở đây, bạn thấy error tag trên span `sendSms`.
 
-Không có tracing, mày chỉ thấy "request mất 450ms" mà không biết 360ms đó ở đâu.
+Không có tracing, bạn chỉ thấy "request mất 450ms" mà không biết 360ms đó ở đâu.
 
 ---
 
@@ -220,7 +220,7 @@ Một số setup dùng **adaptive sampling** — rate thấp mặc định, tự
 
 ## Takeaway
 
-Log cho mày biết **gì** xảy ra. Trace cho mày biết **ở đâu và tốn bao lâu**. Trong microservices, không có trace ID truyền qua service, log là những mảnh ghép rời không liên kết được. Setup Micrometer Tracing trong Spring Boot 3 tốn ít hơn 30 phút — nhưng lần đầu debug production incident với trace ID, mày sẽ không bao giờ muốn làm mà không có nó nữa.
+Log cho bạn biết **gì** xảy ra. Trace cho bạn biết **ở đâu và tốn bao lâu**. Trong microservices, không có trace ID truyền qua service, log là những mảnh ghép rời không liên kết được. Setup Micrometer Tracing trong Spring Boot 3 tốn ít hơn 30 phút — nhưng lần đầu debug production incident với trace ID, bạn sẽ không bao giờ muốn làm mà không có nó nữa.
 
 ---
 

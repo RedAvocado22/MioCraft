@@ -1,5 +1,5 @@
 ---
-title: "Isolation Levels — bốn cấp độ và khi nào mày cần cái nào"
+title: "Isolation Levels — bốn cấp độ và khi nào bạn cần cái nào"
 description: "Read Uncommitted, Read Committed, Repeatable Read, Serializable — mỗi level là một trade-off giữa consistency và performance. Chọn sai là data corruption hoặc bottleneck."
 category: system-design
 pubDate: 2024-02-21
@@ -9,7 +9,7 @@ tags: ["database", "transactions", "isolation"]
 
 Hai transaction chạy đồng thời. Cái nào "isolated" được như thế nào — tức là transaction này nhìn thấy bao nhiêu data thay đổi từ transaction kia — đó là **Isolation Level**.
 
-MySQL có 4 levels: READ UNCOMMITTED, READ COMMITTED, REPEATABLE READ, SERIALIZABLE. Mỗi level cho phép một loại "anomaly" khác nhau. Mày cần hiểu cái nào để lựa chọn đúng cho HMS.
+MySQL có 4 levels: READ UNCOMMITTED, READ COMMITTED, REPEATABLE READ, SERIALIZABLE. Mỗi level cho phép một loại "anomaly" khác nhau. Bạn cần hiểu cái nào để lựa chọn đúng cho HMS.
 
 ---
 
@@ -23,7 +23,7 @@ Trước hết, cái gì là "sai" khi concurrent transactions chạy?
 
 **Phantom Read** — Transaction A query với WHERE clause, lần đầu thấy N rows. Lần thứ hai query cùng WHERE, thấy N+1 rows vì transaction B vừa insert.
 
-**Lost Update** — Hai transaction update cùng row, một update bị overwrite (cậu biết từ P06/Bài 03).
+**Lost Update** — Hai transaction update cùng row, một update bị overwrite (bạn biết từ P06/Bài 03).
 
 ---
 
@@ -45,7 +45,7 @@ Trước hết, cái gì là "sai" khi concurrent transactions chạy?
 - Chặn: Dirty Read, Non-repeatable Read
 - Cho phép: Phantom Read
 - Cách hoạt động: Transaction A start, snapshot của database ở thời điểm A start được capture. Mỗi query A làm đều thấy snapshot này, dù B update rows. UPDATE thành UPDATE khác = no-no.
-- Khi dùng: Transaction mà cần consistent view suốt execution. HMS use case: appointment booking — mày check slot available, check pricing, áp discount, transfer payment — toàn bộ này phải see consistent state.
+- Khi dùng: Transaction mà cần consistent view suốt execution. HMS use case: appointment booking — bạn check slot available, check pricing, áp discount, transfer payment — toàn bộ này phải see consistent state.
 
 **SERIALIZABLE**
 - Chặn: Dirty Read, Non-repeatable Read, Phantom Read
@@ -167,7 +167,7 @@ Transaction A query lại cùng condition, thấy 6 rows.
 
 Đó là phantom read. REPEATABLE READ không chặn cái này vì nó chỉ snapshot existing rows, không snapshot "range" của rows.
 
-**Vấn đề khi nào?** Hiếm. Ví dụ cậu query `COUNT(*) FROM appointment WHERE doctor_id = X`, lần sau COUNT lại khác = một loại anomaly. Nhưng thường không ảnh hưởng logic.
+**Vấn đề khi nào?** Hiếm. Ví dụ bạn query `COUNT(*) FROM appointment WHERE doctor_id = X`, lần sau COUNT lại khác = một loại anomaly. Nhưng thường không ảnh hưởng logic.
 
 **Fix nếu care:** Dùng SERIALIZABLE, hoặc lock range `SELECT ... FOR UPDATE`.
 
@@ -179,4 +179,4 @@ MySQL InnoDB default là REPEATABLE READ — đây là lựa chọn an toàn cho
 
 ---
 
-*Bài tiếp theo: Deadlock — vì sao database tự kill query của mày*
+*Bài tiếp theo: Deadlock — vì sao database tự kill query của bạn*

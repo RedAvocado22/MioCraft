@@ -7,13 +7,13 @@ series: "Phần 5: Design Patterns"
 tags: ["iterator", "design-pattern", "java", "collections"]
 ---
 
-Có một pattern mà mày đang dùng mỗi lần viết `for (Appointment apt : appointments)` mà không biết tên của nó.
+Có một pattern mà bạn đang dùng mỗi lần viết `for (Appointment apt : appointments)` mà không biết tên của nó.
 
 ---
 
 ## GoF giải bài gì
 
-1994, codebase mày làm việc có thể lưu data trong `Array`, `LinkedList`, `BinaryTree`, `HashTable`. Mỗi cấu trúc duyệt theo cách khác nhau — array dùng index, linked list dùng `next`, tree dùng đệ quy.
+1994, codebase bạn làm việc có thể lưu data trong `Array`, `LinkedList`, `BinaryTree`, `HashTable`. Mỗi cấu trúc duyệt theo cách khác nhau — array dùng index, linked list dùng `next`, tree dùng đệ quy.
 
 Nếu business logic phải biết đang duyệt cấu trúc nào để chọn cách duyệt phù hợp, code trở nên coupled với implementation detail của collection. Đổi từ `Array` sang `LinkedList` là phải sửa tất cả chỗ dùng nó.
 
@@ -44,10 +44,10 @@ public interface Iterable<T> {
 }
 ```
 
-Mỗi lần mày viết `for-each loop`, Java compiler dịch nó thành:
+Mỗi lần bạn viết `for-each loop`, Java compiler dịch nó thành:
 
 ```java
-// Mày viết
+// Bạn viết
 for (Appointment apt : appointments) {
     process(apt);
 }
@@ -64,11 +64,11 @@ while (iter.hasNext()) {
 
 ---
 
-## Khi nào mày tự implement Iterator
+## Khi nào bạn tự implement Iterator
 
-Tự viết Iterator hữu ích khi mày có cấu trúc data tùy chỉnh cần được duyệt theo nhiều cách.
+Tự viết Iterator hữu ích khi bạn có cấu trúc data tùy chỉnh cần được duyệt theo nhiều cách.
 
-HMS có `DoctorSchedule` — lịch của bác sĩ theo tuần, lưu dạng tree với nhánh là ngày và lá là time slot. Mày cần duyệt theo hai cách: theo ngày (tất cả slot của thứ Hai, rồi thứ Ba...) và theo slot trống (chỉ những slot chưa đầy, bỏ qua ngày).
+HMS có `DoctorSchedule` — lịch của bác sĩ theo tuần, lưu dạng tree với nhánh là ngày và lá là time slot. Bạn cần duyệt theo hai cách: theo ngày (tất cả slot của thứ Hai, rồi thứ Ba...) và theo slot trống (chỉ những slot chưa đầy, bỏ qua ngày).
 
 ```java
 public class WeeklySchedule implements Iterable<DoctorSchedule> {
@@ -136,7 +136,7 @@ List<DoctorScheduleResponse> result = schedules.stream()
     .toList();
 ```
 
-Trong modern Java, `Stream` thường thay thế manual `Iterator` cho processing pipeline. Iterator tường minh vẫn cần thiết khi mày cần kiểm soát tinh từng bước — ví dụ, pause giữa chừng, interleave với external system call, hoặc batch-process từng N element.
+Trong modern Java, `Stream` thường thay thế manual `Iterator` cho processing pipeline. Iterator tường minh vẫn cần thiết khi bạn cần kiểm soát tinh từng bước — ví dụ, pause giữa chừng, interleave với external system call, hoặc batch-process từng N element.
 
 ---
 
@@ -163,16 +163,16 @@ public void exportAllAppointments(OutputStream out) {
 
 ## Khi nào không cần nghĩ đến Iterator
 
-Trong code Java hàng ngày với Spring Boot, mày hiếm khi cần "implement Iterator pattern" vì nó đã ở khắp nơi rồi — `List`, `Set`, `Stream`, JPA repository method trả `List` hoặc `Stream`, tất cả đều là Iterator pattern sẵn.
+Trong code Java hàng ngày với Spring Boot, bạn hiếm khi cần "implement Iterator pattern" vì nó đã ở khắp nơi rồi — `List`, `Set`, `Stream`, JPA repository method trả `List` hoặc `Stream`, tất cả đều là Iterator pattern sẵn.
 
-Mày chỉ cần chủ động nghĩ đến nó khi xây dựng custom data structure, khi cần multiple traversal strategy trên cùng một structure, hoặc khi xử lý data quá lớn để load hết vào memory.
+Bạn chỉ cần chủ động nghĩ đến nó khi xây dựng custom data structure, khi cần multiple traversal strategy trên cùng một structure, hoặc khi xử lý data quá lớn để load hết vào memory.
 
 ---
 
 ## Takeaway
 
-Iterator là một trong những pattern đã được bake vào DNA của Java đến mức mày dùng nó mà không nhận ra. Hiểu nó giúp mày viết custom collection đúng (`implement Iterable`), chọn đúng giữa `Iterator`, `for-each`, và `Stream` cho từng use case, và hiểu tại sao database cursor pagination lại quan trọng khi dataset lớn.
+Iterator là một trong những pattern đã được bake vào DNA của Java đến mức bạn dùng nó mà không nhận ra. Hiểu nó giúp bạn viết custom collection đúng (`implement Iterable`), chọn đúng giữa `Iterator`, `for-each`, và `Stream` cho từng use case, và hiểu tại sao database cursor pagination lại quan trọng khi dataset lớn.
 
 ---
 
-*Bài tiếp theo: Visitor — khi mày cần thêm operation vào object hierarchy mà không sửa class*
+*Bài tiếp theo: Visitor — khi bạn cần thêm operation vào object hierarchy mà không sửa class*

@@ -15,7 +15,7 @@ Nhưng MySQL không làm vậy. User A vẫn đọc được, user B vẫn sửa
 
 ## Ý tưởng cơ bản — lưu nhiều version của cùng một row
 
-Khi mày update một row, MySQL không overwrite nó. Nó lưu một **version mới** cùng một **version chain**. Mỗi version gắn kèm một con số gọi là **transaction ID**.
+Khi bạn update một row, MySQL không overwrite nó. Nó lưu một **version mới** cùng một **version chain**. Mỗi version gắn kèm một con số gọi là **transaction ID**.
 
 Ví dụ, cái appointment này:
 
@@ -27,7 +27,7 @@ Version 1 (trx_id: 100): Doctor A, 9:00 AM, Status: PENDING
 Version 2 (trx_id: 105): Doctor A, 9:00 AM, Status: CONFIRMED  <- User B vừa update
 ```
 
-Khi user A (transaction 103) đọc appointment này, MySQL nó nói — "Transaction 103 thấy transaction 105 chưa commit xong, nên tao cho transaction 103 thấy version 1 (lúc 100 commit). Transaction 105 sau này commit xong, user mới thấy version 2".
+Khi user A (transaction 103) đọc appointment này, MySQL nó nói — "Transaction 103 thấy transaction 105 chưa commit xong, nên mình cho transaction 103 thấy version 1 (lúc 100 commit). Transaction 105 sau này commit xong, user mới thấy version 2".
 
 User A không phải chờ. User B sửa xong. Cả hai happy.
 
@@ -82,7 +82,7 @@ Không phải main table. Là **undo log** — một cái file riêng trong Inno
 
 Khi row update, row trong main table được update xong, pointer DB_ROLL_PTR chỉ vào undo log. Nếu transaction khác cần version cũ, nó follow pointer này, reconstruct row từ undo log.
 
-Vì thế undo log không thể bị delete ngay. Nó phải lưu cho tới khi transaction lâu nhất read row này xong, mới được xóa. Nếu mày có một transaction chạy lâu mà không commit/rollback, undo log sẽ sống lâu, chiếm disk space.
+Vì thế undo log không thể bị delete ngay. Nó phải lưu cho tới khi transaction lâu nhất read row này xong, mới được xóa. Nếu bạn có một transaction chạy lâu mà không commit/rollback, undo log sẽ sống lâu, chiếm disk space.
 
 ---
 
@@ -90,7 +90,7 @@ Vì thế undo log không thể bị delete ngay. Nó phải lưu cho tới khi 
 
 MVCC giải quyết "read không block write". Nhưng nó không giải quyết "write không block write".
 
-Ví dụ, cái race condition mà cậu hỏi hôm nào — 2 user đặt lịch cùng slot:
+Ví dụ, cái race condition mà bạn hỏi hôm nào — 2 user đặt lịch cùng slot:
 
 ```
 Doctor Schedule: slot = 5/5 (full)
@@ -101,7 +101,7 @@ Transaction B: (đồng thời) CHECK slot < 5? No → abort
 Chưa có vấn đề.
 ```
 
-Nhưng nếu logic mày là:
+Nhưng nếu logic bạn là:
 
 ```
 Transaction A: GET current_slot (5/5) → UPDATE slot = 6
@@ -120,7 +120,7 @@ Giải pháp:
 
 ## Ví dụ thực tế — HMS appointment booking
 
-Mày có bảng:
+Bạn có bảng:
 
 ```sql
 CREATE TABLE doctor_schedule (
@@ -153,7 +153,7 @@ Time 3: A UPDATE available_slots = 4, COMMIT
 Time 4: B UPDATE available_slots = 4, COMMIT (Lost Update! Đáng lẽ phải 3)
 ```
 
-Để fix, cậu thêm version column:
+Để fix, bạn thêm version column:
 
 ```sql
 ALTER TABLE doctor_schedule ADD COLUMN version INT DEFAULT 0;
@@ -185,8 +185,8 @@ Khi B cố update với version = 0, nhưng A đã change thành version = 1, My
 
 ## Takeaway
 
-MVCC là lý do MySQL hệ thống không bị deadlock trên mỗi read. Nhưng nó không giải quyết concurrent writes. Lúc mày thấy "2 user update cùng lúc xong data sai", đó không phải bug MVCC, là transaction design của mày chưa có protection.
+MVCC là lý do MySQL hệ thống không bị deadlock trên mỗi read. Nhưng nó không giải quyết concurrent writes. Lúc bạn thấy "2 user update cùng lúc xong data sai", đó không phải bug MVCC, là transaction design của bạn chưa có protection.
 
 ---
 
-*Bài tiếp theo: Isolation Levels — bốn cấp độ và khi nào mày cần cái nào*
+*Bài tiếp theo: Isolation Levels — bốn cấp độ và khi nào bạn cần cái nào*

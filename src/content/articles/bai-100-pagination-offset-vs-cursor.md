@@ -9,22 +9,22 @@ tags: ["database", "pagination", "performance", "spring-data"]
 
 ---
 
-API của mày có endpoint lấy danh sách appointments. Mày implement pagination bằng `LIMIT` và `OFFSET` vì đó là cái đầu tiên hiện ra khi Google "Spring Boot pagination". Mọi thứ hoạt động bình thường trong development, test pass, deploy lên production.
+API của bạn có endpoint lấy danh sách appointments. Bạn implement pagination bằng `LIMIT` và `OFFSET` vì đó là cái đầu tiên hiện ra khi Google "Spring Boot pagination". Mọi thứ hoạt động bình thường trong development, test pass, deploy lên production.
 
 Sáu tháng sau, hệ thống có vài triệu records. Một admin mở trang 500 của danh sách — và phải chờ 8 giây.
 
-Không phải vì máy chủ yếu. Không phải vì network chậm. Mà vì `OFFSET` có một vấn đề căn bản mà không ai nói với mày khi mày mới học.
+Không phải vì máy chủ yếu. Không phải vì network chậm. Mà vì `OFFSET` có một vấn đề căn bản mà không ai nói với bạn khi bạn mới học.
 
 ---
 
 ## OFFSET hoạt động như thế nào thật sự
 
-Mày nghĩ `OFFSET 5000 LIMIT 20` nghĩa là "nhảy thẳng đến row 5000 rồi lấy 20 row". Thực tế không phải vậy.
+Bạn nghĩ `OFFSET 5000 LIMIT 20` nghĩa là "nhảy thẳng đến row 5000 rồi lấy 20 row". Thực tế không phải vậy.
 
 Database phải **đọc và đếm toàn bộ 5000 rows đầu tiên**, rồi bỏ chúng đi, rồi mới trả về 20 rows tiếp theo. Không có shortcut nào ở đây — ngay cả khi có index, database vẫn phải traverse qua 5000 entries đó.
 
 ```sql
--- Mày tưởng đây là O(1) — nhảy thẳng đến offset
+-- Bạn tưởng đây là O(1) — nhảy thẳng đến offset
 SELECT * FROM appointments
 ORDER BY created_at DESC
 LIMIT 20 OFFSET 5000;
@@ -38,7 +38,7 @@ Trang 1: đọc 20 rows. Trang 251: đọc 5020 rows. Trang 501: đọc 10020 ro
 
 ## Cursor-based pagination giải quyết vấn đề này như thế nào
 
-Thay vì nói "bỏ qua N rows đầu", cursor-based pagination nói: "cho tao những rows có giá trị lớn hơn giá trị cuối cùng tao đã thấy".
+Thay vì nói "bỏ qua N rows đầu", cursor-based pagination nói: "cho mình những rows có giá trị lớn hơn giá trị cuối cùng mình đã thấy".
 
 ```java
 // ❌ Offset-based — chậm dần theo số trang
@@ -47,7 +47,7 @@ public Page<AppointmentResponse> getAppointments(int page, int size) {
     return appointmentRepository.findAll(pageable).map(mapper::toResponse);
 }
 
-// ✅ Cursor-based — O(log n) bất kể mày đang ở trang nào
+// ✅ Cursor-based — O(log n) bất kể bạn đang ở trang nào
 public CursorPage<AppointmentResponse> getAppointments(String cursor, int size) {
     LocalDateTime cursorTime = cursor != null 
         ? decodeCursor(cursor) 
@@ -77,7 +77,7 @@ ORDER BY created_at DESC
 LIMIT 21;
 ```
 
-Với index trên `created_at`, query này luôn là O(log n) bất kể mày đang ở "trang" bao nhiêu. Database nhảy thẳng đến vị trí cần thiết trong index tree.
+Với index trên `created_at`, query này luôn là O(log n) bất kể bạn đang ở "trang" bao nhiêu. Database nhảy thẳng đến vị trí cần thiết trong index tree.
 
 ---
 
@@ -111,7 +111,7 @@ Trong lúc đó, record F được insert vào đầu danh sách
 User chuyển sang trang 2: records [E, F, G, H, I]  ← E bị duplicate
 ```
 
-Record `E` bị đọc hai lần vì offset 5 giờ trỏ đến vị trí khác với trước. Cursor-based không có vấn đề này vì mày track bằng giá trị thực, không phải vị trí.
+Record `E` bị đọc hai lần vì offset 5 giờ trỏ đến vị trí khác với trước. Cursor-based không có vấn đề này vì bạn track bằng giá trị thực, không phải vị trí.
 
 ---
 
@@ -129,13 +129,13 @@ public record CursorPage<T>(
 // GET /api/appointments?cursor=eyJjcmVhdGVkQXQiOiIyMDI0LTAxLTE1VDEwOjMwOjAwIn0
 ```
 
-Encode cursor thành base64 hoặc opaque string — client không cần biết bên trong là gì. Nếu mai mày đổi cách implement cursor, client không bị ảnh hưởng.
+Encode cursor thành base64 hoặc opaque string — client không cần biết bên trong là gì. Nếu mai bạn đổi cách implement cursor, client không bị ảnh hưởng.
 
 ---
 
 ## Takeaway
 
-Offset pagination là thứ dạy cho mày để mày hiểu concept — không phải để mày dùng trong production với data set lớn. Trước khi implement pagination, hỏi hai câu: *"Data set này sẽ lớn đến đâu?"* và *"User có cần nhảy đến trang cụ thể không?"* Hai câu trả lời đó quyết định mày dùng gì.
+Offset pagination là thứ dạy cho bạn để bạn hiểu concept — không phải để bạn dùng trong production với data set lớn. Trước khi implement pagination, hỏi hai câu: *"Data set này sẽ lớn đến đâu?"* và *"User có cần nhảy đến trang cụ thể không?"* Hai câu trả lời đó quyết định bạn dùng gì.
 
 ---
 

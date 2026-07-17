@@ -114,7 +114,7 @@ public class ScheduleCacheInvalidationListener {
 }
 ```
 
-Lưu ý quan trọng: invalidate trong `AFTER_COMMIT`, không phải trong transaction. Tại sao? Nếu transaction rollback, mày không muốn xóa cache của data vẫn còn valid. (Đây chính là vấn đề ở bài 85, nhưng áp dụng cho cache.)
+Lưu ý quan trọng: invalidate trong `AFTER_COMMIT`, không phải trong transaction. Tại sao? Nếu transaction rollback, bạn không muốn xóa cache của data vẫn còn valid. (Đây chính là vấn đề ở bài 85, nhưng áp dụng cho cache.)
 
 ---
 
@@ -159,13 +159,13 @@ public DoctorScheduleResponse getDoctorSchedule(UUID scheduleId) {
 
     if (Boolean.TRUE.equals(acquired)) {
         try {
-            // Double-check: request khác có thể đã populate cache khi tao đang wait
+            // Double-check: request khác có thể đã populate cache khi mình đang wait
             cached = redisTemplate.opsForValue().get(cacheKey);
             if (cached != null) {
                 return objectMapper.readValue(cached, DoctorScheduleResponse.class);
             }
 
-            // Chỉ mình tao query DB
+            // Chỉ mình mình query DB
             DoctorSchedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new NotFoundException("Schedule not found"));
 
