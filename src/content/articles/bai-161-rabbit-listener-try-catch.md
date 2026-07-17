@@ -3,6 +3,7 @@ title: "Một try/catch quá rộng có thể biến lỗi business thành messa
 description: "Bọc cả @RabbitListener trong một catch khiến lỗi DB tạm thời bị gắn nhãn payload sai và mất cơ hội retry. Error boundary phải đặt đúng chỗ."
 category: system-design
 pubDate: 2026-07-17
+addedDate: 2026-07-17
 series: "Phần 7: Backend & Hệ thống"
 tags: ["rabbitmq", "error-handling", "retry", "dlq", "case-study"]
 ---

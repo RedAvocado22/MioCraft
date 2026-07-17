@@ -3,6 +3,7 @@ title: "Escrow không thể nhảy thẳng từ SIGNED sang ACTIVE"
 description: "Ký hợp đồng và khóa đủ tiền là hai business fact khác nhau. Two-phase lock làm rõ buyer payment, seller deposit và thời điểm contract thật sự có hiệu lực."
 category: system-design
 pubDate: 2026-07-17
+addedDate: 2026-07-17
 series: "Phần 8: System Design"
 tags: ["escrow", "state-machine", "saga", "payments", "case-study"]
 ---

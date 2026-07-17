@@ -3,6 +3,7 @@ title: "Message đã vào queue nhưng handler chưa chạy — converter cũng 
 description: "Exchange và binding đều đúng chưa có nghĩa business logic đã chạy. Message converter sai có thể làm listener fail trước dòng code đầu tiên."
 category: system-design
 pubDate: 2026-07-17
+addedDate: 2026-07-17
 series: "Phần 7: Backend & Hệ thống"
 tags: ["rabbitmq", "message-queue", "spring-amqp", "debugging", "case-study"]
 ---

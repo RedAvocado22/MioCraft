@@ -3,6 +3,7 @@ title: "Database cũ đang che giấu bug của bạn"
 description: "Persistent volume khiến seed thiếu và migration stale không lộ ra. Chỉ một lần dựng stack hoàn toàn sạch mới kiểm tra được môi trường có tái tạo thật sự hay không."
 category: system-design
 pubDate: 2026-07-17
+addedDate: 2026-07-17
 series: "Phần 12: Production & Ops"
 tags: ["docker", "database", "migration", "e2e-testing", "case-study"]
 ---

@@ -3,6 +3,7 @@ title: "DLQ không phải thùng rác — retry và reconciliation trong Saga"
 description: "Retry xử lý lỗi tạm thời, DLQ giữ message không xử lý được, còn reconciliation phát hiện cả những event chưa từng tới queue. Cần đủ cả ba lớp."
 category: system-design
 pubDate: 2026-07-17
+addedDate: 2026-07-17
 series: "Phần 12: Production & Ops"
 tags: ["dlq", "retry", "reconciliation", "saga", "rabbitmq"]
 ---

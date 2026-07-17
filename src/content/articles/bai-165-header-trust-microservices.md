@@ -3,6 +3,7 @@ title: "Header tin cậy đến đâu trong microservices?"
 description: "Gateway inject X-User-Id tiện nhưng chỉ an toàn khi downstream xác minh request thật sự đến từ trusted boundary. Internal flag không phải authentication."
 category: system-design
 pubDate: 2026-07-17
+addedDate: 2026-07-17
 series: "Phần 8: System Design"
 tags: ["security", "api-gateway", "microservices", "authentication", "case-study"]
 ---

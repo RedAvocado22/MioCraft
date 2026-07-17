@@ -1,0 +1,247 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import {
+  buildLocalArticleNumbers,
+  formatArticleNumber,
+  getLatestDate,
+  sortLatestArticles,
+} from '../utils/article-numbering';
+
+const allArticles = await getCollection('articles');
+const articles = [...allArticles].sort(sortLatestArticles);
+const localNumbers = buildLocalArticleNumbers(allArticles);
+
+const categoryMeta = {
+  'system-design': { label: 'Thiết kế hệ thống', badge: 'badge-sd', dot: 'dot-sd' },
+  'architecture':  { label: 'Kiến trúc',          badge: 'badge-arch', dot: 'dot-arch' },
+  'programming':   { label: 'Lập trình',          badge: 'badge-prog', dot: 'dot-prog' },
+} as const;
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('vi-VN', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+function formatSeries(series?: string) {
+  const match = series?.match(/^Phần (\d+):\s*(.*)$/);
+  if (match) return `P${match[1].padStart(2, '0')} · ${match[2]}`;
+  return series ?? 'Khác';
+}
+---
+
+<BaseLayout title="Latest" description="Những bài viết mới nhất trên MioCraft, sắp xếp từ mới đến cũ.">
+  <style>
+    .back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #4b5563;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 2rem;
+      transition: color 0.15s;
+    }
+    .back:hover { color: #e2e8f0; }
+    .back svg { width: 14px; height: 14px; }
+
+    .page-header { margin-bottom: 2rem; }
+    .eyebrow {
+      color: var(--accent);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+    .page-header h1 {
+      color: #f1f5f9;
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      margin-bottom: 0.35rem;
+    }
+    .count {
+      color: #6b7280;
+      font-size: 0.82rem;
+    }
+
+    .search-wrap {
+      position: relative;
+      margin-bottom: 1.25rem;
+    }
+    .search-icon {
+      position: absolute;
+      left: 0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #4b5563;
+      pointer-events: none;
+      width: 14px;
+      height: 14px;
+    }
+    #search {
+      width: 100%;
+      box-sizing: border-box;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 0.6rem 1rem 0.6rem 2.4rem;
+      font-family: inherit;
+      font-size: 0.82rem;
+      color: #e2e8f0;
+      outline: none;
+    }
+    #search:focus { border-color: rgba(139,92,246,0.4); }
+    #search::placeholder { color: #374151; }
+
+    .article-list { display: flex; flex-direction: column; }
+    .article-card {
+      display: flex;
+      gap: 1.25rem;
+      padding: 1.15rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      text-decoration: none;
+      color: inherit;
+      align-items: flex-start;
+      transition: opacity 0.15s;
+    }
+    .article-card:hover { opacity: 0.82; }
+    .article-card:hover .article-title { color: #a78bfa; }
+    .article-index {
+      flex-shrink: 0;
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      background: rgba(139,92,246,0.1);
+      border: 1px solid rgba(139,92,246,0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #a78bfa;
+      margin-top: 2px;
+    }
+    .article-body { flex: 1; min-width: 0; }
+    .article-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.35rem;
+    }
+    .article-date, .article-series {
+      color: #6b7280;
+      font-size: 0.72rem;
+    }
+    .article-series::before {
+      content: '·';
+      margin-right: 0.5rem;
+      color: #374151;
+    }
+    .article-title {
+      color: #e2e8f0;
+      font-size: 0.98rem;
+      font-weight: 650;
+      line-height: 1.45;
+      margin-bottom: 0.3rem;
+      transition: color 0.15s;
+    }
+    .article-desc {
+      color: #6b7280;
+      font-size: 0.82rem;
+      line-height: 1.55;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .article-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.55rem;
+    }
+    .no-results {
+      display: none;
+      text-align: center;
+      color: #4b5563;
+      font-size: 0.82rem;
+      padding: 2rem 0;
+    }
+
+    @media (max-width: 600px) {
+      .article-card { gap: 0.9rem; }
+      .article-title { font-size: 0.9rem; }
+      .article-desc { font-size: 0.78rem; }
+    }
+  </style>
+
+  <a href="/" class="back">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 3L5 8l5 5" />
+    </svg>
+    Trang chủ
+  </a>
+
+  <div class="page-header">
+    <p class="eyebrow">MioCraft / latest</p>
+    <h1>Bài mới cập nhật</h1>
+    <p class="count">{articles.length} bài · bài mới nhất hiển thị trước</p>
+  </div>
+
+  <div class="search-wrap">
+    <svg class="search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="6.5" cy="6.5" r="4" />
+      <path d="M11 11l3 3" />
+    </svg>
+    <input id="search" type="text" placeholder="Tìm trong bài mới..." autocomplete="off" spellcheck="false" />
+  </div>
+  <p class="no-results" id="no-results">Không tìm thấy bài viết nào.</p>
+
+  <div class="article-list" id="article-list">
+    {articles.map((article, index) => {
+      const meta = categoryMeta[article.data.category];
+      return (
+        <a href={`/articles/${article.slug}`} class="article-card" data-search={`${article.data.title} ${article.data.description} ${article.data.series ?? ''} ${(article.data.tags ?? []).join(' ')}`}>
+          <div class="article-index">{String(index + 1).padStart(2, '0')}</div>
+          <div class="article-body">
+            <div class="article-meta">
+              <span class={`badge ${meta.badge}`}>
+                <span class={`badge-dot ${meta.dot}`}></span>
+                {meta.label}
+              </span>
+              <span class="article-date">{formatDate(getLatestDate(article))}</span>
+              <span class="article-series">{formatSeries(article.data.series)} · Bài {formatArticleNumber(localNumbers.get(article.slug))}</span>
+            </div>
+            <div class="article-title">{article.data.title}</div>
+            <p class="article-desc">{article.data.description}</p>
+            {article.data.tags && article.data.tags.length > 0 && (
+              <div class="article-tags">
+                {article.data.tags.slice(0, 4).map((tag) => <span class="tag">{tag}</span>)}
+              </div>
+            )}
+          </div>
+        </a>
+      );
+    })}
+  </div>
+
+  <script>
+    const input = document.getElementById('search') as HTMLInputElement;
+    const cards = Array.from(document.querySelectorAll<HTMLElement>('.article-card'));
+    const noResults = document.getElementById('no-results') as HTMLElement;
+
+    input.addEventListener('input', () => {
+      const query = input.value.trim().toLowerCase();
+      let visible = 0;
+      cards.forEach(card => {
+        const matches = !query || (card.dataset.search ?? '').toLowerCase().includes(query);
+        card.style.display = matches ? '' : 'none';
+        if (matches) visible++;
+      });
+      noResults.style.display = visible === 0 ? 'block' : 'none';
+    });
+  </script>
+</BaseLayout>

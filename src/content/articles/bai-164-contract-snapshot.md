@@ -3,6 +3,7 @@ title: "Hợp đồng đã ký phải nhớ quá khứ"
 description: "Đọc tên và giá trị live từ service khác khiến nội dung hợp đồng thay đổi theo dữ liệu hiện tại. Snapshot có chủ ý bảo vệ lịch sử và domain invariant."
 category: architecture
 pubDate: 2026-07-17
+addedDate: 2026-07-17
 series: "Phần 6: Database"
 tags: ["denormalization", "snapshot", "ddd", "contracts", "case-study"]
 ---

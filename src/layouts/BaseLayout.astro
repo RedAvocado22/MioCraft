@@ -288,6 +288,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         MioCraft
       </a>
       <div class="nav-links">
+        <a href="/latest"           class={currentPath.startsWith('/latest')           ? 'active' : ''}>Latest</a>
         <a href="/code-co-nghe"   class={currentPath.startsWith('/code-co-nghe')   ? 'active' : ''}>Những Điều Mình Học Được</a>
         <a href="/behind-the-tech" class={currentPath.startsWith('/behind-the-tech') ? 'active' : ''}>Behind the Tech</a>
         <a href="https://github.com/RedAvocado22/MioCraft" target="_blank" rel="noopener noreferrer" class="nav-github" aria-label="GitHub">

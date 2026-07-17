@@ -1,10 +1,28 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import {
+  buildLocalArticleNumbers,
+  formatArticleNumber,
+  getLatestDate,
+  sortLatestArticles,
+} from '../utils/article-numbering';
 
 const articles = await getCollection('articles');
 const cstCount = articles.filter(a => !a.data.series || a.data.series.match(/^Phần \d+:/)).length;
 const bttCount = articles.filter(a => a.data.series?.includes('Behind the Tech')).length;
+const localNumbers = buildLocalArticleNumbers(articles);
+const latestArticles = [...articles].sort(sortLatestArticles).slice(0, 5);
+
+function formatSeries(series?: string) {
+  const match = series?.match(/^Phần (\d+):\s*(.*)$/);
+  if (match) return `P${match[1].padStart(2, '0')} · ${match[2]}`;
+  return series ?? 'Khác';
+}
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('vi-VN', { day: 'numeric', month: 'short', year: 'numeric' });
+}
 ---
 
 <BaseLayout title="Trang chủ">
@@ -142,11 +160,95 @@ const bttCount = articles.filter(a => a.data.series?.includes('Behind the Tech')
       color: #4b5563;
       margin-top: 0.15rem;
     }
+
+    .latest-preview {
+      padding: 1.25rem;
+      border-radius: 10px;
+      background: rgba(139,92,246,0.06);
+      border: 1px solid rgba(139,92,246,0.18);
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .latest-preview:hover {
+      background: rgba(139,92,246,0.1);
+      border-color: rgba(139,92,246,0.35);
+    }
+    .latest-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.8rem;
+    }
+    .latest-title {
+      color: #f1f5f9;
+      font-size: 0.95rem;
+      font-weight: 800;
+    }
+    .latest-link {
+      color: #a78bfa;
+      font-size: 0.72rem;
+      white-space: nowrap;
+    }
+    .latest-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+    .latest-item {
+      display: flex;
+      align-items: baseline;
+      gap: 0.6rem;
+      min-width: 0;
+    }
+    .latest-item-index {
+      color: #8b5cf6;
+      font-size: 0.68rem;
+      flex-shrink: 0;
+    }
+    .latest-item-body {
+      min-width: 0;
+      flex: 1;
+    }
+    .latest-item-name {
+      color: #cbd5e1;
+      font-size: 0.78rem;
+      line-height: 1.45;
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .latest-item-meta {
+      color: #6b7280;
+      font-size: 0.66rem;
+      display: block;
+      margin-top: 0.1rem;
+    }
   </style>
 
   <p class="eyebrow">MioCraft / knowledge-base</p>
 
   <div class="landing">
+    <a href="/latest" class="latest-preview">
+      <div class="latest-header">
+        <span class="latest-title">Latest · Bài mới cập nhật</span>
+        <span class="latest-link">Xem tất cả →</span>
+      </div>
+      <div class="latest-list">
+        {latestArticles.map((article) => (
+          <div class="latest-item">
+            <span class="latest-item-index">{formatArticleNumber(localNumbers.get(article.slug))}</span>
+            <span class="latest-item-body">
+              <span class="latest-item-name">{article.data.title}</span>
+              <span class="latest-item-meta">{formatSeries(article.data.series)} · {formatDate(getLatestDate(article))}</span>
+            </span>
+          </div>
+        ))}
+      </div>
+    </a>
+
     <a href="/code-co-nghe" class="series-card">
       <span class="series-label">Series 01</span>
       <span class="series-title">Những Điều Mình Học Được</span>

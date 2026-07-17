@@ -3,6 +3,7 @@ title: "Idempotency không phải là existsBy()"
 description: "Check tồn tại trước khi save chỉ là bước đầu. Race condition, unique constraint và dữ liệu khác request mới quyết định một thao tác có thật sự idempotent hay không."
 category: system-design
 pubDate: 2026-07-17
+addedDate: 2026-07-17
 series: "Phần 10: Case Studies thực tế"
 tags: ["case-study", "idempotency", "concurrency", "database", "distributed-systems"]
 ---

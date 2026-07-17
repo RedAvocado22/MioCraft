@@ -8,6 +8,27 @@ export function sortArticles(a: Article, b: Article) {
   return dateDiff || a.slug.localeCompare(b.slug, 'en', { numeric: true });
 }
 
+/**
+ * Sorts the discovery feed by the date an article was actually added.
+ * Older content without addedDate falls back to its publication order.
+ */
+export function sortLatestArticles(a: Article, b: Article) {
+  const aAdded = a.data.addedDate?.getTime();
+  const bAdded = b.data.addedDate?.getTime();
+
+  if (aAdded !== undefined || bAdded !== undefined) {
+    if (aAdded === undefined) return 1;
+    if (bAdded === undefined) return -1;
+    return bAdded - aAdded || b.slug.localeCompare(a.slug, 'en', { numeric: true });
+  }
+
+  return sortArticles(b, a);
+}
+
+export function getLatestDate(article: Article) {
+  return article.data.addedDate ?? article.data.pubDate;
+}
+
 export function getPartNumber(series?: string) {
   const match = series?.match(/^Phần (\d+):/);
   return match ? Number(match[1]) : null;

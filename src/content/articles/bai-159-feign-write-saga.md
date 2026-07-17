@@ -3,6 +3,7 @@ title: "Khi một lệnh Feign làm Saga mất nhất quán"
 description: "Gọi REST đồng bộ để thay đổi dữ liệu của service khác tạo ra distributed write không có transaction chung. Đúng hơn là để service sở hữu state tự xử lý event."
 category: architecture
 pubDate: 2026-07-17
+addedDate: 2026-07-17
 series: "Phần 3: Kiến trúc phần mềm"
 tags: ["case-study", "microservices", "saga", "feign", "event-driven"]
 ---
